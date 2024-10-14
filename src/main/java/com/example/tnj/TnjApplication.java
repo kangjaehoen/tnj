@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan
-@MapperScan
+@ComponentScan(basePackages = {"com.example.tnj","mybatis.dao"})
+@MapperScan(value = {"mybatis.dao"})
 public class TnjApplication {
 
 	public static void main(String[] args) {
