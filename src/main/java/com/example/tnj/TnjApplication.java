@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan
-@MapperScan
+@MapperScan(value={"mybatis.dao"})
 public class TnjApplication {
 
 	public static void main(String[] args) {

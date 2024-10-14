@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Header Design</title>
+  <style>
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    }
+
+    .icon-group {
+    padding: 10px 20px;
+    margin-right: 50px; /* 오른쪽 여백 추가 */
+    }
+
+    header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    }
+    .logo img {
+    width: 100px; /* 로고 크기 조정 */
+    height: auto; /* 비율 유지 */
+    border-radius: 50%;
+    }
+    .profile-icon img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    }
+    .menu {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    }
+    .icon-group {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    }
+    /*.profile-icon {
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px; !* 오른쪽 여백 *!
+    }*/
+    .menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div th:fragment="headerFragment" style="margin-right: 20px;"> <!-- 오른쪽 여백 추가 -->
+  <header>
+    <div class="logo">
+      <img src="/images/logo.png" alt="Logo">
+    </div>
+    <div class="menu">
+<span class="icon-group">
+<div class="profile-icon">
+<img src="/images/profile.png" alt="Profile">
+</div>
+<div class="menu-icon">
+&#9776; <!-- 메뉴 아이콘 -->
+</div>
+</span>
+    </div>
+  </header>
+</div>
+</body>
+</html>

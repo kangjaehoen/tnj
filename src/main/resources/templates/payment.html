@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 내역 확인</title>
+    <style>
+        body {
+            font-family: 'Pretendard-Regular', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .logo img {
+            width: 120px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /*max-width: 1200px;*/
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+            padding: 20px 0;
+            font-size: 14px;
+            color: #333;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /*.footer-left {
+            display: flex;
+            flex-direction: column;
+        }
+        .footer-left span {
+            margin-bottom: 10px;
+        }*/
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px; /* 페이지네이션 아래 간격 추가 */
+        }
+
+        .search-options {
+            display: flex;
+            flex-direction: column; /* 수직 정렬 */
+            margin-bottom: 20px;
+        }
+
+        #search-options, #payment-status {
+            margin-bottom: 20px; /* 각 섹션 간의 여백 추가 */
+        }
+
+        .search-options select,
+        .search-options input[type="radio"] {
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .search-options label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .search-options button {
+            background-color: #92c653;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            align-self: flex-start; /* 버튼을 왼쪽 정렬 */
+        }
+
+        .search-options button:hover {
+            background-color: #76a53b;
+        }
+
+        .payment-history h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .payment-history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .payment-history th,
+        .payment-history td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .payment-history th {
+            background-color: #f4f4f4;
+        }
+
+        .payment-history td a {
+            color: #337ab7;
+            text-decoration: none;
+        }
+
+        .payment-history td a:hover {
+            text-decoration: underline;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <th:block th:replace="~{fragments/header :: headerFragment}"></th:block>
+</div>
+
+    <div class="search-options">
+        <div id="search-options">
+            <h2>검색옵션</h2>
+            <label for="year">청구년도</label>
+            <select id="year">
+                <option value="">전체 년도</option>
+            </select>
+
+            <label for="month">전체 월</label>
+            <select id="month">
+                <option value="">전체 월</option>
+            </select>
+        </div>
+
+        <div id="payment-status">
+            <label>결제상태</label>
+            <input type="radio" id="paid" name="status" checked>
+            <label for="paid">결제완료</label>
+
+            <input type="radio" id="refunded" name="status">
+            <label for="refunded">환불완료</label>
+
+            <input type="radio" id="cancelled" name="status">
+            <label for="cancelled">취소 중</label>
+
+            <button>검색</button>
+        </div>
+    </div>
+
+    <div class="payment-history">
+        <h2>결제내역 확인</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>청구월</th>
+                <th>결제일시</th>
+                <th>결제번호</th>
+                <th>청구내용</th>
+                <th>결제 금액</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>2022-01</td>
+                <td>2022-01-19 02:58:08</td>
+                <td>20220119-445674205</td>
+                <td><a href="#">2022년 1월 청구서</a></td>
+                <td>#11</td>
+                <td>결제완료</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <a href="#">«</a>
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">»</a>
+    </div>
+<!--    <div class="footer-container">-->
+<!--&lt;!&ndash;        <div class="footer-left">&ndash;&gt;-->
+<!--            <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--    </div>-->
+
+</div>
+</body>
+
+</html>
