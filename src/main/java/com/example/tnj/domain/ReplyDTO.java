@@ -2,6 +2,8 @@ package com.example.tnj.domain;
 
 import lombok.*;
 
+
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class ReplyDTO {
     private String revContent;
     private String accomNum;
     private String id;
+    private String hiredate;
 }

@@ -1,5 +1,6 @@
 package mybatis.dao;
 
+import com.example.tnj.domain.PageDTO;
 import com.example.tnj.domain.ReplyDTO;
 import com.example.tnj.domain.ReplyRatingVO;
 import lombok.Setter;
@@ -36,6 +37,29 @@ public interface ReplyMapper {
             " ON r.id = u.id " +
             " JOIN accom a " +
             " ON r.accomNum = a.accomNum" +
-            " WHERE r.accomNum= #{accomNUm} ")
+            " WHERE r.accomNum= #{accomNUm} " +
+            " ORDER BY satisfy DESC")
     public List<ReplyDTO> listReply(int accomNum);
+
+    @Select(" SELECT revContent, hiredate, satisfy, u.id " +
+            " FROM review r " +
+            " JOIN user u ON r.id = u.id " +
+            " JOIN accom a ON r.accomNum = a.accomNum " +
+            " WHERE r.accomNum = #{accomNum}" +
+            " ORDER BY satisfy DESC " +
+            " LIMIT #{pdto.countNum} OFFSET #{pdto.startNum}")
+    public List<ReplyDTO> pagenation(PageDTO pdto,int accomNum);
+
+    @Select(" SELECT count(rnum) FROM review WHERE accomNum = #{accomNum}")
+    public int amountReivew(int accommNum);
+
+
+ /*   @Select(" SELECT revContent, hiredate, satisfy, u.id " +
+            " FROM review r " +
+            " JOIN user u ON r.id = u.id " +
+            " JOIN accom a ON r.accomNum = a.accomNum " +
+            " WHERE r.accomNum = 1 " +
+            " AND (revContent LIKE CONCAT('%', :${search}, '%') OR :${search} = '') " +
+            " ORDER BY satisfy DESC " +
+            " LIMIT 4 OFFSET 0")*/
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xml:th="http://www.thymeleaf.org" >
+<html lang="en" xml:th="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -119,19 +119,9 @@
             margin-bottom: 10px;
         }
 
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #dcdcdc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 14px;
-            color: #fff;
-            margin-right: 10px;
-        }
+      .user-id{
+
+      }
 
         .review-details {
             margin-top: 10px;
@@ -310,6 +300,26 @@
                     border: none; /* 강조된 버튼 테두리 제거 */
                 }
 
+             .search-container {
+                display: flex;
+                align-items: center;
+                border: 1px solid #ccc;
+                border-radius: 25px;
+                padding: 5px;
+                background-color: #fff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                margin-bottom:10px;
+                width : 250px;
+            }
+
+            .search-input {
+                border: none;
+                outline: none;
+                padding: 10px;
+                border-radius: 25px;
+                width: 200px;
+            }
+
 
     </style>
 <body>
@@ -352,36 +362,26 @@
 
 
     <div class="review-cards">
-        <div class="review-card">
-            <div class="user-info">
-                <div class="user-avatar">닉네임1</div>
-            </div>
+        <div class="review-card1" th:each="review:${list}" style="display:none">
             <div class="review-details">
-                <span class="stars">★★★★★</span>
-                <span class="review-date">2024년 8월</span>
-                <div class="review-text">댓글 텍스트 영역</div>
-            </div>
-        </div>
-
-        <div class="review-card">
-            <div class="user-info">
-                <div class="user-avatar">닉네임2</div>
-            </div>
-            <div class="review-details">
-                <span class="stars">★★★★★</span>
-                <span class="review-date">2024년 8월</span>
-                <div class="review-text">댓글 텍스트 영역</div>
-            </div>
-        </div>
-
-        <div class="review-card">
-            <div class="user-info">
-                <div class="user-avatar">닉네임3</div>
-            </div>
-            <div class="review-details">
-                <span class="stars">★★★★★</span>
-                <span class="review-date">2024년 8월</span>
-                <div class="review-text">댓글 텍스트 영역</div>
+                <div class="user-id">[[${review.id}]]</div>
+                <div th:if="${review.satisfy} == 5">
+                    <span class="stars">★★★★★</span>
+                </div>
+                <div th:if="${review.satisfy} == 4">
+                    <span class="stars">★★★★</span>
+                </div>
+                <div th:if="${review.satisfy} == 3">
+                    <span class="stars">★★★</span>
+                </div>
+                <div th:if="${review.satisfy} == 2">
+                    <span class="stars">★★</span>
+                </div>
+                <div th:if="${review.satisfy} == 1">
+                    <span class="stars">★</span>
+                </div>
+                <span class="review-date">[[${review.hiredate}]]</span>
+                <div class="review-text">[[${review.revContent}]]</div>
             </div>
         </div>
     </div>
@@ -389,7 +389,7 @@
     <div class="reviews-section">
         <!-- 기존 리뷰 섹션 -->
         <div class="load-more">
-            <button id="loadMoreBtn">리뷰 (총개수) 더보기</button>
+            <button id="loadMoreBtn">리뷰 [[${replyRate.reviewCount}]]개 더보기</button>
         </div>
     </div>
 
@@ -399,9 +399,9 @@
             <div class="close-modal" id="closeModal">&times;</div>
             <div class="modal-header">
                 <span class="rating">
-                    <i class="fas fa-star"></i> 4.86
+                    <i class="fas fa-star"></i> [[${replyRate.satisAvg}]]
                 </span>
-                <span class="review-count">리뷰 244개</span>
+                <span class="review-count">리뷰 [[${replyRate.reviewCount}]]개</span>
             </div>
             <hr>
             <div class="modal-body">
@@ -410,75 +410,26 @@
                     <canvas id="modal-ratingChart" width="200px" height="200px"></canvas>
                     <div class="icon-item">
                         <i class="fas fa-bars"></i>
-                        <div>전체 평점(만족도)<br><strong>5.0</strong></div>
+                        <div>전체 평점(만족도)<br><strong>[[${replyRate.satisAvg}]]</strong></div>
 
                     </div>
                     <div class="icon-item">
                         <i class="fas fa-stopwatch"></i>
-                        <div>청결도<br><strong>5.0</strong></div>
+                        <div>청결도<br><strong>[[${replyRate.cleanAvg}]]</strong></div>
 
                     </div>
                     <div class="icon-item">
                         <i class="fas fa-check-circle"></i>
-                        <div>정확도<br><strong>5.0</strong></div>
+                        <div>정확도<br><strong>[[${replyRate.accuracyAvg}]]</strong></div>
 
                     </div>
                     <div class="icon-item">
                         <i class="fas fa-tags"></i>
-                        <div>가격 대비 만족도<br><strong>4.9</strong></div>
+                        <div>가격 대비 만족도<br><strong>[[${replyRate.scpAvg}]]</strong></div>
 
                     </div>
                 </div>
-                <div id="modal-half-right">
-                    <div class="review-card">
-                        <div class="user-info">
-                            닉네임1
-                        </div>
-                        <div class="review-details">
-                            <span class="stars">★★★★★</span>
-                            <span class="review-date">2024년 8월</span>
-                            <div class="review-text">댓글 텍스트 영역</div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="user-info">
-                            닉네임2
-                        </div>
-                        <div class="review-details">
-                            <span class="stars">★★★★★</span>
-                            <span class="review-date">2024년 8월</span>
-                            <div class="review-text">댓글 텍스트 영역</div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="user-info">
-                            닉네임2
-                        </div>
-                        <div class="review-details">
-                            <span class="stars">★★★★★</span>
-                            <span class="review-date">2024년 8월</span>
-                            <div class="review-text">댓글 텍스트 영역</div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="user-info">
-                            닉네임2
-                        </div>
-                        <div class="review-details">
-                            <span class="stars">★★★★★</span>
-                            <span class="review-date">2024년 8월</span>
-                            <div class="review-text">댓글 텍스트 영역</div>
-                        </div>
-                    </div>
-                    <div class="pagination">
-                        <button class="page-button prev">prev</button>
-                        <button class="page-button active">1</button>
-                        <button class="page-button">2</button>
-                        <button class="page-button">3</button>
-                        <button class="page-button">4</button>
-                        <button class="page-button next">next</button>
-                    </div>
-                </div>
+                <div id="modal-half-right"> </div>
             </div>
 
 
@@ -492,64 +443,139 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // DB에서 가져온 별점 데이터 (예시로 하드코딩된 데이터)
-    const ratings = {
-        labels: ['5', '4', '3', '2', '1'],
-        datasets: [{
-            label: '평점 분포',
-            data: [ [[${replyRate.count5}]], [[${replyRate.count4}]], [[${replyRate.count3}]], [[${replyRate.count2}]], [[${replyRate.count1}]] ], // 이 부분은 서버에서 가져온 데이터로 대체
-            backgroundColor: 'rgba(118, 185, 0, 0.5)', // 막대 색상
-            borderColor: 'rgba(118, 185, 0, 1)',
-            borderWidth: 0.1
-        }]
-    };
 
-    // 차트 옵션
-    const options = {
-    indexAxis: 'y',
-    maintainAspectRatio: true, // 차트가 부모 컨테이너에 맞춰 크기를 조정
-    aspectRatio: 2, // 비율을 설정하여 차트의 크기를 조절 (너비에 비해 높이를 작게)
-    scales: {
-        x: {
-            beginAtZero: true
-        }
-    }
-};
-
-    // 차트를 그리는 함수
-    const ctx = document.getElementById('ratingChart').getContext('2d');
-    const ratingChart = new Chart(ctx, {
-        type: 'bar', // 막대 그래프
-        data: ratings,
-        options: options
-    });
-
-    const ctx1 = document.getElementById('modal-ratingChart').getContext('2d');
-    const ratingChart1 = new Chart(ctx1, {
-        type: 'bar', // 막대 그래프
-        data: ratings,
-        options: options
-    });
-    const modal = document.getElementById('reviewModal');
-       const openBtn = document.getElementById('loadMoreBtn');
-       const closeModal = document.getElementById('closeModal');
-
-       // 더보기 버튼 클릭 시 모달을 보이게 함
-       openBtn.onclick = function() {
-           modal.style.display = 'flex'; // 모달 보이기
+    window.onload = function(){
+       const cards = document.querySelectorAll(".review-card1");
+        let buttonNum;
+       for(let i = 0; i<6 && i<cards.length;i++){
+            cards[i].style.display='block';
        }
 
-       // 모달 닫기 버튼 클릭 시 모달 숨김
-       closeModal.onclick = function() {
-           modal.style.display = 'none';
-       }
 
-       // 모달 바깥 클릭 시 모달 닫기
-       window.onclick = function(event) {
-           if (event.target == modal) {
-               modal.style.display = 'none';
-           }
-       }
+
+      const ratings = {
+          labels: ['5', '4', '3', '2', '1'],
+          datasets: [{
+              label: '별점 분포',
+              data: [ [[${replyRate.count5}]], [[${replyRate.count4}]], [[${replyRate.count3}]], [[${replyRate.count2}]], [[${replyRate.count1}]] ],
+              backgroundColor: 'rgba(118, 185, 0, 0.5)',
+              borderColor: 'rgba(118, 185, 0, 1)',
+              borderWidth: 0.1
+          }]
+      };
+
+
+      const options = {
+      indexAxis: 'y',
+      maintainAspectRatio: true, // 차트가 부모 컨테이너에 맞춰 크기를 조정
+      aspectRatio: 2, // 비율을 설정하여 차트의 크기를 조절 (너비에 비해 높이를 작게)
+      scales: {
+          x: {
+              beginAtZero: true
+          }
+      }
+   };
+
+      // 차트를 그리는 함수
+      const ctx = document.getElementById('ratingChart').getContext('2d');
+      const ratingChart = new Chart(ctx, {
+          type: 'bar',
+          data: ratings,
+          options: options
+      });
+
+      const ctx1 = document.getElementById('modal-ratingChart').getContext('2d');
+      const ratingChart1 = new Chart(ctx1, {
+          type: 'bar',
+          data: ratings,
+          options: options
+      });
+      const modal = document.getElementById('reviewModal');
+         const openBtn = document.getElementById('loadMoreBtn');
+         const closeModal = document.getElementById('closeModal');
+
+
+         openBtn.onclick = function() {
+             modal.style.display = 'flex';
+         }
+
+
+         closeModal.onclick = function() {
+             modal.style.display = 'none';
+         }
+
+
+         window.onclick = function(event) {
+             if (event.target == modal) {
+                 modal.style.display = 'none';
+             }
+         }
+
+         let search =  document.getElementsByClassName("search-input");
+         let rv =  document.getElementById("modal-half-right")
+          let xhr = new XMLHttpRequest();
+               xhr.onload = function(){
+                  if(xhr.status == 200) {
+                      let obj =  xhr.responseText;
+                      let jsonObj  =  JSON.parse(obj);
+                      console.log(jsonObj);
+
+                       let html = "";
+
+                       html +='<div class="search-container"><input type="text" placeholder="후기 검색" class="search-input" name="search"></div>';
+                       jsonObj.dto.forEach(function(list){
+                            html += '<div class="review-card">'
+                            html += '<div class="user-info">'+list.id+'</div>';
+                            html += '<div class="review-detail" th:if='+list.satisfy == 5+'><span class="stars">★★★★★</span></div>';
+                            html += '<div class="review-detail" th:if='+list.satisfy == 4+'><span class="stars">★★★★</span></div>';
+                            html += '<div class="review-detail" th:if='+list.satisfy == 3+'><span class="stars">★★★</span></div>';
+                            html += '<div class="review-detail" th:if='+list.satisfy == 2+'><span class="stars">★★</span></div>';
+                            html += '<div class="review-detail" th:if='+list.satisfy == 1+'><span class="stars">★</span></div>';
+                            html += '<span class="review-date">'+list.hiredate+'</span>';
+                            html += '<div class="review-text">'+list.revContent+'</div>';
+                            html += '</div>';
+
+                       });
+                            html += '<div class="pagination">';
+                           if(jsonObj.pdto.prev){
+                            html += '<button class="page-button prev">prev</button>';
+                            }
+                           for(let i=jsonObj.pdto.startPage;i<=jsonObj.pdto.endPage;i++){
+                             html+='<button class="page-button">'+i+'</button>';
+                           }
+                            if(jsonObj.pdto.next){
+                            html += '<button class="page-button next">next</button>';
+                            }
+                            html += '</div>'
+
+                        rv.innerHTML = html;
+
+                         buttons = document.getElementsByClassName("page-button");
+                          for(let i=0;i<buttons.length;i++){
+                            buttons[i].addEventListener("click", function(){
+                             buttonNum = this.textContent;
+                              console.log(buttonNum);
+
+                                xhr.open('POST','/page/'+buttonNum+'/'+[[${param.accomNum}]],true);
+                                xhr.send("");
+
+                            });
+                        }
+               }
+           };
+
+            xhr.open('POST','/page/'+1+'/'+[[${param.accomNum}]],true);
+            xhr.send("");
+
+
+
+
+
+
+
+   };
+
 </script>
+
 </body>
 </html>
