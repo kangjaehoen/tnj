@@ -6,6 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HeaderController {
 
+   /* @GetMapping("/")
+    public String main(){
+
+        return "main";
+    }
+*/
     @GetMapping("/payment")
     public String payment(){
 

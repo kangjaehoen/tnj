@@ -26,27 +26,46 @@ public class ReplyController {
     public String reviewList(int accomNum, Model model){
         ReplyRatingVO vo = replyMapper.rating(accomNum);
         List<ReplyDTO> dto = replyMapper.listReply(accomNum);
+
         model.addAttribute("replyRate",vo);
         model.addAttribute("list",dto);
         return "replyView";
     }
 
-
-
-
     @PostMapping(value = "/page/{page}/{accomNum}",produces="application/json; charset=utf-8")
     @ResponseBody
     public ReplyPageDTO pagenation(@PathVariable int page,
                                      @PathVariable int accomNum){
+        ReplyPageDTO rpdto= new ReplyPageDTO();
+        PageDTO pdto;
+        List<ReplyDTO> dto;
+        int total = 0;
 
-        int total = replyMapper.amountReivew(accomNum);
-        PageDTO pdto = new PageDTO((page-1)*4,page*4,page,total);
-        List<ReplyDTO> dto = replyMapper.pagenation(pdto,accomNum);
+            total = replyMapper.amountReivew(accomNum);
+            pdto = new PageDTO((page-1)*4,4,page,total);
+            dto = replyMapper.pagenation(pdto,accomNum);
+            rpdto = new ReplyPageDTO(dto,pdto);
 
-
-
-
-        ReplyPageDTO rpdto = new ReplyPageDTO(dto,pdto);
         return rpdto;
     }
+
+    @PostMapping(value = "/search/{page}/{accomNum}/{searchValue}",produces="application/json; charset=utf-8")
+    @ResponseBody
+    public ReplyPageDTO searchPagenation(@PathVariable int page,
+                                   @PathVariable int accomNum,
+                                   @PathVariable(required = false) String searchValue){
+        ReplyPageDTO rpdto= new ReplyPageDTO();
+        PageDTO pdto;
+        List<ReplyDTO> dto;
+        int total = 0;
+
+            total = replyMapper.amountSearchReview(accomNum,searchValue);
+            pdto = new PageDTO((page-1)*4,4,page,total);
+            dto=replyMapper.searchList(pdto,accomNum,searchValue);
+            rpdto = new ReplyPageDTO(dto,pdto);
+
+        return rpdto;
+    }
+
+
 }

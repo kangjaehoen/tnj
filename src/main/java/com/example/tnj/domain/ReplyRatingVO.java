@@ -14,9 +14,9 @@ public class ReplyRatingVO {
     private int count3;
     private int count2;
     private int count1;
-    private int satisAvg;
-    private int accuracyAvg;
-    private int cleanAvg;
-    private int scpAvg;
+    private double satisAvg;
+    private double accuracyAvg;
+    private double cleanAvg;
+    private double scpAvg;
 
 }

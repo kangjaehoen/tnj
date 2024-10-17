@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>숙소 예약 페이지</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .guest-counter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .guest-adjustment {
+      display: flex;
+      align-items: center;
+    }
+
+    header {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 10px 20px;
+         background-color: #fff;
+         border-bottom: 1px solid #ccc;
+        }
+
+ .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+    body {
+      width: 100%;
+    }
+
+    .guest-adjustment button {
+      width: 30px;
+      height: 30px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      font-size: 18px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .guest-adjustment input {
+      width: 40px;
+      text-align: center;
+      border: none;
+      background-color: #fff;
+      margin: 0 10px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .gallery img {
+      width: 100%; /* 이미지가 그리드 칼럼에 맞춰지도록 */
+      height: auto; /* 비율 유지 */
+    }
+
+    /* Sidebar 스타일 */
+    .sidebar {
+      position: sticky; /* 스크롤 시 일부 따라오는 효과 */
+      top: 80px; /* 헤더 아래에 위치 */
+      padding: 15px; /* 패딩 */
+      background-color: #fff; /* 배경 색상 */
+      border-radius: 8px; /* 모서리 둥글게 */
+      border: 1px solid #ccc; /* 테두리 */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    }
+
+    /* Flex 레이아웃을 사용하여 가로 배치 */
+    .row.horizontal {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+    }
+
+    /* Bootstrap의 기본 container에 대한 width 재정의 */
+    .container {
+      width: 100%; /* 찜하기 버튼까지 맞추기 위해 전체 너비를 100%로 설정 */
+      max-width: 1140px; /* Bootstrap 기본 최대 너비로 제한 */
+    }
+
+    .main-content {
+      display: flex;
+      justify-content: space-between;
+      width: 100%; /* 본문과 찜하기 버튼이 모두 같은 줄에 맞춰지도록 설정 */
+    }
+
+    .main-title {
+      flex-grow: 1; /* 제목이 왼쪽으로 맞춰지며 최대 공간 사용 */
+    }
+
+    .like-button {
+      flex-shrink: 0; /* 버튼의 크기를 고정 */
+    }
+
+    #convenience {
+      display: flex; /* 가로 배치 */
+      justify-content: space-between; /* 항목 간의 간격 */
+      gap: 10px; /* 항목 간의 간격 */
+    }
+
+    #conven1, #conven2 {
+      display: flex;
+      flex-direction: column; /* 세로 배치 */
+      gap: 15px; /* 항목 간격을 넓힘 */
+    }
+
+    /* 이미지 설정 */
+    .col-md-12 img {
+      width: 100%; /* 그리드에 맞춰 이미지 너비를 설정 */
+      max-width: 100%; /* 부모 요소를 넘지 않도록 제한 */
+      height: auto; /* 세로 비율 유지 */
+    }
+
+    /* row 요소의 패딩 조정 */
+    .row {
+      margin: 0;
+    }
+
+    .container {
+      padding: 0 15px; /* 양쪽에 기본적인 패딩을 줌 */
+    }
+  </style>
+</head>
+<body>
+<div>
+  <div class="container mt-5" th:each="list : ${list}">
+    <th:block th:replace="~{fragments/header :: headerFragment}"></th:block>
+    <!--전체 감싸기-->
+    <div class="row">
+      <div class="main-content">
+        <h2 class="main-title" th:text="${list.accName}"></h2>
+        <button class="btn btn-outline-danger like-button">찜하기</button>
+      </div>
+    </div>
+
+    <!-- Main Image -->
+    <div class="row">
+      <div class="col-md-12">
+        <img src="/images/숙소1.png" alt="Main Image" class="img-fluid">
+      </div>
+    </div>
+
+    <!-- 숙소 상세정보 -->
+    <div class="row">
+      <div class="col-md-8">
+        <h1 class="sub-title">Hwacheon-myeon, Hongcheon, 한국의 집 전체</h1>
+        <p>최대 인원 <span th:text="${list.maximumOcupacy}"></span>명 ·  침실 <span th:text="${list.room}"></span>개 · 침대 <span th:text="${list.bed}"></span>개 · 욕실 <span th:text="${list.bathroom}"></span>개</p>
+        <p>★ <span th:text="${revRate}"></span>&nbsp;후기 <span th:text="${revCnt}"></span>개</p>
+        <hr>
+        <!--편의시설 안내-->
+        <div id="convenience">
+          <div id="conven1">
+            <div style="display: flex; align-items: center;">
+              <img src="/images/Convenience/한적한시골.png" style="width: 30px; height: auto;"/> &nbsp;&nbsp;한적한 시골
+            </div>
+            <div style="display: flex; align-items: center;">
+              <img src="/images/Convenience/tv.png" style="width: 30px; height: auto;"/> &nbsp;&nbsp;TV
+            </div>
+            <div style="display: flex; align-items: center;">
+              <img src="/images/Convenience/wifi.png" style="width: 30px; height: auto;"/> &nbsp;&nbsp;와이파이
+            </div>
+          </div>
+          <div id="conven2">
+            <div style="display: flex; align-items: center;">
+              <img src="/images/Convenience/주차가능.png" style="width: 30px; height: auto;"/> &nbsp;&nbsp;주차가능
+            </div>
+            <div style="display: flex; align-items: center;">
+              <img src="/images/Convenience/셀프체크인.png" style="width: 30px; height: auto;"/> &nbsp;&nbsp;셀프 체크인
+            </div>
+            <div style="display: flex; align-items: center;">
+              <img src="/images/Convenience/중앙냉방시설.png" style="width: 30px; height: auto;"/> &nbsp;&nbsp;중앙 냉방시설
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div  class="additional-info" style="display: flex; flex-direction: column;">
+          <h4>호스트:&nbsp;<span th:text="${list.id}"/></h4>
+          <span th:text="${list.informtext}"></span>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="col-md-4">
+        <div class="sidebar" id="sidebar">
+          <form th:action="@{/accDetail/reserv}" method="post" onsubmit="return validateForm()">
+            <input type="hidden" id="adultPrice" th:value="${aVO?.adultPrice?:_}"/>
+            <input type="hidden" id="kidPrice" th:value="${aVO?.kidPrice?:_}"/>
+
+            <div class="form-group">
+              <label for="checkin">체크인</label>
+              <input type="date" class="form-control" id="checkIn" name="checkin"
+                     th:required="true"/>
+            </div>
+            <div class="form-group">
+              <label for="checkout">체크아웃</label>
+              <input type="date" class="form-control" id="checkOut" name="checkout"
+                     th:required="true"/>
+            </div>
+            <div class="form-group">
+              <label class="form-control" id="guests" style="cursor:pointer;" >게스트</label>
+              <div class="guest-counter" id="guestCounterContainer" style="display: none;">
+                <div class="guest-counter">
+                  <span>성인 (13세 이상)</span>
+                  <div class="guest-adjustment">
+                    <button type="button" onclick="changeGuestCount('adult', -1)">-</button>
+                    <input type="number" id="adultCount" name="adultCnt" value="0" readonly
+                           th:required="${adultCount > 0}" />
+                    <button type="button" onclick="changeGuestCount('adult', 1)">+</button>
+                  </div>
+                </div>
+                <div class="guest-counter mt-2">
+                  <span>어린이 (2~12세)</span>
+                  <div class="guest-adjustment">
+                    <button type="button" onclick="changeGuestCount('child', -1)">-</button>
+                    <input type="number" id="childCount" name="kidCnt" value="0" readonly
+                           th:required="${childCount > 0}" />
+                    <button type="button" onclick="changeGuestCount('child', 1)">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--숙박일수랑 총금액-->
+            <input type="hidden" id="totalDays" name="totalDays" value="0">
+            <input type="hidden" id="totalPayment" name="totalPayment" value="0">
+
+            <button type="submit" class="btn btn-primary btn-block" style="background-color: #B2D055; border: none;">예약하기</button>
+          </form>
+
+          <div class="total-price mt-3">
+            <p>
+              <span th:text="${list.price}"/> x
+              <span id="totalNights">0</span>
+            </p>
+            <p>총 합계: <span id="totalPrice">0</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-container">
+        <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
+      </div>
+    </footer>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // 게스트 설정 영역 보이기/숨기기
+    document.getElementById('guests').addEventListener('click', function () {
+      const guestCounterContainer = document.getElementById('guestCounterContainer');
+      if (guestCounterContainer.style.display === 'none' || guestCounterContainer.style.display === '') {
+        guestCounterContainer.style.display = 'block';  // 클릭 시 나타나기
+      } else {
+        guestCounterContainer.style.display = 'none';   // 클릭 시 숨기기
+      }
+    });
+
+    function changeGuestCount(type, change) {
+      const adultInput = document.getElementById('adultCount');
+      const childInput = document.getElementById('childCount');
+
+      if (type === 'adult') {
+        let newCount = Math.max(0, parseInt(adultInput.value) + change);
+        adultInput.value = newCount;
+      } else if (type === 'child') {
+        let newCount = Math.max(0, parseInt(childInput.value) + change);
+        childInput.value = newCount;
+      }
+
+      // 인원 수가 변경되면 가격 업데이트
+      const days = parseInt(document.getElementById("totalNights").innerText) || 0;
+      if (days > 0) {
+        updatePrice(days);
+      }
+
+    }
+/*
+    //스크롤 움직이는 애니메이션 효과
+    var sidebar = document.getElementById("sidebar");
+    var targetY = 0; // 목표 Y 위치
+    var currentY = 0; // 현재 Y 위치
+    var scrollSpeed = 5; // 스크롤 속도 (조절 가능)
+    var bottomLimit = 20; // 내려갈 최대 Y 위치 (조절 가능)
+    var spacing = -1; // 사이 여백
+
+    window.addEventListener("scroll", function () {
+      targetY = Math.min(bottomLimit, Math.max(0, window.pageYOffset || document.documentElement.scrollTop));
+      // main_blank3.style.top = targetY + "px";
+      // applybox.style.top = (targetY + main_blank3.offsetHeight + spacing) + "px";
+    });
+
+    function animate() {
+      currentY += (targetY - currentY) / scrollSpeed;
+      // applybox.style.top = (currentY + main_blank3.offsetHeight + spacing) + "px";
+      sidebar.style.top = currentY + "px";
+
+      if (Math.abs(targetY - currentY) > 0.1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    animate();*/
+
+    //숙박일수 및 총 금액 계산
+
+      document.getElementById('checkOut').addEventListener('change', calculateDays);
+      document.getElementById('checkIn').addEventListener('change', calculateDays);
+
+      function calculateDays() {
+        var checkIn = document.getElementById("checkIn").value;
+        var checkOut = document.getElementById("checkOut").value;
+
+        if (checkIn && checkOut) {
+          var date1 = new Date(checkIn);
+          var date2 = new Date(checkOut);
+
+          // 날짜 차이를 밀리초로 계산
+          var timeDifference = date2.getTime() - date1.getTime(); // 체크아웃에서 체크인 빼기
+          var daysDifference = Math.abs(timeDifference / (1000 * 60 * 60 * 24)); // 밀리초를 일수로 변환
+
+          if (daysDifference <= 0) {
+            document.getElementById("totalNights").innerText = "체크 아웃 날짜를 확인해주세요.";
+            document.getElementById("totalPrice").innerText = "₩ 0";
+          } else {
+            document.getElementById("totalNights").innerText = daysDifference + "박";
+            // updatePrice 함수 호출 시 daysDifference 전달
+            updatePrice(daysDifference);
+          }
+        }
+      }
+
+      // 총 가격 구하기
+      function updatePrice(days) {
+        var priceOneAdult = parseFloat(document.getElementById("adultPrice").value) || 0; // 기본값 0 설정
+        var priceOneKid = parseFloat(document.getElementById("kidPrice").value) || 0; // 기본값 0 설정
+        const adultCnt = parseInt(document.getElementById('adultCount').value) || 0; // 기본값 0 설정
+        const kidCnt = parseInt(document.getElementById('childCount').value) || 0; // 기본값 0 설정
+
+        // 총 가격 계산
+        var totalPrice = (priceOneAdult * adultCnt + priceOneKid * kidCnt) * days;
+
+        // 가격을 출력
+        document.getElementById("totalPrice").innerText = totalPrice.toLocaleString() + " 원"; // 한국 원화 표시
+
+        // 히든필드 값 업데이트
+        document.getElementById("totalPayment").value = totalPrice;
+        document.getElementById("totalDays").value = days;
+
+        return totalPrice; // 가격을 반환
+      }
+
+
+
+    //날짜선택-유효성검증
+    function validateForm() {
+      var checkIn = document.getElementById("checkIn").value;
+      var checkOut = document.getElementById("checkOut").value;
+      var adultCnt = parseInt(document.getElementById('adultCount').value) || 0;
+      var childCnt = parseInt(document.getElementById('childCount').value) || 0;
+
+      if (!checkIn || !checkOut) {
+        alert("체크인과 체크아웃 날짜를 선택해주세요.");
+        return false;
+      }
+
+      var date1 = new Date(checkIn);
+      var date2 = new Date(checkOut);
+
+      if (date2.getTime() <= date1.getTime()) {
+        alert("체크아웃 날짜는 체크인 날짜 이후여야 합니다.");
+        return false; // 폼 제출 방지
+      }
+
+      if (adultCnt === 0 && childCnt === 0) {
+        alert("성인 또는 어린이 인원을 최소 1명 이상 선택해주세요.");
+        return false;
+      }
+
+      return true;
+    }
+
+  </script>
+</div>
+</body>
+</html>

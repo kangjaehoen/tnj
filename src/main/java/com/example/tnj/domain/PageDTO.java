@@ -28,8 +28,8 @@ public class PageDTO {
         this.total=total;
 
 
-        this.endPage = (int) ((Math.ceil(this.currentPage/4.0))*4.0);
-        this.startPage = this.endPage - 3;
+        this.endPage = (int) ((Math.ceil(this.currentPage/5.0))*5.0);
+        this.startPage = this.endPage - 4;
 
 
 
