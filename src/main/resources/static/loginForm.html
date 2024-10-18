@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <style>
+        @font-face {
+        font-family: 'Pretendard-Regular';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+        font-weight: 400;
+        font-style: normal;
+    }
+    *{
+        font-family: 'Pretendard-Regular';
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f5f5;
+    }
+
+    form {
+        padding-left: 60px;
+        padding-right: 60px;
+        padding-bottom: 70px;
+        background-color: white;
+        border-radius: 15px;
+        padding-top: 30px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        text-underline-position: below;
+        /* text-shadow: #B2D055 3px 3px, #B2D055 3px 3px; */
+        font-weight: bolder;
+        padding-top: 25px;
+    }
+
+    div:nth-of-type(1) {
+        width: 360px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 18px;
+
+    }
+    .register{
+        text-align: center;
+    }
+
+    .form-check label {
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+    .form-check input {
+        margin-right: 10px;
+    }
+
+    .form-signin input[type="text"] {
+        margin-bottom: -1px;
+        border: none;
+        outline: none;
+        background: none;
+        padding: 10px;
+        font-size: 16px;
+        width: 94.5%;
+        margin-top: 11px;
+    }
+
+    .form-signin input[type="password"] {
+        margin-bottom: -1px;
+        border: none;
+        outline: none;
+        background: none;
+        padding: 10px;
+        font-size: 16px;
+        width: 180px;
+    }
+    .form-check label {
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+    .form-check input {
+        margin-right: 10px;
+    }
+
+    .form-floating input[name="id"]{
+        border-bottom: 1px solid #ccc;
+    }
+    .btn-bd-primary{
+        text-align: center;
+        width: 100%;
+        height: 40px;
+        background-color: #B2D055;
+        border: none;
+        border-radius:10px;
+        margin-top: 40px;
+    }
+    .btn-bd-primary:hover{
+        box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
+    }
+    .find{
+        text-align: right;
+        margin-top: 10px;
+    }
+    .findLink{
+        color: #B2D055;
+        float: right;
+        cursor: pointer;
+    }
+    .findLink2{
+        color: #B2D055;
+        cursor: pointer;
+    }
+    .findLink:hover{
+        color: #a0c04a;
+    }
+    .findLink2:hover{
+        color: #a0c04a;
+    }
+
+    .form-floating{
+        height:100px;
+    }
+    </style>
+</head>
+<body>
+<main class="form-signin w-100 m-auto">
+    <form action="/logIn" method="Post">
+        <h1 class="h3 mb-3 fw-normal">My 여행 업고 튀어</h1><br>
+        <span id = "alertMsg" style="display:none;" ></span>
+        로그인<br>
+        <div class="form-floating">
+            <label><input type="text" name="id" placeholder="아이디" required></label>
+            <label><input type="password" name="pw" placeholder="비밀번호" required></label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="remember-me"
+                   id="flexCheckDefault"> <label class="form-check-label"
+                                                 for="flexCheckDefault"> 계정 기억하기 </label>
+            <a href = "/moveID" class="findLink">아이디 및 비밀번호 찾기</a>
+        </div>
+        <br><br> &nbsp;
+       <button class="btn-bd-primary" type="submit">
+<!--        onclick="login_proc(); event.preventDefault();">-->
+        계속</button>
+        <br><br><br>
+        <div class="register">
+            계정이 없으신가요?<br>
+            <span class = "findLink2" onclick="location.href='/register' ">
+                <!--name="register" type="submit" -->
+                회원가입 하기
+            </span>
+        </div>
+    </form>
+</main>
+<script>
+    function getParams() {
+        const params = {};
+        const queryString = window.location.search.substring(1);
+        const queryArray = queryString.split("&");
+        queryArray.forEach(param => {
+        const [ key, value ] = param.split("=");
+        params[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return params;
+    }
+    const alertMsg = document.getElementById('alertMsg');
+    const params = getParams();
+    if (params.registered === 'true') {
+        alertMsg.innerHTML = '회원가입이 완료되었습니다. 로그인 해주세요!';
+        alertMsg.style.display = 'block';
+    }
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        alert('회원가입이 완료되었습니다. 로그인 해주세요!');-->
+<!--        });-->
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const id = document.querySelector("[name='id']").value;
+        const pw = document.querySelector("[name='pw']").value;
+
+        if (!id || !pw) {
+            alert("아이디와 비밀번호를 입력하세요.");
+            return;
+        }
+
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            const resultDom = JSON.parse(xhr.responseText);
+            if (resultDom.result === "ok") {
+                window.location.href = "/main";
+            } else {
+                alert("비밀번호 및 아이디가 틀렸습니다.");
+            }
+        };
+        xhr.open("POST", "/logIn", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        const params = `id=${encodeURIComponent(id)}&pw=${encodeURIComponent(pw)}`;
+        xhr.send(params);
+    });
+
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("password");
+        const type = passwordInput.type === "password" ? "text" : "password";
+        passwordInput.type = type;
+    }
+</script>
+</body>
+</html>
