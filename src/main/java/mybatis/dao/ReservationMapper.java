@@ -43,8 +43,15 @@ public interface ReservationMapper {
     public AccVO accInfo(@Param("accomNum") int accomNum);
 
     //예약 insert
-    @Insert("insert into reservation values(#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
+    @Insert("insert into reservation values(#{chkin_Date}, now(), #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
     public List<ResVO> insertRes(@Param("accomNum") ReservationDTO accomNum);
+
+    @Select(" SELECT  resNum, resDate,  chkin_Date, chkout_Date, " +
+            "        adultCnt, kidCnt, id,  accomNum" +
+            " FROM reservation " +
+            " WHERE id=#{id} ")
+    public ResVO resInfo(String id);
+
 
 
 }

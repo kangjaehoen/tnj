@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<link rel="stylesheet" th:href="@{/css/headerStyle.css}">
 <style>
 
     body {
@@ -244,87 +245,103 @@
 </div>
 <script>
 
-    window.onload = function(){
+    let id = "[[${session.id}]]";
+     window.onload = function(){
 
-        let imgBtn = document.getElementsByClassName("wishlist-btn");
+         let imgBtn = document.getElementsByClassName("wishlist-btn");
 
-        let clickAccomNum;
-        let checkStatus;
-        let xhrList = new XMLHttpRequest();
-        xhrList.onload = function() {
-            if(xhrList.status == 200){
-                let obj = xhrList.responseText;
-                let jsonObj = JSON.parse(obj);
+         let clickAccomNum;
+         let checkStatus;
+         let xhrList = new XMLHttpRequest();
+         xhrList.onload = function() {
+             if(xhrList.status == 200){
+                 let obj = xhrList.responseText;
+                 let jsonObj = JSON.parse(obj);
 
-             for (let i = 0; i < imgBtn.length; i++) {
-                    let accomNum = imgBtn[i].querySelector('.accomNum').value;
-                    let isWished = jsonObj.some(item => item.accomNum == accomNum);
+              for (let i = 0; i < imgBtn.length; i++) {
+                     let accomNum = imgBtn[i].querySelector('.accomNum').value;
+                     let isWished = jsonObj.some(item => item.accomNum == accomNum);
 
 
-                    if (isWished) {
-                        imgBtn[i].querySelector('img').src = "../images/FullLove.png"; // 이미 위시리스트에 있는 아이템
+                     if (isWished) {
+                         imgBtn[i].querySelector('img').src = "../images/FullLove.png"; // 이미 위시리스트에 있는 아이템
+                     }
+                 }
+             }
+         }
+         xhrList.open('GET','/wishCheck/'+id,true);
+         xhrList.send();
+
+
+
+
+         for(let i = 0; i<imgBtn.length;i++){
+             imgBtn[i].onclick = function(e){
+                  e.stopPropagation();
+
+                   if (!id || id === "null") {
+                    if(confirm("로그인이 필요합니다. 로그인 하시겠습니까?")){
+                    window.location.href = "/loginForm.html";
+                    return;
+                    }else{
+                        return;
                     }
                 }
-            }
-        }
-        xhrList.open('GET','/wishCheck',true);
-        xhrList.send();
+
+
+                  clickAccomNum = imgBtn[i].querySelector('.accomNum').value;
+
+                  let xhrCheck = new XMLHttpRequest();
+                  xhrCheck.open('GET', `/checkWish/${clickAccomNum}`, true);
+                  xhrCheck.onload = function() {
+
+                  if (xhrCheck.status == 200) {
+                      const isWished = JSON.parse(xhrCheck.responseText);
+                      let xhr = new XMLHttpRequest();
+                      if (isWished) {
+                          xhr.open('GET',`/delete/${clickAccomNum}`,true);
+                          xhr.send();
+                        imgBtn[i].querySelector('img').src = "../images/EmptyLove.png";
+
+                     } else {
+                             let data ={
+                                 id : id,
+                                 accomNum : clickAccomNum,
+                                 checkStatus : 1
+                            };
+
+                                    xhr.open('POST','/wish',true);
+                                    xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+                                    xhr.send(JSON.stringify(data));
+
+                                     imgBtn[i].querySelector('img').src = "../images/FullLove.png";
+
+
+                         }
+                     }
+                   };
+                 xhrCheck.send();
+             }; // onclick
+
+
+         } // for
 
 
 
+        let postList =  document.getElementsByClassName("galler-gridList");
 
-        for(let i = 0; i<imgBtn.length;i++){
-            imgBtn[i].onclick = function(e){
-                 clickAccomNum = imgBtn[i].querySelector('.accomNum').value;
-                 e.stopPropagation();
-                 let xhrCheck = new XMLHttpRequest();
-                 xhrCheck.open('GET', `/checkWish/${clickAccomNum}`, true);
-                 xhrCheck.onload = function() {
-
-                 if (xhrCheck.status == 200) {
-                     const isWished = JSON.parse(xhrCheck.responseText);
-                     let xhr = new XMLHttpRequest();
-                     if (isWished) {
-                         xhr.open('GET',`/delete/${clickAccomNum}`,true);
-                         xhr.send();
-                       imgBtn[i].querySelector('img').src = "../images/EmptyLove.png";
-
-                    } else {
-
-                        let data ={
-                            id : 'testID',
-                            accomNum : clickAccomNum,
-                            checkStatus : 1
-                       };
-
-                       xhr.open('POST','/wish',true);
-                       xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
-                       xhr.send(JSON.stringify(data));
-
-                        imgBtn[i].querySelector('img').src = "../images/FullLove.png";
-
-                        }
-                    }
-                  };
-                xhrCheck.send();
-            }; // onclick
-        } // for
+         for(let i=0;i<postList.length;i++){
+                postList[i].onclick = function(){
+                  let postNum = postList[i].querySelector('.accomNumName').value;
+                     window.location.href="/accDetail?accomNum="+postNum;
+                }
+         }
 
 
 
-       let postList =  document.getElementsByClassName("galler-gridList");
+     } // window
 
-        for(let i=0;i<postList.length;i++){
-               postList[i].onclick = function(){
-                 let postNum = postList[i].querySelector('.accomNumName').value;
-                    window.location.href="/accDetail?accomNum="+postNum;
-               }
-        }
-
-
-
-    } // window
 </script>
+<script th:src="@{/js/header.js}"></script>
 </body>
-
 </html>

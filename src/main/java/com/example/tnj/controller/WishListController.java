@@ -12,9 +12,9 @@ public class WishListController {
     @Autowired
     private WishListMapper wishListMapper;
 
-    @GetMapping(value = "/wishCheck", produces = "application/json; charset=utf-8")
-    public List<WishListDTO> wishCheck(){
-        List<WishListDTO> list = wishListMapper.checkWish();
+    @GetMapping(value = "/wishCheck/{id}", produces = "application/json; charset=utf-8")
+    public List<WishListDTO> wishCheck(@PathVariable String id){
+        List<WishListDTO> list = wishListMapper.checkWish(id);
     return list;
     };
 
