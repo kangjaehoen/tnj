@@ -75,21 +75,28 @@ h4{
 .btn-confirm:hover{
     box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
 }
-.btn-dark{
+.btn-dark {
     text-align: center;
-    width: 43%;
-    height: 40px;
+    width: 80%;
+    margin-left: 52px;
+    height: 45px;
     background-color: #333;
     color: white;
     border: none;
-    border-radius:10px;
-    margin-left:-3px;
-    margin-bottom: 25px;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 30px;
 }
-.btn-dark:hover{
+
+.btn-dark:hover {
     background-color: black;
-    box-shadow: 2px 2px gray, -2px 2px darkgray;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
 }
+
 .btn-light{
     text-align: center;
     width: 43%;
@@ -167,7 +174,7 @@ input[type="email"]{
     border-radius: 1px;
     padding: 10px;
     margin-left: 24px;
-    width: 51.5%;
+    width: 78%;
     margin-right: 4.5px;border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
@@ -177,42 +184,64 @@ input[type="email"]{
 <body>
 
 <main class="form-signin w-100 m-auto">
-    <form action="/findId" method="POST">
+    <form action="/findId" id = "findIdForm" method="POST">
         <h1 class="h3 mb-3 fw-normal">아이디 찾기</h1><br>
         <a href="/moveID" class="btn btn-bd-primary">아이디</a>
         <a href="/movePW" class="btn btn-primary">비밀번호</a>
         <div class="form-floating">
-            <h4>등록된 이메일로 찾기</h4>
-            가입 당시 입력한 이메일을 통해 인증 후 새 비밀번호를 등록해주세요.<br>
+            <h4>등록된 개인정보로 찾기</h4>
+            가입 당시 입력한 개인정보로 인증 후 아이디를 확인하세요.<br>
             <label>이름<input type="text" name="name" placeholder="(필수)"></label><br>
             <label>생년월일 <input type="date" name="birth" placeholder="YY/MM/DD"></label><br>
             <label>이메일 <input type="email" name="email" placeholder="example@email.com"></label>
-            <button class="btn-confirm" type="button" name="codeSend">인증번호 전송</button>
             <br>
-            <label><input type="number" name="codeEnter" placeholder="인증번호 입력"></label>
-            <button class="btn-confirm" type="submit" name="confirm">확인</button>
-            <br><br><br>
-            <button class="btn-light" type="button" name="resend">재전송</button>
-            <button class="btn-dark" type="submit">아이디 찾기</button>
-        </div>
+            <span id = notAvailableAlert></span></div>
+            <br>
+            <button class="btn-dark" type="submit">확인</button>
+
     </form>
 </main>
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    document.getElementById('findIdForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const nAA = document.getElementById('notAvailableAlert');
+    const name = document.querySelector('[name="name"]').value;
+    const birth = document.querySelector('[name="birth"]').value;
+    const email = document.querySelector('[name="email"]').value;
+
+        if (!document.getElementById('findIdForm').checkValidity()) {
+            nAA.innerHTML = '필요한 정보들을 넣어주세요.';
+            nAA.style.color = '#ff0000';
+            nAA.style.display = 'block';
+            return;
+        }
+
+    const params = new URLSearchParams({
+            name: name,
+            birth: birth,
+            email: email
+        }).toString();
+
+    let xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status === 200) {
-            alert(xhr.responseText);
+        const response = JSON.parse(xhr.responseText);
+        if (response && response.id){
+            window.location.href=`/showId?name=${encodeURIComponent(name)}&id=${encodeURIComponent(response.id)}`;
         } else {
             alert('아이디를 찾을 수 없습니다.');
         }
-    };
-    xhr.open('POST', '/findId', true);
-     const params = new URLSearchParams(formData).toString();
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send(params);
+        }else{
+        alert('서버 오류 발생');
+        }
+   };
 
-        event.preventDefault();
+    xhr.open('POST', '/findId', true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(params);
     });
+
 </script>
 </body>
 </html>

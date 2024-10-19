@@ -1,6 +1,7 @@
 package com.example.tnj.controller;
 
 import com.example.tnj.domain.UserDTO;
+import jakarta.servlet.http.HttpSession;
 import mybatis.dao.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+@SessionAttributes("user")
 public class UserController {
     @Autowired
     private UserMapper userMapper;
@@ -21,31 +24,37 @@ public class UserController {
     @PostMapping("/register")
     public String register(@ModelAttribute UserDTO user) {
         if (userMapper.registerUser(user) > 0) {
-            return "";
+            return "redirect:/loginForm.html?registered=true";
         }
-        return "회원가입에 실패하셨습니다";
+        return "redirect:/registerForm.html";
     }
 
-    @PostMapping("/logIn")
-    public ResponseEntity<Map<String, String>> login(@RequestParam String id, @RequestParam String pw) {
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(HttpSession session, @RequestParam String id, @RequestParam String pw) {
         UserDTO user = userMapper.loginUser(id, pw);
         Map<String, String> response = new HashMap<>();
         if (user != null && user.getPw().equals(pw)) {
-            response.put("result", "성공~");
+            session.setAttribute("user", user);
+            response.put("result", "success");
             return ResponseEntity.ok(response);
         }
-        response.put("result", "ㅇㄴ");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        response.put("result", "fail");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-//    @RequestMapping("/moveID")
-//    public String mfindId() {
-//        return "idFind";
-//    }
+    @RequestMapping("/moveID")
+    public String mfindId() {
+        return "idFind";
+    }
 
     @RequestMapping("/moveRegister")
     public String mRegister() {
         return "registerForm";
+    }
+
+    @RequestMapping("/moveLogin")
+    public String mLogin() {
+        return "loginForm";
     }
 
     @RequestMapping("/movePW")
@@ -74,24 +83,24 @@ public String checkEmail(@RequestParam String email) {
     }
 }
 
-// Find ID
 @PostMapping("/findId")
-public ResponseEntity<String> findId(@RequestParam String name, @RequestParam String email) {
-    String id = userMapper.findId(name, email);
+public ResponseEntity<Map<String, String>> findId(@RequestParam String name, @RequestParam String birth, @RequestParam String email) {
+    String id = userMapper.findId(name, birth, email);
+    Map<String, String> response = new HashMap<>();
     if (id != null) {
-        return ResponseEntity.ok("당신의 아이디는 " + id + "입니다.");
+        response.put("name", name);
+        response.put("id", id);
+        return ResponseEntity.ok(response);
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
+    response.put("error", "아이디를 찾을 수 없습니다.");
+    return ResponseEntity.status(HttpStatus.OK).body(response);
 }
 
-// Find Password
-@PostMapping("/findPw")
-public ResponseEntity<String> findPassword(@RequestParam String id, @RequestParam String email) {
-    String pw = userMapper.findPassword(id, email);
-    if (pw != null) {
-        return ResponseEntity.ok("비밀번호는 : " + pw + "입니다.");
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
+@GetMapping("/showId")
+public String showId(Model model, @RequestParam String id, @RequestParam String name){
+        model.addAttribute("name", name);
+        model.addAttribute("id", id);
+        return "idShow";
 }
 
 @PostMapping("/changePassword")
