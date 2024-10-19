@@ -1,7 +1,9 @@
 package mybatis.dao;
 
 import com.example.tnj.domain.AccVO;
+import com.example.tnj.domain.CategoryVO;
 import com.example.tnj.domain.PayVO;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
