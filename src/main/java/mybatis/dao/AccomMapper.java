@@ -2,13 +2,11 @@ package mybatis.dao;
 
 import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.PayVO;
-import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface AccomMapper {
-    //리스트불러오기
     @Select("select * from accom where id = #{id}")
     public List<AccVO> listmine(String id);
     //리스트불러오기:조건
@@ -36,4 +34,50 @@ public interface AccomMapper {
     //판매변경
     @Update("update accom set onSale =#{onSale} where accomNum =#{accomNum}")
     public int saleupdate(@Param("accomNum") int accomNum,@Param("onSale") int onSale);
+
+    @Select(" SELECT a.accomNum, a.id, a.accName, a.postcode, a.address, " +
+            "        a.detailAddress, a.accCall, a.adultPrice, a.kidPrice, " +
+            "        a.dayoff, a.category, a.accType, a.onSale , " +
+            "        a.accomRule, a.occ, a.maxOcc, FORMAT(a.price,0) as price, " +
+            "        a.informtext, a.chkin_Time, a.chkout_Time, a.room, " +
+            "        a.bed, a.bathroom, round(avg(r.satisfy),1) as satisAvg " +
+            " FROM accom a " +
+            " LEFT JOIN review r " +
+            " ON  a.accomNum = r.accomNum" +
+            " WHERE category = #{category} " +
+            " GROUP BY a.accomNum ")
+    public List<CategoryVO> categoryAccomList(String category);
+
+
+    @Select(" SELECT a.accomNum, a.id, a.accName, a.postcode, a.address, " +
+            "        a.detailAddress, a.accCall, a.adultPrice, a.kidPrice, " +
+            "        a.dayoff, a.category, a.accType,  a.onSale , " +
+            "        a.accomRule, a.occ, a.maxOcc, FORMAT(a.price,0) as price, " +
+            "        a.informtext, a.chkin_Time, a.chkout_Time, a.room, " +
+            "        a.bed, a.bathroom, round(avg(r.satisfy),1) as satisAvg " +
+            " FROM accom a " +
+            " LEFT JOIN review r " +
+            " ON  a.accomNum = r.accomNum" +
+            " WHERE a.accType = #{accType} " +
+            " GROUP BY a.accomNum ")
+    public List<CategoryVO> accTypeAccomList(String accType);
+
+    @Select(" SELECT a.accomNum, a.id, a.accName, a.postcode, a.address, " +
+            "        a.detailAddress, a.accCall, a.adultPrice, a.kidPrice, " +
+            "        a.dayoff, a.category, a.accType, a.onSale , " +
+            "        a.accomRule, a.occ, a.maxOcc, FORMAT(a.price,0) as price, " +
+            "        a.informtext, a.chkin_Time, a.chkout_Time, a.room, " +
+            "        a.bed, a.bathroom, round(avg(r.satisfy),1) as satisAvg " +
+            " FROM accom a " +
+            " LEFT JOIN review r " +
+            " ON a.accomNum = r.accomNum " +
+            " WHERE (a.accName LIKE CONCAT('%', #{search}, '%') " +
+            " OR a.address LIKE CONCAT('%', #{search}, '%') " +
+            " OR a.accType LIKE CONCAT('%', #{search}, '%') " +
+            " OR a.category LIKE CONCAT('%', #{search}, '%')) " +
+            " GROUP BY a.accomNum ")
+    public List<CategoryVO> searchAccomList(String search);
+
 }
+
+
