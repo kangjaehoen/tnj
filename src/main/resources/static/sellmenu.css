@@ -1,0 +1,32 @@
+    .selnav{
+        min-width : 200px;
+    }
+    .selmenu{
+    position: fixed;
+    top: 25%;
+    width: 180px;
+    height: 200px;
+    padding : 10px;
+    background-color : #B2D055;
+    font-size : 14px;
+    line-height : 30px;
+    border-radius : 10px;
+    list-style : none;
+    }
+@media ( max-width : 1150px) {
+	.selnav {
+		display: none;
+	}
+}
+.selnav label{
+    display : block;
+    width : 100%;
+}
+
+.selnav form:hover {
+	background-color: #8dbf3d;
+}
+
+.selnav label {
+	padding-left: 30px;
+}
