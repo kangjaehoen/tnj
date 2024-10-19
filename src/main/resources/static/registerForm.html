@@ -221,125 +221,125 @@
     </form>
 </main>
 <script type="text/javascript">
-    function submitPage(event){
-<!--            const form = document.getElementById('form');-->
-<!--            const errorMsg = document.getElementById('submitError');-->
-<!--            errorMsg.style.display = 'none';-->
+    function submitPage(event) {
+	const form = document.getElementById('form');
+	const errorMsg = document.getElementById('submitError');
+	errorMsg.style.display = 'none';
 
-<!--            if (!form.checkValidity()) {-->
-<!--                errorMsg.innerHTML = '모든 항목을 입력해주세요.';-->
-<!--                errorMsg.style.color = '#ff0000';-->
-<!--                errorMsg.style.display = 'block';-->
-<!--                event.preventDefault();-->
-<!--                return;-->
-<!--            }-->
-<!--            form.submit();-->
-            window.location.href = '/loginForm.html?registered=true';
-    }
+	if (!form.checkValidity()) {
+		errorMsg.innerHTML = '모든 항목을 입력해주세요.';
+		errorMsg.style.color = '#ff0000';
+		errorMsg.style.display = 'block';
+		event.preventDefault();
+		return;
+	}
+	form.submit();
+	window.location.href = '/loginForm.html?registered=true';
+}
 
-<!--        document.querySelector('input[name="id"]').addEventListener('keypress', function(event) {-->
-<!--        if (event.key === 'Enter') {-->
-<!--            event.preventDefault();-->
-<!--            checkId();-->
-<!--        }-->
-<!--    });-->
+document.querySelector('input[name="id"]').addEventListener('keypress', function(event) {
+	if (event.key === 'Enter') {
+		event.preventDefault();
+		checkId();
+	}
+});
 
-<!--    document.querySelector('input[name="email"]').addEventListener('keypress', function(event) {-->
-<!--        if (event.key === 'Enter') {-->
-<!--            event.preventDefault();-->
-<!--            checkEmail();-->
-<!--        }-->
-<!--    });-->
-<!--        function validateEmail(){-->
-<!--            var form = document.getElementById('form');-->
-<!--            var email = document.getElementById('email').value;-->
-<!--            var text = document.getElementById('text');-->
-<!--            var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;-->
-<!--            if (!email.match(pattern)){-->
-<!--                text.innerHTML = '유효한 이메일 주소를 입력해주세요.';-->
-<!--                text.style.color = '#ff0000';-->
-<!--                text.style.display = 'block';-->
-<!--            } else {-->
-<!--                text.style.display = 'none';-->
-<!--            }-->
-<!--        }-->
-<!--        const today = new Date().toISOString().split('T')[0];-->
-<!--        document.getElementById('birth').setAttribute('min', '1900-01-01');-->
-<!--        document.getElementById('birth').setAttribute('max', today);-->
+document.querySelector('input[name="email"]').addEventListener('keypress', function(event) {
+	if (event.key === 'Enter') {
+		event.preventDefault();
+		checkEmail();
+	}
+});
+function validateEmail() {
+	var form = document.getElementById('form');
+	var email = document.getElementById('email').value;
+	var text = document.getElementById('text');
+	var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+	if (!email.match(pattern)) {
+		text.innerHTML = '유효한 이메일 주소를 입력해주세요.';
+		text.style.color = '#ff0000';
+		text.style.display = 'block';
+	} else {
+		text.style.display = 'none';
+	}
+}
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('birth').setAttribute('min', '1900-01-01');
+document.getElementById('birth').setAttribute('max', today);
 
-<!--        function checkId(){-->
-<!--            const id = document.querySelector('input[name="id"]').value;-->
-<!--            const message = document.getElementById('text1');-->
-<!--            const idPattern = /^[a-zA-Z0-9]+$/;-->
+function checkId() {
+	const id = document.querySelector('input[name="id"]').value;
+	const message = document.getElementById('text1');
+	const idPattern = /^[a-zA-Z0-9]+$/;
 
-<!--                if (id.trim()===""){-->
-<!--                    message.innerHTML = '입력이 필요합니다.';-->
-<!--                    message.style.color = '#ff0000';-->
-<!--                    message.style.display = 'block';-->
-<!--                    return;-->
-<!--                }-->
-<!--                if (!id.match(idPattern)){-->
-<!--                message.innerHTML = '영문과 숫자 조합만 가능합니다.';-->
-<!--                message.style.color = '#ff0000';-->
-<!--                message.style.display = 'block';-->
-<!--                return;-->
-<!--            }-->
+	if (id.trim() === "") {
+		message.innerHTML = '입력이 필요합니다.';
+		message.style.color = '#ff0000';
+		message.style.display = 'block';
+		return;
+	}
+	if (!id.match(idPattern)) {
+		message.innerHTML = '영문과 숫자 조합만 가능합니다.';
+		message.style.color = '#ff0000';
+		message.style.display = 'block';
+		return;
+	}
 
-<!--        fetch(`/checkId?id=${id}`)-->
-<!--            .then(response => response.json())-->
-<!--            .then(data => {-->
-<!--                message.style.display = 'block';-->
-<!--                if (!data.available) {-->
-<!--                    message.innerHTML = '아이디가 중복됩니다.';-->
-<!--                    message.style.color = '#ff0000';-->
-<!--                    } else {-->
-<!--                    message.innerHTML = '사용 가능한 아이디입니다.';-->
-<!--                    message.style.color = '#B2D055';-->
-<!--                    }-->
-<!--                })-->
-<!--            .catch(error => console.error('Error:', error));-->
-<!--        }-->
-<!--         function checkEmail(){-->
-<!--        const email = document.querySelector('input[name="email"]').value;-->
-<!--        const message = document.getElementById('text');-->
-<!--        var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;-->
+	fetch(`/checkId?id=${id}`)
+		.then(response => response.json())
+		.then(data => {
+			message.style.display = 'block';
+			if (!data.available) {
+				message.innerHTML = '아이디가 중복됩니다.';
+				message.style.color = '#ff0000';
+			} else {
+				message.innerHTML = '사용 가능한 아이디입니다.';
+				message.style.color = '#B2D055';
+			}
+		})
+		.catch(error => console.error('Error:', error));
+}
+function checkEmail() {
+	const email = document.querySelector('input[name="email"]').value;
+	const message = document.getElementById('text');
+	var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 
-<!--        if (!email.match(pattern)){-->
-<!--         message.innerHTML = '입력이 필요합니다.';-->
-<!--         return;-->
-<!--         }-->
-<!--        fetch(`/checkEmail?email=${email}`)-->
-<!--            .then(response => response.text())-->
-<!--            .then(data => {-->
-<!--                message.style.display = 'block';-->
-<!--                if (data.includes('중복')) {-->
-<!--                    message.innerHTML = '이메일이 중복됩니다.';-->
-<!--                    message.style.color = '#ff0000';-->
-<!--                    } else {-->
-<!--                        message.innerHTML = '사용 가능한 이메일입니다.';-->
-<!--                        message.style.color = '#B2D055';-->
-<!--                    }-->
-<!--                })-->
-<!--            .catch(error => console.error('Error:', error));-->
-<!--        }-->
-<!--        function validatePw(){-->
-<!--            const passwordInput = document.getElementById('pw');-->
-<!--            const message = document.getElementById('text2');-->
-<!--            const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;-->
+	if (!email.match(pattern)) {
+		message.innerHTML = '입력이 필요합니다.';
+		return;
+	}
+	fetch(`/checkEmail?email=${email}`)
+		.then(response => response.text())
+		.then(data => {
+			message.style.display = 'block';
+			if (data.includes('중복')) {
+				message.innerHTML = '이메일이 중복됩니다.';
+				message.style.color = '#ff0000';
+			} else {
+				message.innerHTML = '사용 가능한 이메일입니다.';
+				message.style.color = '#B2D055';
+			}
+		})
+		.catch(error => console.error('Error:', error));
+}
+function validatePw() {
+	const passwordInput = document.getElementById('pw');
+	const message = document.getElementById('text2');
+	const pwPattern = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
 
-<!--            passwordInput.addEventListener('input', function(event) {-->
-<!--                const password = passwordInput.value;-->
+	passwordInput.addEventListener('input', function(event) {
+		const password = passwordInput.value;
 
-<!--                if (!password.match(pwPattern)) {-->
-<!--                    message.style.display = 'block';-->
-<!--                    message.innerHTML = '비밀번호는 8-20자 이내의 영문, 숫자, 혹은 특수문자를 포함해야 합니다.';-->
-<!--                    message.style.color = '#ff0000';-->
-<!--                } else {-->
-<!--                    message.style.display = 'none';-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-<!--        validatePw();-->
+		if (!password.match(pwPattern)) {
+			message.style.display = 'block';
+			message.innerHTML = '비밀번호는 8-20자 이내의 영문, 숫자, 혹은 특수문자를 포함해야 합니다.';
+			message.style.color = '#ff0000';
+		} else {
+			message.style.display = 'none';
+		}
+	});
+}
+validatePw();
 </script>
 </body>
 </html>
