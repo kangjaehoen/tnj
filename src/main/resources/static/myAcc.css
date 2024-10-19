@@ -32,6 +32,18 @@
             white-space : wrap;
             word-break : keep-all;
         }
+        .toolbtn{
+            background-color: #B2D055;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin : 0;
+        }
+        .toolbtn:hover{
+            background-color: #8dbf3d;
+        }
+
         /*검색바*/
         .search-bar {
         	display: flex;

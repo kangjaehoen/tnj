@@ -11,10 +11,9 @@
 <th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
 <section class="mainsection">
     <h1>
+        <form class="search-bar" action="/searchmine" method="post" style="display : inline-block"><input type="text" name="key" placeholder="상품 검색"/><button type="submit"><img id="searchButton" src="../images/search-button.png"></button></form>
         <button onclick="saleNotsale()" class="toolbtn">판매변경</button>
         <button onclick="deletelist()" class="toolbtn">삭제</button>
-        <form action="/searchmine" method="post" style="display : inline-block"><input type="text" name="key" placeholder="상품 검색"><input type="submit" style="hidden"></form>
-        <form class="search-bar" action="/searchmine" method="post" style="display : inline-block"><input type="text" name="key" placeholder="상품 검색"/><button type="submit"><img id="searchButton" src="../images/search-button.png"></button></form>
     </h1>
     <table>
         <thead>
