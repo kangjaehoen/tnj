@@ -38,10 +38,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @RequestMapping("/moveID")
-    public String mfindId() {
-        return "idFind";
-    }
+//    @RequestMapping("/moveID")
+//    public String mfindId() {
+//        return "idFind";
+//    }
 
     @RequestMapping("/moveRegister")
     public String mRegister() {
