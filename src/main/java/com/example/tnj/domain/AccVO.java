@@ -22,7 +22,6 @@ public class AccVO {
     private LocalDate dayoff;
     private String category;
     private String accType;
-    private String accPic;
     private int onSale;
     private String accomRule;
     private String informtext;

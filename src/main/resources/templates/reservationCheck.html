@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="allseller.css" />
+    <link rel="stylesheet" type="text/css" href="sellmenu.css" />
 </head>
 <body>
 <th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
-
+<section class="mainsection">
 <th:block th:if="${rsv}">
     <ul th:each="list : ${rsv}">
         <li th:text="rsv.id"></li>
     </ul>
 </th:block>
-
+</section>
 </body>
 </html>
