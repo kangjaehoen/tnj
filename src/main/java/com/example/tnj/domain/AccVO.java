@@ -1,11 +1,15 @@
 package com.example.tnj.domain;
 
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class AccVO {
     private String accName;
     private int accomNum;

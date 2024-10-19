@@ -14,6 +14,7 @@
         }
 
         .container {
+
             width: 100%;
             margin: 50px auto;
             background-color: white;
@@ -22,55 +23,20 @@
             border-radius: 8px;
         }
 
-       /* header {
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
             background-color: #fff;
             border-bottom: 1px solid #ccc;
-        }*/
+        }
 
         .logo img {
             width: 120px;
             height: 100px;
             border-radius: 50%;
         }
-
-        .profile-icon img {
-            width: 70px;
-            height: 50px;
-            border-radius: 50%;
-        }
-        .footer-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            /*max-width: 1200px;*/
-            margin: 0 auto;
-            padding: 0 20px;
-            width: 100%;
-        }
-
-        footer {
-            background-color: #f8f9fa;
-            border-top: 1px solid #ddd;
-            padding: 20px 0;
-            font-size: 14px;
-            color: #333;
-            width: 100%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /*.footer-left {
-            display: flex;
-            flex-direction: column;
-        }
-        .footer-left span {
-            margin-bottom: 10px;
-        }*/
 
         .pagination {
             text-align: center;
@@ -196,8 +162,8 @@
             <input type="radio" id="refunded" name="status">
             <label for="refunded">환불완료</label>
 
-            <input type="radio" id="cancelled" name="status">
-            <label for="cancelled">취소 중</label>
+            <!--<input type="radio" id="cancelled" name="status">
+            <label for="cancelled">취소 중</label>-->
 
             <button>검색</button>
         </div>
@@ -238,13 +204,13 @@
         <a href="#">3</a>
         <a href="#">»</a>
     </div>
-    <div class="footer-container">
-<!--        <div class="footer-left">-->
-            <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
-<!--        </div>-->
-    </div>
-
 </div>
+<footer>
+    <div class="footer-container">
+        <!--        <div class="footer-left">-->
+        <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
+        <!--        </div>-->
+    </div>
+</footer>
 </body>
-
 </html>
