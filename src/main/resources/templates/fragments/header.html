@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Header Design</title>
+	<style>
+		body {
+			margin: 0;
+			font-family: Arial, sans-serif;
+		}
+
+		header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px 20px;
+			background-color: #fff;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.logo {
+			margin-left: 300px;
+			float: left;
+		}
+
+		.logo img {
+			width: 100px; /* 로고 크기 조정 */
+			height: auto; /* 비율 유지 */
+			border-radius: 50%;
+			margin-left: 200px;
+		}
+
+		.profile-icon img {
+			display: inline-block;
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+		}
+
+
+	</style>
+</head>
+<body>
+<div th:fragment="headerFragment" style="margin-right: 20px;"> <!-- 오른쪽 여백 추가 -->
+	<header>
+		<div class="logo">
+			<a href="/"><img src="/images/logo.png" alt="Logo"></a>
+		</div>
+		<div style="display: flex; align-items: center; margin-right: 40px;">
+			<img src="/images/profile.png" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+			<span style="font-size: 24px; cursor: pointer;">&#9776;</span> <!-- 메뉴 아이콘 -->
+		</div>
+	</header>
+</div>
+</body>
+</html>

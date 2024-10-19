@@ -5,12 +5,13 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
+
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AccVO {
+public class CategoryVO {
     private String accName;
     private int accomNum;
     private String id;
@@ -18,7 +19,7 @@ public class AccVO {
     private String address;
     private String detailAddress;
     private String accCall;
-    private int price;
+    private String price;
     private int adultPrice;
     private int kidPrice;
     private int occ;
@@ -34,4 +35,7 @@ public class AccVO {
     private int room;
     private int bed;
     private int bathroom;
+
+    private int satisfy;
+    private double satisAvg;
 }
