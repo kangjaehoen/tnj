@@ -11,7 +11,6 @@
 		}
 		footer {
 			background-color: #f8f9fa;
-			border-top: 1px solid #ddd;
 			padding: 20px 0;
 			font-size: 14px;
 			color: #333;
@@ -20,7 +19,6 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			max-width: 1200px;
 			margin: 0 auto;
 			padding: 0 20px;
 		}
@@ -62,45 +60,17 @@
 		<div class="footer-container">
 			<!-- Left Side -->
 			<div class="footer-left">
-				<span>&copy; <span id="thisYear"></span> travel and jumpup</span>
+				<span>&copy;<span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">&nbsp;&nbsp;현재 년도</span>travel and jumpup</span>
 				<span>개인정보 처리방침 · 쿠키 정책 · 이용약관 · 사이트맵 · 회사 정보</span>
 			</div>
-
-			<!-- Right Side -->
-		<!--	<div class="footer-right">
-				&lt;!&ndash; Language Selection &ndash;&gt;
-				<select name="language" id="language-select">
-					<option value="kr">한국어 (KR)</option>
-					<option value="en">English (US)</option>
-				</select>
-
-				&lt;!&ndash; Currency &ndash;&gt;
-				<select name="currency" id="currency-select">
-					<option value="krw">₩ KRW</option>
-					<option value="usd">$ USD</option>
-				</select>
-
-				&lt;!&ndash; Social Icons &ndash;&gt;
-				<div class="social-icons">
-					<a href="#"><i class="fab fa-facebook-f"></i></a>
-					<a href="#"><i class="fab fa-twitter"></i></a>
-					<a href="#"><i class="fab fa-instagram"></i></a>
-					<a href="#"><i class="fab fa-youtube"></i></a>
-				</div>
-			</div>-->
 		</div>
 		<div class="cookie-info">
 			<p>통신판매업 신고번호: 12345 · 대표이사: 홍길동 · 이용약관에 따른 책임은 사용자에게 있습니다.</p>
 		</div>
 	</footer>
 </div>
-
-<!-- 년도 자동 증가 -->
 <script>
-	const _date = new Date();
-	const _year = _date.getFullYear();
-	const thisYear = document.getElementById('thisYear');
-	thisYear.innerText = _year;
+
 </script>
 </body>
 </html>
