@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <style>
+        @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+*{
+    font-family: 'Pretendard-Regular';
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+form {
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+div:nth-of-type(1) {
+    width: 450px;
+    padding: 3rem;
+}
+h1 {
+    text-align: center;
+    font-weight: bolder;
+}
+h4{
+	color: #6c757d;
+	margin-bottom: 10px;
+}
+.btn-bd-primary{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: inline-block;
+    box-sizing: border-box;
+    width: 40%;
+    color: black;
+    height: 40px;
+    margin-bottom: 10px;
+    margin-left: 50px;
+    background-color: #B2D055;
+    border: 1px solid #B2D055;
+    text-decoration: none;
+}
+.btn-bd-primary:hover{
+    box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
+    text-decoration: none;
+}
+.btn-confirm{
+    text-align: center;
+    width: 25%;
+    height: 35px;
+    background-color: #B2D055;
+    color: white;
+    border: none;
+    border-radius:10px;
+    margin-top: 5px;
+    padding: 10px;
+}
+.btn-confirm:hover{
+    box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
+}
+.btn-dark{
+    text-align: center;
+    width: 43%;
+    height: 40px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius:10px;
+    margin-left:-3px;
+    margin-bottom: 25px;
+}
+.btn-dark:hover{
+    background-color: black;
+    box-shadow: 2px 2px gray, -2px 2px darkgray;
+}
+.btn-light{
+    text-align: center;
+    width: 43%;
+    height: 40px;
+    background-color: white;
+    border: 1px solid black;
+    margin-left:32px;
+    border-radius: 10px;
+}
+.btn-light:hover{
+    box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
+}
+.btn-primary{
+    text-align: center;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    width: 40%;
+    height: 40px;
+    color: black;
+    margin-left:-4px;
+    margin-bottom:10px;
+    background-color: white;
+    border: 1px solid black;
+    text-decoration: none;
+}
+.btn-primary:hover{
+    box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
+    text-decoration: none;
+}
+<!--a{-->
+<!--	color: black;-->
+<!--}-->
+<!--a:hover{-->
+<!--	text-shadow: 0.5px 0.5px gray;-->
+<!--}-->
+
+input[type="text"] {
+    background-color: white;
+    padding: 12px;
+    margin-left: 42px;
+    width: 77%;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+input[type="number"] {
+    background-color: white;
+    padding: 12px;
+    cursor: pointer;
+    margin-right: 5px;
+    width: 66%;
+    height: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+input[type="date"]{
+    margin-top: 5px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 10px;
+    margin-left: 10px;
+    width: 78%;
+}
+input[type="email"]{
+    margin-top: 5px;
+    background-color: white;
+    border: 1px solid #111111;
+    border-radius: 1px;
+    padding: 10px;
+    margin-left: 24px;
+    width: 51.5%;
+    margin-right: 4.5px;border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+    </style>
+</head>
+<body>
+
+<main class="form-signin w-100 m-auto">
+    <form action="/findId" method="POST">
+        <h1 class="h3 mb-3 fw-normal">아이디 찾기</h1><br>
+        <a href="/moveID" class="btn btn-bd-primary">아이디</a>
+        <a href="/movePW" class="btn btn-primary">비밀번호</a>
+        <div class="form-floating">
+            <h4>등록된 이메일로 찾기</h4>
+            가입 당시 입력한 이메일을 통해 인증 후 새 비밀번호를 등록해주세요.<br>
+            <label>이름<input type="text" name="name" placeholder="(필수)"></label><br>
+            <label>생년월일 <input type="date" name="birth" placeholder="YY/MM/DD"></label><br>
+            <label>이메일 <input type="email" name="email" placeholder="example@email.com"></label>
+            <button class="btn-confirm" type="button" name="codeSend">인증번호 전송</button>
+            <br>
+            <label><input type="number" name="codeEnter" placeholder="인증번호 입력"></label>
+            <button class="btn-confirm" type="submit" name="confirm">확인</button>
+            <br><br><br>
+            <button class="btn-light" type="button" name="resend">재전송</button>
+            <button class="btn-dark" type="submit">아이디 찾기</button>
+        </div>
+    </form>
+</main>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            alert(xhr.responseText);
+        } else {
+            alert('아이디를 찾을 수 없습니다.');
+        }
+    };
+    xhr.open('POST', '/findId', true);
+     const params = new URLSearchParams(formData).toString();
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(params);
+
+        event.preventDefault();
+    });
+</script>
+</body>
+</html>

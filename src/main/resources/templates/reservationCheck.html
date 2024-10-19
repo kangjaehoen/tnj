@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
+
+<th:block th:if="${rsv}">
+    <ul th:each="list : ${rsv}">
+        <li th:text="rsv.id"></li>
+    </ul>
+</th:block>
+
+</body>
+</html>
