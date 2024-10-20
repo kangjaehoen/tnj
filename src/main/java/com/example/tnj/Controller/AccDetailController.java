@@ -1,4 +1,4 @@
-package com.example.tnj.Controller;
+package com.example.tnj.controller;
 
 import com.example.tnj.domain.AccDetailDTO;
 import com.example.tnj.domain.AccVO;

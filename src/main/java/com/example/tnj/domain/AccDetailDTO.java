@@ -48,4 +48,5 @@ public class AccDetailDTO {
     private String revContent;
 
 
+
 }

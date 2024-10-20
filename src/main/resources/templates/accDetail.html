@@ -183,7 +183,7 @@
       <!-- Sidebar -->
       <div class="col-md-4">
         <div class="sidebar" id="sidebar">
-          <form th:action="@{/reservation/resInfo}" method="post" onsubmit="return validateForm()">
+          <form th:action="@{/reservation/resInfo}" id="reservForm" method="post" onsubmit="return validateForm()">
             <input type="hidden" id="accomNum" name="accomNum" th:value="${aVO?.accomNum?:_}"/>
             <input type="hidden" id="adultPrice" th:value="${aVO?.adultPrice?:_}"/>
             <input type="hidden" id="kidPrice" th:value="${aVO?.kidPrice?:_}"/>
@@ -192,13 +192,13 @@
 
 
             <div class="form-group">
-              <label for="checkin">체크인</label>
-              <input type="date" class="form-control" id="checkIn" name="checkin"
+              <label for="checkIn">체크인</label>
+              <input type="date" class="form-control" id="checkIn" name="checkIn"
                      th:required="true"/>
             </div>
             <div class="form-group">
-              <label for="checkout">체크아웃</label>
-              <input type="date" class="form-control" id="checkOut" name="checkout"
+              <label for="checkOut">체크아웃</label>
+              <input type="date" class="form-control" id="checkOut" name="checkOut"
                      th:required="true"/>
             </div>
             <div class="form-group">
@@ -208,18 +208,18 @@
                   <span>성인 (13세 이상)</span>
                   <div class="guest-adjustment">
                     <button type="button" onclick="changeGuestCount('adult', -1)">-</button>
-                    <input type="number" id="adultCount" name="adultCnt" value="1" readonly
-                           th:required="${adultCount > 0}" />
+                    <input type="number" id="adultCnt" name="adultCnt" value="1" readonly
+                           th:required="${adultCnt > 0}" />
                     <button type="button" onclick="changeGuestCount('adult', 1)">+</button>
                   </div>
                 </div>
                 <div class="guest-counter mt-2">
                   <span>어린이 (2~12세)</span>
                   <div class="guest-adjustment">
-                    <button type="button" onclick="changeGuestCount('child', -1)">-</button>
-                    <input type="number" id="childCount" name="kidCnt" value="0" readonly
-                           th:required="${childCount > 0}" />
-                    <button type="button" onclick="changeGuestCount('child', 1)">+</button>
+                    <button type="button" onclick="changeGuestCount('kid', -1)">-</button>
+                    <input type="number" id="kidCnt" name="kidCnt" value="0" readonly
+                           th:required="${kidCnt > 0}" />
+                    <button type="button" onclick="changeGuestCount('kid', 1)">+</button>
                   </div>
                 </div>
               </div>
@@ -267,15 +267,15 @@
     });
 
     function changeGuestCount(type, change) {
-      const adultInput = document.getElementById('adultCount');
-      const childInput = document.getElementById('childCount');
+      const adultInput = document.getElementById('adultCnt');
+      const kidInput = document.getElementById('kidCnt');
 
       if (type === 'adult') {
         let newCount = Math.max(0, parseInt(adultInput.value) + change);
         adultInput.value = newCount;
-      } else if (type === 'child') {
-        let newCount = Math.max(0, parseInt(childInput.value) + change);
-        childInput.value = newCount;
+      } else if (type === 'kid') {
+        let newCount = Math.max(0, parseInt(kidInput.value) + change);
+        kidInput.value = newCount;
       }
 
       // 인원 수가 변경되면 가격 업데이트
@@ -342,46 +342,43 @@
 
     // 총 가격 구하기
     // 총 가격 구하기
-    // 총 가격 구하기
     function updatePrice(days) {
       var priceOneAdult = parseFloat(document.getElementById("adultPrice").value) || 0; // 성인 1인당 가격
       var priceOneKid = parseFloat(document.getElementById("kidPrice").value) || 0; // 어린이 1인당 가격
-      const adultCnt = parseInt(document.getElementById('adultCount').value) || 0; // 성인 수
-      const kidCnt = parseInt(document.getElementById('childCount').value) || 0; // 어린이 수
+      const adultCnt = parseInt(document.getElementById('adultCnt').value) || 0; // 성인 수
+      const kidCnt = parseInt(document.getElementById('kidCnt').value) || 0; // 어린이 수
       const maxOccupancy = parseInt(document.getElementById("maxOccupancy").value) || 0; // 최대 수용 인원
 
       let totalPrice = 0; // 총 가격 초기화
       const pricePerNight = parseFloat(document.getElementById("OneDayPrice").value) || 0;
 
-      if (adultCnt + kidCnt <= maxOccupancy) {
+      const totalGuests = adultCnt + kidCnt; // 전체 인원
+
+      if (totalGuests <= maxOccupancy) {
         // 최대 수용 인원 이내일 경우
         totalPrice = pricePerNight * days;
       } else {
         // 최대 수용 인원 초과 시
-        const excessCount = (adultCnt + kidCnt) - maxOccupancy; // 초과 인원 수
+        const excessCount = totalGuests - maxOccupancy; // 초과 인원 수
+        let excessAdults = Math.max(0, adultCnt - maxOccupancy); // 초과 성인 수
+        let excessKids = 0;
 
-        let moreCharge = 0;
+        if (excessAdults < excessCount) {
+          // 초과 성인이 초과 인원 수보다 적으면, 남은 인원은 어린이로 처리
+          excessKids = excessCount - excessAdults;
+        }
 
-        if (maxOccupancy < adultCnt) {
-          // 수용 인원이 어른 수보다 적은 경우
-          moreCharge = adultCnt - maxOccupancy; // 초과 성인 수
-          totalPrice = pricePerNight * days + (moreCharge * priceOneAdult * days) + (kidCnt * priceOneKid * days);
-        } else {
-          // 수용 인원이 어른 수보다 많고 어린이 수를 포함하는 경우
-          moreCharge = (adultCnt + kidCnt) - maxOccupancy; // 초과 인원 수
-          const excessKids = moreCharge > kidCnt ? moreCharge - kidCnt : 0; // 남은 초과 인원은 어린이로 간주
+        // 기본 숙박료 계산
+        totalPrice = pricePerNight * days;
 
-          // 기본 가격 계산
-          totalPrice += pricePerNight * days; // 기본 숙박료
+        // 초과 성인에 대한 추가 비용 계산
+        if (excessAdults > 0) {
+          totalPrice += (excessAdults * priceOneAdult * days);
+        }
 
-          // 초과 인원에 대한 추가 비용 계산
-          if (moreCharge > 0) {
-            if (adultCnt > maxOccupancy) {
-              totalPrice += (moreCharge * priceOneAdult * days); // 초과 성인에 대한 추가 비용
-            } else {
-              totalPrice += (excessKids * priceOneKid * days); // 초과 어린이에 대한 추가 비용
-            }
-          }
+        // 초과 어린이에 대한 추가 비용 계산
+        if (excessKids > 0) {
+          totalPrice += (excessKids * priceOneKid * days);
         }
       }
 
@@ -396,12 +393,13 @@
     }
 
 
+
     //날짜선택-유효성검증
     function validateForm() {
       var checkIn = document.getElementById("checkIn").value;
       var checkOut = document.getElementById("checkOut").value;
-      var adultCnt = parseInt(document.getElementById('adultCount').value) || 0;
-      var childCnt = parseInt(document.getElementById('childCount').value) || 0;
+      var adultCnt = parseInt(document.getElementById('adultCnt').value) || 0;
+      var kidCnt = parseInt(document.getElementById('kidCnt').value) || 0;
 
       if (!checkIn || !checkOut) {
         alert("체크인과 체크아웃 날짜를 선택해주세요.");
@@ -416,7 +414,7 @@
         return false; // 폼 제출 방지
       }
 
-      if (adultCnt === 0 && childCnt === 0) {
+      if (adultCnt === 0 && kidCnt === 0) {
         alert("성인 또는 어린이 인원을 최소 1명 이상 선택해주세요.");
         return false;
       }
