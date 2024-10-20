@@ -47,7 +47,7 @@ public interface ReservationMapper {
     public int chkDuplicate(ReservationDTO rDTO);
 
     //예약 insert
-    @Insert("insert into reservation (chkin_Date, chkout_Date, adultCnt, kidCnt, id, accomNum) values(#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
+    @Insert("insert into reservation (resDate,chkin_Date, chkout_Date, adultCnt, kidCnt, id, accomNum) values( now(),#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
     public void insertRes(ReservationDTO rDTO);
 
 
