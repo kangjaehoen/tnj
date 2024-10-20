@@ -166,43 +166,50 @@
 
     <!-- 예약 정보 및 규칙 섹션 -->
     <div class="reservation-and-rules">
-        <div class="reservation-info">
-            <div class="reservation-details">
-                <h3>확인 및 결제</h3>
-                <p><strong>예약정보</strong></p>
-                <p>날짜:
-                    <span th:text="${checkin}"></span> ~
-                    <span th:text="${checkout}"></span>
-                </p>
-                <p>체크인 시간:
-                    <span th:text="${aVO.chkin_Time}"></span> ~
-                    <span th:text="${aVO.chkout_Time}"></span>
-                </p>
-                <p>게스트:
-                    <span th:text="'성인'+${adultCnt}+'명'"></span>
-                    <span th:if="${kidCnt > 0}">
-                         , <span th:text="'어린이 ' + ${kidCnt} + '명'"></span>
-                    </span>
-                </p>
-            </div>
-            <div class="price-details">
-                <img src="/images/room.png" alt="서울의 호스텔" class="room-image">
-                <div class="price-texts">
-                    <span th:text="${aVO.getAccName()}"></span>
-                    <p>★ <span th:text="${revRate}"></span>
-                        후기(<span th:text="${revCnt != null ? revCnt : '0'}"></span>개)
+        <form method="post">
+            <div class="reservation-info">
+                <div class="reservation-details">
+                    <h3>확인 및 결제</h3>
+                    <p><strong>예약정보</strong></p>
+                    <p>날짜:
+                        <span th:text="${checkIn}"></span> ~
+                        <span th:text="${checkOut}"></span>
                     </p>
-                    <hr>
-                    <p>요금 세부정보</p>
-                    <p><span th:text="${aVO.getPrice()}"></span>원 ×<span th:text="${totalDays}"></span> 박</p>
+                    <p>체크인 시간:
+                        <span th:text="${aVO.chkin_Time}"></span> ~
+                        <span th:text="${aVO.chkout_Time}"></span>
+                    </p>
+                    <p>게스트:
+                        <span th:text="'성인'+${adultCnt}+'명'"></span>
+                        <span th:if="${kidCnt > 0}">
+                             , <span th:text="'어린이 ' + ${kidCnt} + '명'"></span>
+                        </span>
+                    </p>
+                </div>
+                <div class="price-details">
+                    <img src="/images/room.png" alt="서울의 호스텔" class="room-image">
+                    <div class="price-texts">
+                        <span th:text="${aVO.getAccName()}"></span>
+                        <p>★ <span th:text="${revRate}"></span>
+                            후기(<span th:text="${revCnt != null ? revCnt : '0'}"></span>개)
+                        </p>
+                        <hr>
+                        <p>요금 세부정보</p>
+                        <p><span th:text="${aVO.getPrice()}"></span>원 ×<span th:text="${totalDays}"></span> 박</p>
 
-                    <p class="total-price">총 결제금액: <span th:text="${totalPayment}"></span></p>
+                        <p class="total-price">총 결제금액: <span th:text="${totalPayment}"></span></p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <input type="hidden" id="totalDays" name="totalDays" th:value="${totalDays}">
         <input type="hidden" id="totalPayment" name="totalPayment" th:value="${totalPayment}">
+        <input type="hidden" id="checkIn" name="checkIn" th:value="${checkIn}">
+        <input type="hidden" id="checkOut" name="checkOut" th:value="${checkOut}">
+        <input type="hidden" id="adultCnt" name="adultCnt" th:value="${adultCnt}">
+        <input type="hidden" id="kidCnt" name="klidCnt" th:value="${kidCnt}">
+
 
         <!-- 결제 버튼 -->
         <button type="button" class="btnOrder">결제</button>
@@ -215,9 +222,9 @@
             <div class="refund-policy">
                 <p><strong>환불정책</strong></p>
                 <p>
-                    <span th:text="${#strings.concat(checkin.substring(5, 7), '월 ', checkin.substring(8), '일')}"></span>
+                    <span th:text="${#strings.concat(checkIn.substring(5, 7), '월 ', checkIn.substring(8), '일')}"></span>
                     오후 <span th:text="${chkTime}"></span> 전까지 무료로 취소하실 수 있습니다. <br>
-                    체크인 날짜인 <span th:text="${#strings.concat(checkin.substring(5, 7), '월 ', checkin.substring(8), '일')}"></span> 전에 취소하면 부분 환불받으실 수 있습니다.
+                    체크인 날짜인 <span th:text="${#strings.concat(checkIn.substring(5, 7), '월 ', checkIn.substring(8), '일')}"></span> 전에 취소하면 부분 환불받으실 수 있습니다.
                 </p>
             </div>
 
@@ -242,59 +249,107 @@
 <script>
 $(document).ready(function(){
     $(".btnOrder").click(function () {
+      /*  let resInfo = $("#reservForm").serialize();*/
 
-        // 테스트용 더미 데이터
-       let count = 2;  // 테스트를 위해 임의로 2로 설정
-        let products = ["Product1", "Product2"]; // 테스트용 더미 상품 목록
-        let name;
-        if (count === 1) {
-            name = "상품";
-        } else {
-            name = '상품 외 ' + (count - 1) + '개';
-        }
-        // 결제 API 초기화
-        IMP.init("imp16048664"); // 가맹점 식별코드 (실제 테스트 시에는 발급받은 테스트용 가맹점 식별코드를 사용하세요)
-        // 결제 요청
-        IMP.request_pay({
-            pg: 'html5_inicis',  // 테스트 시에는 'html5_inicis', 'kcp', 'paypal' 등 테스트 가능한 PG사를 사용할 수 있습니다.
-            pay_method: 'card',
-            merchant_uid: 'merchant_' + new Date().getTime(),  // 임의의 고유 주문번호 생성
-            name: name,
-            amount: 10000,  // 테스트용 고정 결제 금액 (10,000원)
-            buyer_email: 'testuser@example.com',  // 테스트용 이메일
-            buyer_name: '테스트 사용자',  // 테스트용 이름
-            buyer_tel: '010-1234-5678',  // 테스트용 전화번호
-            buyer_addr: '서울특별시 강남구 테헤란로',  // 테스트용 주소
-            buyer_postcode: '123-456'  // 테스트용 우편번호
-        }, function (res) {
-            if (res.success) {
-                var msg = "결제가 완료되었습니다.\\n";
-                msg += '고유ID: ' + res.imp_uid + '\\n';
-                msg += '상점 거래ID: ' + res.merchant_uid + '\\n';
-                msg += '결제 금액: ' + res.paid_amount + '\\n';
-                msg += '카드 승인번호: ' + res.apply_num + '\\n';
-                alert(msg);
-                // 결제 완료된 정보를 폼에 입력
-                $("#ordersReceiver").val(res.buyer_name);
-                $("#ordersReceiverAddr").val(res.buyer_addr);
-                $("#ordersReceiverPhone").val(res.buyer_tel);
-                $("#ordersTotalPrice").val(10000);  // 고정된 테스트 결제 금액
-                $("#ordersSalePrice").val(res.paid_amount);
-                $("#ordersUsedPoint").val(0);  // 테스트용 포인트 사용 0
-                $("#ordersRequest").val('테스트 요청 사항');
-                $("#ordersContent").val(res.name);
-                // 상품 정보 전송 (더미 데이터 사용)
-                sendProducts(products);
-                // 폼 제출 (테스트 시 실제 제출 대신 콘솔 로그로 대체)
-                console.log("폼 제출 성공 (테스트)", $("#pay").serialize());
-                // $("#pay").submit(); // 실제 결제 시에는 이 부분을 활성화
-            } else {
-                var msg = "결제에 실패하였습니다.\\n";
-                msg += '실패사유: ' + res.error_msg;
-                alert(msg);
-            }
-        });
+       let resInfo={
+            checkIn: $("#checkIn").val(),
+            checkOut: $("#checkOut").val(),
+            adultCnt: $("#adultCnt").val(),
+            kidCnt: $("#kidCnt").val(),
+            totalDays: $("#totalDays").val(),
+            totalPayment: $("#totalPayment").val()
+       };
+
+       //예약날짜 중복체크
+       $.ajax({
+         url: '/reservation/chkDuplicate',
+         method: 'POST',
+         contentType: 'application/json',
+         data:JSON.stringify(resInfo),
+         success: function(response){
+             if(response == 0){
+                 insertReserv(resInfo);
+             }else{
+                 alert("해당 날짜에는 예약이 불가능합니다.");
+             }
+         }
+       })
     });
+
 });
+
+//예약 insert
+function insertReserv(resInfo) {
+    $.ajax({
+        url: '/reservation/insertRes',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(resInfo),
+        success: function (response) {
+            alert("예약이 성공적으로 완료되었습니다.");
+            processPayment();
+        },
+        error: function (error) {
+            alert("예약insert 실패");
+        }
+    });
+}
+
+
+function processPayment() {
+    // 테스트용 더미 데이터
+    let count = 2;  // 테스트를 위해 임의로 2로 설정
+    let products = ["Product1", "Product2"]; // 테스트용 더미 상품 목록
+    let name;
+    if (count === 1) {
+        name = "상품";
+    } else {
+        name = '상품 외 ' + (count - 1) + '개';
+    }
+    // 결제 API 초기화
+    IMP.init("imp16048664"); // 가맹점 식별코드 (실제 테스트 시에는 발급받은 테스트용 가맹점 식별코드를 사용하세요)
+    // 결제 요청
+    IMP.request_pay({
+        pg: 'html5_inicis',  // 테스트 시에는 'html5_inicis', 'kcp', 'paypal' 등 테스트 가능한 PG사를 사용할 수 있습니다.
+        pay_method: 'card',
+        merchant_uid: 'merchant_' + new Date().getTime(),  // 임의의 고유 주문번호 생성
+        name: name,
+        amount: 10000,  // 테스트용 고정 결제 금액 (10,000원)
+        buyer_email: 'testuser@example.com',  // 테스트용 이메일
+        buyer_name: '테스트 사용자',  // 테스트용 이름
+        buyer_tel: '010-1234-5678',  // 테스트용 전화번호
+        buyer_addr: '서울특별시 강남구 테헤란로',  // 테스트용 주소
+        buyer_postcode: '123-456'  // 테스트용 우편번호
+    }, function (res) {
+        if (res.success) {
+            var msg = "결제가 완료되었습니다.\\n";
+            msg += '고유ID: ' + res.imp_uid + '\\n';
+            msg += '상점 거래ID: ' + res.merchant_uid + '\\n';
+            msg += '결제 금액: ' + res.paid_amount + '\\n';
+            msg += '카드 승인번호: ' + res.apply_num + '\\n';
+            alert(msg);
+            // 결제 완료된 정보를 폼에 입력
+            $("#ordersReceiver").val(res.buyer_name);
+            $("#ordersReceiverAddr").val(res.buyer_addr);
+            $("#ordersReceiverPhone").val(res.buyer_tel);
+            $("#ordersTotalPrice").val(10000);  // 고정된 테스트 결제 금액
+            $("#ordersSalePrice").val(res.paid_amount);
+            $("#ordersUsedPoint").val(0);  // 테스트용 포인트 사용 0
+            $("#ordersRequest").val('테스트 요청 사항');
+            $("#ordersContent").val(res.name);
+            // 상품 정보 전송 (더미 데이터 사용)
+            sendProducts(products);
+            // 폼 제출 (테스트 시 실제 제출 대신 콘솔 로그로 대체)
+            console.log("폼 제출 성공 (테스트)", $("#pay").serialize());
+            // $("#pay").submit(); // 실제 결제 시에는 이 부분을 활성화
+        } else {
+            var msg = "결제에 실패하였습니다.\\n";
+            msg += '실패사유: ' + res.error_msg;
+            alert(msg);
+        }
+    });
+
+
+}
 </script>
 </html>

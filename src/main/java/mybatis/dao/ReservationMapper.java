@@ -42,9 +42,13 @@ public interface ReservationMapper {
     @Select("select * from accom where accomNum =#{accomNum}")
     public AccVO accInfo(@Param("accomNum") int accomNum);
 
+    //예약 중복확인
+    @Select("SELECT COUNT(*) FROM reservation WHERE chkin_Date = #{chkin_Date} AND chkout_Date = #{chkout_Date}")
+    public int chkDuplicate(ReservationDTO rDTO);
+
     //예약 insert
-    @Insert("insert into reservation values(#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
-    public List<ResVO> insertRes(@Param("accomNum") ReservationDTO accomNum);
+    @Insert("insert into reservation (chkin_Date, chkout_Date, adultCnt, kidCnt, id, accomNum) values(#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
+    public void insertRes(ReservationDTO rDTO);
 
 
 }
