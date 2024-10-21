@@ -24,7 +24,7 @@ public class CategoryVO {
     private int kidPrice;
     private int occ;
     private int maxocc;
-    private LocalDate dayoff;
+    private String dayoff;
     private String category;
     private String accType;
     private int onSale;

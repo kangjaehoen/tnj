@@ -21,7 +21,7 @@ public class AccDetailDTO {
     private String accCall;
     private int adultPrice;
     private int kidPrice;
-    private Date dayoff;
+    private String dayoff;
     private String category;
     private String accType;
     private String accPic;
