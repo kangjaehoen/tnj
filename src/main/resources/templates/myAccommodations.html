@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="allseller.css" />
-    <link rel="stylesheet" type="text/css" href="sellmenu.css" />
-    <link rel="stylesheet" type="text/css" href="myAcc.css" />
+    <link rel="stylesheet" type="text/css" href="css/allseller.css" />
+    <link rel="stylesheet" type="text/css" href="css/sellmenu.css" />
+    <link rel="stylesheet" type="text/css" href="css/myAcc.css" />
 </head>
 <body>
 <th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
 <section class="mainsection">
-    <h1 style="white-">
-
-        <form class="search-bar" action="/searchmine" method="post" style="display : inline-block"><input type="text" name="key" placeholder="상품 검색"/><button type="submit"><img id="searchButton" src="../images/search-button.png"></button></form><br>
-        <button onclick="showonsale()" class="toolbtn">판매중</button>
-        <div style="">
+    <h1 class="displaycenter">
+        <form  id="searchmine" class="search-bar" action="/searchmine" method="post"><input type="text" name="key" placeholder="상품 검색"/><button type="submit"><img id="searchButton" src="../images/search-button.png"></button></form>
+    </h1>
+    <br>
+    <h1>
         <button onclick="saleNotsale()" class="toolbtn">판매변경</button>
         <button onclick="deletelist()" class="toolbtn">삭제</button>
+
+        <div style="display : inline-block; float : right;">
+            <button onclick="showonsale()" class="toolbtn">판매중</button>
         </div>
+
     </h1>
     <table>
         <thead>
@@ -141,7 +145,7 @@
 </script>
 <script>
     function showonsale(){
-    document
+    location.href = '/searchonsale';
     }
 </script>
 </body>

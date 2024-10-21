@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class PayVO {
     String id;
     LocalDate payDate;
-    int pay_Staus;
+    String pay_Staus;
     int payment;
     int accomNum;
     int resNum;

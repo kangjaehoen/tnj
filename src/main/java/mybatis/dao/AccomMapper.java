@@ -11,10 +11,12 @@ public interface AccomMapper {
     //리스트불러오기
     @Select("select * from accom where id = #{id}")
     public List<AccVO> listmine(String id);
-
     //리스트불러오기:조건
-    @Select("select * from accom where id =#{id} and (accName like concat('%', #{key}, '%') or address like concat('%', #{key}, '%') or detailAddress like concat('%', #{key}, '%') or category like concat('%', #{key}, '%') or accType like concat('%', #{key}, '%') )")
+    @Select("select * from accom where id =#{id} and (accName like concat('%', #{key}, '%') or address like concat('%', #{key}, '%') or detailAddress like concat('%', #{key}, '%') or category like concat('%', #{key}, '%') or accType like concat('%', #{key}, '%')) ")
     public List<AccVO> searchmine(String id, String key);
+    //판매중리스트불러오기
+    @Select("select * from accom where id= #{id} and onSale =1")
+    public  List<AccVO> searchmineonsale(String id);
 
     //등록
     @Insert("insert into accom (accomNum, id, accName, postcode, address, detailAddress, price, accCall, adultPrice, kidPrice, dayoff, category, accType, onSale, accomRule, informtext, occ, maxocc,chkin_Time,chkout_Time,room,bed,bathroom) values (#{accomNum}, #{id}, #{accName}, #{postcode}, #{address}, #{detailAddress}, #{price}, #{accCall}, #{adultPrice}, #{kidPrice}, #{dayoff}, #{category}, #{accType}, #{onSale}, #{accomRule}, #{informtext}, #{occ}, #{maxocc},#{chkin_Time},#{chkout_Time},#{room},#{bed},#{bathroom} )")
@@ -29,13 +31,12 @@ public interface AccomMapper {
     @Delete("delete from accom where id=#{id} and accomNum =#{accomNum}")
     public int accdelete(String id, int accomNum);
 
-    //결제확인
-    @Select("select * from pay where accomNum in (select accomNum from accom where id = #{id})")
-    public List<PayVO> reservationcheck(String id);
-
     //불러오기
     @Select("select * from accom where id =#{id} and accomNum=#{accomNum}")
     public AccVO oneacc(String id, int accomNum);
+    //불러오기-숙소번호로 숙소이름을
+    @Select("select accName from accom where accomNum=#{accomNum}")
+    public String oneNameByAccomNum(int accomNum);
 
     //판매상태확인
     @Select("select onSale from accom where accomNum =#{accomNum}")

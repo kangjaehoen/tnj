@@ -3,17 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="allseller.css" />
-    <link rel="stylesheet" type="text/css" href="sellmenu.css" />
+    <link rel="stylesheet" type="text/css" href="css/allseller.css"/>
+    <link rel="stylesheet" type="text/css" href="css/sellmenu.css"/>
+    <link rel="stylesheet" type="text/css" href="css/reservationcheck.css"/>
 </head>
 <body>
 <th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
 <section class="mainsection">
-<th:block th:if="${rsv}">
-    <ul th:each="list : ${rsv}">
-        <li th:text="rsv.id"></li>
-    </ul>
-</th:block>
+    <h1 class="displaycenter">
+        <form id="searchmine" class="search-bar" action="/searchmine" method="post"><input type="text" name="key"
+                                                                                           placeholder="상품 검색"/>
+            <button type="submit"><img id="searchButton" src="../images/search-button.png"></button>
+        </form>
+    </h1>
+    <br>
+    <section class="calender">
+        <h1 class="timeselect">
+            <button class="toolbtn" id="leftbtn">←</button>
+            <form id="chTime" action="/rCheck" method="post" style="display : inline-block;">
+            <input type="number" id="year" name="year" min="1990" th:value="${year?:#dates.format(#dates.createNow(),'YYYY')}" style="text-align : right;"> <input type="number" id="month" name="month" min="1" max="12" th:value="${month?:#dates.format(#dates.createNow(),'MM')}" style="text-align : left;">
+            </form>
+            <button class="toolbtn" id="rightbtn">→</button>
+        </h1>
+        <table style="width: 100%;">
+            <tr>
+                <th>일</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+                <th>토</th>
+            </tr>
+            <th:block th:each="day, daystat : ${rchart}">
+                <th:block th:if="${daystat.index % 7 ==0}"><tr></th:block>
+                <td class="cell">
+                    <p th:if="${daystat.index % 7 == 0}" th:text="${#temporals.format(day,'dd')}" class="day" style="color : red"></p>
+                    <p th:if="${daystat.index % 7 == 6}" th:text="${#temporals.format(day,'dd')}" class="day" style="color : blue"></p>
+                    <p th:if="${daystat.index % 7 != 0 && daystat.index % 7 != 6}" th:text="${#temporals.format(day,'dd')}" class="day"></p>
+                    <br>
+                    <th:block th:each="ar : ${arDTOs}"><th:block th:if="${day == ar.res.chkin_Date}" ><span th:text="${ar.acc.accName}"></span><br></th:block></th:block></td>
+                <th:block th:if="${daystat.index % 7 == 6}"></tr></th:block>
+            </th:block>
+        </table>
+    </section>
+    <section class="bookInfo">
+    </section>
 </section>
+<script>
+    let year= document.getElementById('year');
+    let month = document.getElementById('month');
+    let form = document.getElementById('chTime');
+
+    document.getElementById('leftbtn').addEventListener("click",function(){
+        if(month.value == 1){
+        year.value = parseInt(year.value) - 1;
+        month.value = 12;
+        } else {
+        month.value = parseInt(month.value) - 1;
+        }
+        form.submit();
+    });
+
+    document.getElementById('rightbtn').addEventListener("click",function(){
+        if(month.value == 12){
+        year.value = parseInt(year.value) + 1;
+        month.value = 1;
+        } else {
+        month.value = parseInt(month.value) + 1;
+        }
+        form.submit();
+    });
+</script>
 </body>
 </html>
