@@ -123,15 +123,27 @@
         padding: 10px;
     }
 
-    .btn-bd-primary{
-        text-align: center;
-        width: 100%;
-        height: 40px;
-        background-color: black;
-        color: white;
-        border: none;
-        border-radius:10px;
-    }
+.btn-bd-primary{
+    text-align: center;
+    width: 100%;
+    margin-left: 52px;
+    height: 45px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 30px;
+}
+
+.btn-bd-primary:hover {
+    background-color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
 
     .btn-confirm{
         text-align: center;
@@ -148,10 +160,6 @@
         background-color: white;
         color: black;
         margin-left: -5px;
-    }
-
-    .btn-bd-primary:hover{
-        box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
     }
 
     .birth{
@@ -234,7 +242,6 @@
 		return;
 	}
 	form.submit();
-	window.location.href = '/loginForm.html?registered=true';
 }
 
 document.querySelector('input[name="id"]').addEventListener('keypress', function(event) {
