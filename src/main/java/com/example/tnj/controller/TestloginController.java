@@ -10,8 +10,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class TestloginController {
-    @Autowired
-    AccomMapper acmd;
 
     @RequestMapping(value = "/sellerPage", produces = "application/json; charset=utf-8")
     @ResponseBody

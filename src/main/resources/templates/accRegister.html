@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>숙소등록</title>
-    <link rel="stylesheet" type="text/css" href="allseller.css" />
-    <link rel="stylesheet" type="text/css" href="sellmenu.css" />
-    <link rel="stylesheet" type="text/css" href="accRegist.css" />
+    <link rel="stylesheet" type="text/css" href="css/allseller.css" />
+    <link rel="stylesheet" type="text/css" href="css/accRegist.css" />
+    <link rel="stylesheet" type="text/css" href="css/sellmenu.css" />
 </head>
 
 <body>
@@ -285,17 +285,17 @@
 
     // 등록하기 버튼
     registerUpdateButton.addEventListener('click', function(event) {
-        alert("저장되었습니다.");
+        alert("저장하시겠습니까?");
         validateForm(event, "/accUpload");
     });
 
     // 수정하기 버튼
     stopReservationButton.addEventListener('click', function(event) {
         if(document.getElementById('loadedAccomNum').value != 0){
-        alert("수정되었습니다.");
+        alert("수정하시겠습니까?");
         validateForm(event, "/accUpdate");
         } else {
-        alert("저장되었습니다.");
+        alert("저장하시겠습니까?");
         validateForm(event, "/accUpload");
         }
     });

@@ -3,9 +3,7 @@ package com.example.tnj.controller;
 import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.ResVO;
 import com.example.tnj.domain.ReservationDTO;
-import jakarta.servlet.http.HttpServletResponse;
 import mybatis.dao.ReservationMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
