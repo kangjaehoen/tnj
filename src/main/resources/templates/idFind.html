@@ -128,12 +128,6 @@ h4{
     box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
     text-decoration: none;
 }
-<!--a{-->
-<!--	color: black;-->
-<!--}-->
-<!--a:hover{-->
-<!--	text-shadow: 0.5px 0.5px gray;-->
-<!--}-->
 
 input[type="text"] {
     background-color: white;
@@ -192,7 +186,7 @@ input[type="email"]{
             <h4>등록된 개인정보로 찾기</h4>
             가입 당시 입력한 개인정보로 인증 후 아이디를 확인하세요.<br>
             <label>이름<input type="text" name="name" placeholder="(필수)"></label><br>
-            <label>생년월일 <input type="date" name="birth" placeholder="YY/MM/DD"></label><br>
+            <label>생년월일 <input type="date" name="birth" id = "birth" placeholder="YY/MM/DD"></label><br>
             <label>이메일 <input type="email" name="email" placeholder="example@email.com"></label>
             <br>
             <span id = notAvailableAlert></span></div>
@@ -202,6 +196,9 @@ input[type="email"]{
     </form>
 </main>
 <script>
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('birth').setAttribute('min', '1900-01-01');
+    document.getElementById('birth').setAttribute('max', today);
     document.getElementById('findIdForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
@@ -226,14 +223,14 @@ input[type="email"]{
     let xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        if (response && response.id){
-            window.location.href=`/showId?name=${encodeURIComponent(name)}&id=${encodeURIComponent(response.id)}`;
-        } else {
-            alert('아이디를 찾을 수 없습니다.');
-        }
+            const response = JSON.parse(xhr.responseText);
+            if (response && response.id){
+                window.location.href=`/showId?name=${encodeURIComponent(name)}&id=${encodeURIComponent(response.id)}`;
+            } else {
+                alert('아이디를 찾을 수 없습니다. 다시 시도해주세요.');
+            }
         }else{
-        alert('서버 오류 발생');
+            alert('서버 오류 발생');
         }
    };
 
@@ -241,6 +238,7 @@ input[type="email"]{
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.send(params);
     });
+
 
 </script>
 </body>

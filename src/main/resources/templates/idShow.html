@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>아이디</title>
+    <style>
+        @font-face {
+font-family: 'Pretendard-Regular';
+src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+font-weight: 400;
+font-style: normal;
+}
+*{
+font-family: 'Pretendard-Regular';
+}
+body {
+font-size: 16px;
+    height: 100%;
+    weight: 80%;
+    background-color: #f5f5f5;;
+    text-align: center;
+    padding: 20px;
+    align-items: center;
+}
+
+h1 {
+    color: #333;
+}
+div{
+        padding-left: 25px;
+padding-right: 25px;
+padding-bottom: 50px;
+padding-top: 50px;
+background-color: white;
+border-radius: 15px;
+box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+a {
+    font-size: 13px;
+    color: #B2D055;
+    cursor: pointer;
+}
+a:hover {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+}
+    </style>
+</head>
+<body>
+<div>
+<h1 th:text="'안녕하세요, ' + ${name} + '님!'"></h1>
+<p th:text="${name}+ '님의 아이디는 ' + ${id} + '입니다.'"></p>
+<a href="/loginForm.html">로그인 페이지로 이동</a>
+</div>
+</body>
+</html>

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class UserController {
         UserDTO user = userMapper.loginUser(id, pw);
         Map<String, String> response = new HashMap<>();
         if (user != null && user.getPw().equals(pw)) {
-            session.setAttribute("user", user);
+            session.setAttribute("id", id);
             response.put("result", "success");
             return ResponseEntity.ok(response);
         }
@@ -73,42 +74,53 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-@GetMapping("/checkEmail")
-public String checkEmail(@RequestParam String email) {
-    String orEm = userMapper.checkEmail(email);
-    if (orEm.equals(email)) {
-        return "중복";
-    } else {
-        return "사용 가능";
+    @GetMapping("/checkEmail")
+    public String checkEmail(@RequestParam String email) {
+        String orEm = userMapper.checkEmail(email);
+        if (orEm.equals(email)) {
+            return "중복";
+        } else {
+            return "사용 가능";
+        }
     }
-}
 
-@PostMapping("/findId")
-public ResponseEntity<Map<String, String>> findId(@RequestParam String name, @RequestParam String birth, @RequestParam String email) {
-    String id = userMapper.findId(name, birth, email);
-    Map<String, String> response = new HashMap<>();
-    if (id != null) {
-        response.put("name", name);
-        response.put("id", id);
-        return ResponseEntity.ok(response);
+    @PostMapping("/findId")
+    public ResponseEntity<Map<String, String>> findId(@RequestParam String name, @RequestParam String birth, @RequestParam String email) {
+        String id = userMapper.findId(name, birth, email);
+        Map<String, String> response = new HashMap<>();
+        if (id != null) {
+            response.put("name", name);
+            response.put("id", id);
+            return ResponseEntity.ok(response);
+        }
+        response.put("error", "아이디를 찾을 수 없습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    response.put("error", "아이디를 찾을 수 없습니다.");
-    return ResponseEntity.status(HttpStatus.OK).body(response);
-}
 
-@GetMapping("/showId")
-public String showId(Model model, @RequestParam String id, @RequestParam String name){
+    @GetMapping("/showId")
+    public String showId(Model model, @RequestParam String id, @RequestParam String name) {
         model.addAttribute("name", name);
         model.addAttribute("id", id);
         return "idShow";
-}
-
-@PostMapping("/changePassword")
-public ResponseEntity<String> changePassword(@RequestParam String id, @RequestParam String newPassword) {
-    int result = userMapper.updatePassword(id, newPassword);
-    if (result > 0) {
-        return ResponseEntity.ok("비밀번호를 성공적으로 변경하였습니다!");
     }
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 변경에 실패하셨습니다.");
-}
+
+    @PostMapping("/findPw")
+    public ModelAndView findPw(@RequestParam String name, @RequestParam String id, @RequestParam String birth, @RequestParam String email) {
+        int idcnt = userMapper.findPw(id, name, email, birth);
+        ModelAndView mav = new ModelAndView();
+        if (idcnt != 0) {
+            mav.addObject("id",id);
+            mav.setViewName("/pwUpdate");
+        } else {
+            mav.setViewName("/pwFind");
+        }
+        return mav;
+    }
+    @PostMapping("/updatePw")
+    public ModelAndView updatepw(String id, String pw){
+        ModelAndView mav = new ModelAndView();
+        userMapper.changePw(id , pw);
+        mav.setViewName("redirect:/loginForm.html");
+        return mav;
+    }
 }

@@ -28,10 +28,10 @@ public interface UserMapper {
     @Select("SELECT id from USER where name = #{name}")
     String showId(@Param("name") String name);
 
-    @Select("SELECT pw FROM User WHERE id = #{id} AND email = #{email}")
-    String findPassword(@Param("id") String id, @Param("email") String email);
+    @Select("SELECT count(*) FROM User WHERE id = #{id} AND name = #{name} AND email = #{email} AND birth = #{birth}")
+    int findPw(String id, String name, String email, String birth);
 
     @Update("UPDATE User SET pw = #{pw} WHERE id = #{id}")
-    int updatePassword(@Param("id") String id, @Param("pw") String pw);
+    int changePw( String id, String pw);
 }
 
