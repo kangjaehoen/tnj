@@ -14,7 +14,6 @@
         }
 
         .container {
-
             width: 100%;
             margin: 50px auto;
             background-color: white;
@@ -45,8 +44,8 @@
         }
 
         .search-options {
-            display: flex;
-            flex-direction: column; /* 수직 정렬 */
+            /*display: flex;
+            flex-direction: column; */
             margin-bottom: 20px;
         }
 
@@ -75,24 +74,43 @@
             align-self: flex-start; /* 버튼을 왼쪽 정렬 */
         }
 
+        button{
+            background-color: #92c653;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
         .search-options button:hover {
             background-color: #76a53b;
         }
 
+        .payment-history {
+            padding: 0; /* 왼쪽과 오른쪽에 각각 20px의 패딩 추가 */
+            margin: 0;
+        }
+
+
         .payment-history h2 {
             margin-bottom: 20px;
-            font-size: 20px;
+            /*font-size: 20px;*/
         }
 
         .payment-history table {
-            width: 100%;
+           /* width: calc(100% - 40px);
+            border-collapse: collapse;
+            margin: 0 auto;*/
+            width: 70%;
             border-collapse: collapse;
         }
 
         .payment-history th,
         .payment-history td {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 10px 10px;
             text-align: center;
         }
 
@@ -170,28 +188,34 @@
     </div>
 
     <div class="payment-history">
-        <h2>결제내역 확인</h2>
+        <h2>결제내역 확인 <button>취소</button>  </h2>
+
         <table>
             <thead>
             <tr>
+                <th><input type="checkbox" id="select-all" onclick="toggleCheckboxes(this)"></th>
                 <th>No.</th>
-                <th>청구월</th>
                 <th>결제일시</th>
                 <th>결제번호</th>
-                <th>청구내용</th>
+                <th>결제상품</th>
                 <th>결제 금액</th>
                 <th>상태</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr th:each="list : ${list}">
+                <td><input type="checkbox" class="item-checkbox"></td>
                 <td>1</td>
-                <td>2022-01</td>
-                <td>2022-01-19 02:58:08</td>
-                <td>20220119-445674205</td>
-                <td><a href="#">2022년 1월 청구서</a></td>
-                <td>#11</td>
-                <td>결제완료</td>
+                <td><span th:text="${list.payDate}"></span></td>
+                <td><span th:text="${list.impUid}"></span></td>
+                <td><a href="#"><span th:text="${list.name}"></span></a></td>
+                <td><span th:text="${list.amount}"></span></td>
+                <td>
+                    <th:block th:switch="${list.pay_Status}">
+                        <span th:case="Y">결제완료</span>
+                        <span th:case="N">취소완료</span>
+                    </th:block>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -212,5 +236,14 @@
         <!--        </div>-->
     </div>
 </footer>
+<script>
+    function toggleCheckboxes(source) {
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+</script>
+
 </body>
 </html>
