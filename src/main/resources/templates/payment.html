@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제 내역 확인</title>
+    <link rel="stylesheet" th:href="@{/css/headerStyle.css}">
     <style>
         body {
             font-family: 'Pretendard-Regular', Arial, sans-serif;
@@ -14,7 +15,6 @@
         }
 
         .container {
-
             width: 100%;
             margin: 50px auto;
             background-color: white;
@@ -45,8 +45,8 @@
         }
 
         .search-options {
-            display: flex;
-            flex-direction: column; /* 수직 정렬 */
+            /*display: flex;
+            flex-direction: column; */
             margin-bottom: 20px;
         }
 
@@ -75,24 +75,43 @@
             align-self: flex-start; /* 버튼을 왼쪽 정렬 */
         }
 
+        button{
+            background-color: #92c653;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
         .search-options button:hover {
             background-color: #76a53b;
         }
 
+        .payment-history {
+            padding: 0; /* 왼쪽과 오른쪽에 각각 20px의 패딩 추가 */
+            margin: 0;
+        }
+
+
         .payment-history h2 {
             margin-bottom: 20px;
-            font-size: 20px;
+            /*font-size: 20px;*/
         }
 
         .payment-history table {
-            width: 100%;
+           /* width: calc(100% - 40px);
+            border-collapse: collapse;
+            margin: 0 auto;*/
+            width: 70%;
             border-collapse: collapse;
         }
 
         .payment-history th,
         .payment-history td {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 10px 10px;
             text-align: center;
         }
 
@@ -133,6 +152,144 @@
             font-weight: 400;
             font-style: normal;
         }
+
+             /* 스타일 생략 */
+        .modal {
+            display: none; /* 기본적으로 모달을 숨김 */
+            position: fixed;
+            z-index: 1000; /* 페이지 내에서 가장 앞에 위치하게 설정 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+            overflow: auto;
+
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 800px; /* 모달 너비 */
+            height : auto;
+            border-radius: 8px; /* 모서리 둥글게 */
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* 모달에 그림자 추가 */
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    </style>
+    <style>
+        .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .reservation-and-rules {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .reservation-info {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 20px;
+        }
+
+        .reservation-details h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reservation-details p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .price-details {
+            display: flex;
+            align-items: center;
+            text-align: right;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: white;
+        }
+
+        .room-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .price-texts {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-texts p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        .total-price {
+            font-weight: bold;
+        }
+
+
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        .refund-policy {
+            padding-top: 20px;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .refund-policy p {
+            margin: 10px 0;
+        }
+
+        .basic-rules ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .basic-rules ul li {
+            margin: 5px 0;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        #reviewMove{
+          margin-left : 650px;
+}
+
     </style>
 </head>
 
@@ -170,28 +327,34 @@
     </div>
 
     <div class="payment-history">
-        <h2>결제내역 확인</h2>
+        <h2>결제내역 확인 <button>취소</button>  </h2>
+
         <table>
             <thead>
             <tr>
+                <th><input type="checkbox" id="select-all" onclick="toggleCheckboxes(this)"></th>
                 <th>No.</th>
-                <th>청구월</th>
                 <th>결제일시</th>
                 <th>결제번호</th>
-                <th>청구내용</th>
+                <th>결제상품</th>
                 <th>결제 금액</th>
                 <th>상태</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
+            <tr class="payList" th:each="list : ${list}">
+                <td><input type="checkbox" class="item-checkbox"></td>
                 <td>1</td>
-                <td>2022-01</td>
-                <td>2022-01-19 02:58:08</td>
-                <td>20220119-445674205</td>
-                <td><a href="#">2022년 1월 청구서</a></td>
-                <td>#11</td>
-                <td>결제완료</td>
+                <td><span th:text="${list.payDate}"></span></td>
+                <td><span class="impUids" th:text="${list.impUid}"></span></td>
+                <td><a href="#" class="modalFloat"><span th:text="${list.name}"></span></a></td>
+                <td><span th:text="${list.amount}"></span></td>
+                <td>
+                    <th:block th:switch="${list.pay_Status}">
+                        <span th:case="Y">결제완료</span>
+                        <span th:case="N">취소완료</span>
+                    </th:block>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -205,6 +368,112 @@
         <a href="#">»</a>
     </div>
 </div>
+
+<form id="reviewForm" action="/insertReply" method="get">
+    <input id="accomNumHidden" type="hidden" name="accomNum" >
+</form>
+
+<div id="reservationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>결제 정보</h2>
+        <div id="reservationDetails">
+            <!-- 예약 정보가 여기에 표시됩니다. -->
+
+            <div class="reservation-and-rules">
+                <form method="post">
+                    <div class="reservation-info">
+                        <div class="reservation-details">
+                            <h3>확인 및 결제</h3>
+                            <p><strong>결제 정보</strong></p>
+                            <p id="date">날짜:
+                               <!-- <span th:text="${checkIn}"></span> ~
+                                <span th:text="${checkOut}"></span>-->
+                            </p>
+                            <p>체크인 시간:
+<!--                                <span th:text="${aVO.chkin_Time}"></span> ~-->
+<!--                                <span th:text="${aVO.chkout_Time}"></span>-->
+                            </p>
+                            <p>게스트:
+                            <!--    <span th:text="'성인'+${adultCnt}+'명'"></span>
+                                <span th:if="${kidCnt > 0}">
+                             , <span th:text="'어린이 ' + ${kidCnt} + '명'"></span>-->
+                        </span>
+                            </p>
+                            <p>f</p>
+                            <p></p>
+                        </div>
+                        <div class="price-details">
+                            <img src="/images/room.png" alt="서울의 호스텔" class="room-image">
+                            <div class="price-texts">
+                                <p></p>
+                                <p>7</p>
+                                <p>8</p>
+                           <!--     <span th:text="${aVO.getAccName()}"></span>
+                                <p>★ <span th:text="${revRate}"></span>
+                                    후기(<span th:text="${revCnt != null ? revCnt : '0'}"></span>개)
+                                </p>-->
+                                <hr>
+                                <p>요금 세부정보</p>
+                                <p>10</p>
+                               <!-- <p><span th:text="${aVO.getPrice()}"></span>원 ×<span th:text="${totalDays}"></span> 박</p>-->
+
+                             <p>총 결제금액: <span id="amount"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <input type="hidden" id="accomName" name="accomName" th:value="${aVO?.getAccName()?:_}">
+                <input type="hidden" id="accomNum" name="accomNum" th:value="${aVO?.accomNum?:_}">
+                <input type="hidden" id="totalDays" name="totalDays" th:value="${totalDays}">
+                <input type="hidden" id="totalPayment" name="totalPayment" th:value="${totalPayment}">
+                <input type="hidden" id="checkIn" name="checkIn" th:value="${checkIn}">
+                <input type="hidden" id="checkOut" name="checkOut" th:value="${checkOut}">
+                <input type="hidden" id="adultCnt" name="adultCnt" th:value="${adultCnt}">
+                <input type="hidden" id="kidCnt" name="klidCnt" th:value="${kidCnt}">
+
+
+                <hr>
+                <h3>예약 정보</h3>
+                <p>12</p>
+                <p>13</p>
+                <p>14</p>
+                <p>15</p>
+                <p>16</p>
+                <p>17</p>
+                <!-- 연한 그레이색 hr 추가 -->
+                <hr>
+
+                <!-- 규칙 섹션 -->
+                <div id="rules">
+                    <div class="refund-policy">
+                        <p><strong>환불정책</strong></p>
+                        <p>19</p>
+                        <p></p>
+                     <!--  <p>
+                            <span th:text="${#strings.concat(checkIn.substring(5, 7), '월 ', checkIn.substring(8), '일')}"></span>
+                            오후 <span th:text="${chkTime}"></span> 전까지 무료로 취소하실 수 있습니다. <br>
+                            체크인 날짜인 <span th:text="${#strings.concat(checkIn.substring(5, 7), '월 ', checkIn.substring(8), '일')}"></span> 전에 취소하면 부분 환불받으실 수 있습니다.
+                        </p>-->
+                    </div>
+
+                    <div class="basic-rules">
+                        <br>
+                        <br>
+                        <button id="reviewMove">리뷰 쓰러가기.</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
 <footer>
     <div class="footer-container">
         <!--        <div class="footer-left">-->
@@ -212,5 +481,120 @@
         <!--        </div>-->
     </div>
 </footer>
+<script>
+    let id = "[[${session.id}]]";
+    let modalFloat;
+    let selectedImpUids = [];
+    let reviewForm =  document.getElementById("reviewForm");
+    let accomValue =  document.getElementById("accomNumHidden");
+
+    function toggleCheckboxes(source) {
+      const checkboxes = document.querySelectorAll('.item-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+    let checks = document.querySelectorAll('.item-checkbox');
+    let imu = document.querySelectorAll('.impUids');
+    for(let i = 0; i < checks.length;i++){
+        checks[i].onclick = function() {
+            impUid =   imu[i].textContent;
+
+            if(checks[i].checked == true){
+                console.log(impUid + " 추가");
+                  if (!selectedImpUids.includes(impUid)) {
+                     selectedImpUids.push(impUid);
+                     }
+           }else{
+                console.log(impUid + "제거");
+                      const index = selectedImpUids.indexOf(impUid);
+                    if (index > -1) {
+                        selectedImpUids.splice(index, 1);
+                    }
+            }
+               console.log(selectedImpUids);
+        }
+    }
+
+        let xhr = new XMLHttpRequest();
+        let impUid;
+       modalFloat = document.getElementsByClassName("modalFloat");
+
+         for (let i = 0; i < modalFloat.length; i++) {
+        modalFloat[i].onclick = function (e) {
+            e.preventDefault(); // 기본 동작 방지
+            console.log("클릭이벤트");
+
+              impUid =   imu[i].textContent;
+              let p = document.getElementsByTagName("p");
+               let amount = document.getElementById("amount");
+             xhr.onload = function(){
+                if(xhr.status == 200) {
+                  let obj = xhr.responseText;
+                  let jsonObj = JSON.parse(obj);
+                    console.log(jsonObj.accName);
+                    console.log(jsonObj.accomNum);
+                    p[1].textContent = '결제 및 예약 날짜 : '+jsonObj.payDate;
+                    p[2].textContent = '결제번호 : '+jsonObj.impUid;
+                    p[3].textContent = '가격 : ₩ '+jsonObj.amount;
+                    p[4].textContent = '유저 : '+jsonObj.id + '님';
+                    p[6].textContext = '숙소명 : '+ jsonObj.accName;
+                    p[8].textContent = '★' + jsonObj.satisAvg +' 후기('+jsonObj.reviewCount+')개';
+                    p[7].textContent = '숙소명 : '+jsonObj.accName;
+                    p[10].textContent = jsonObj.price+'원 x'+jsonObj.totalDay+'박';
+                    amount.textContent = jsonObj.amount +' ₩';
+                    p[12].textContent = '숙소명 : ' +jsonObj.accName;
+                    p[13].textContent = '주소 : '+jsonObj.address+' '+jsonObj.detailAddress;
+                    p[14].textContent = '우편번호 : '+jsonObj.postcode;
+                    p[15].textContent = '전화번호 : '+jsonObj.accCall;
+                    p[16].textContent = '예약기간 : '+jsonObj.checkIn+' '+jsonObj.chkin_Time +'  ~  '+jsonObj.checkOut+' '+jsonObj.chkout_Time ;
+                    p[17].textContent = '예약번호 : ' + jsonObj.resNum;
+                    p[19].textContent =  jsonObj.checkIn+' 오후 2시 전까지 무료로 취소하실 수 있습니다.'
+                    p[20].textContent = '체크인 날짜인 '+jsonObj.checkIn+' 이전에 취소하면 부분 환불 받으실 수 있습니다.';
+                   accomValue.value = jsonObj.accomNum;
+
+                }
+            }
+             console.log(impUid+'123');
+             xhr.open('GET','/payResAccomInfo/'+impUid,'true');
+             xhr.send();
+
+            document.getElementById('reservationModal').style.display = 'block'; // 모달 표시
+        }
+
+    }
+
+    // 모달을 닫는 함수
+    function closeModal() {
+        document.getElementById('reservationModal').style.display = 'none';
+    }
+
+    // X 버튼 클릭 시 모달 닫기
+    document.querySelector('.close-button').onclick = function () {
+        closeModal();
+    };
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function (event) {
+        const modal = document.getElementById('reservationModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    let review = document.getElementById("reviewMove");
+        review.onclick = function(e){
+            e.preventDefault();
+            reviewForm.submit();
+
+    }
+
+
+
+
+
+</script>
+
+<script th:src="@{/js/header.js}"></script>
 </body>
 </html>

@@ -15,4 +15,9 @@ public class PayVO {
     private int payment;
     private int accomNum;
     private int resNum;
+    private String impUid;
+    private String merchantUid;
+    private String amount;
+    private String name;
+    private String apply_name;
 }

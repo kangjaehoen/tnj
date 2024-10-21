@@ -1,7 +1,6 @@
 let myPage = document.getElementById("myPage");
 let myPageList = document.getElementById("myPageList");
 
-console.log(id);
 
 myPage.onclick = function() {
     let rect = myPage.getBoundingClientRect();
