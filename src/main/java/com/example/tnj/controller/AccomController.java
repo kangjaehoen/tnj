@@ -1,4 +1,4 @@
-package com.example.tnj.controller;
+package com.example.tnj.Controller;
 
 import mybatis.dao.AccomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
