@@ -25,7 +25,7 @@ public class AccDetailController {
     public String accDetail(Model model, @ModelAttribute AccVO ac, @RequestParam("accomNum") int accomNum) {
         List<AccDetailDTO> list= dao.listAll(accomNum);
         String revCnt=dao.cntReview(accomNum);
-        double revRate=dao.revRating(accomNum);
+        String revRate=dao.revRating(accomNum);
         AccVO aVO=dao.acinfo(accomNum);
 
         model.addAttribute("revCnt",revCnt);
