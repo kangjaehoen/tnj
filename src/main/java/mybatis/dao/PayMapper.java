@@ -13,4 +13,6 @@ public interface PayMapper {
     @Select("select * from reservation where accomNum in (select accomNum from accom where id = #{id} and  resDate > #{startdate} and resDate <#{enddate})")
     public List<PayVO> reservationcheck(String id, LocalDate startdate, LocalDate enddate);
 
+
+
 }

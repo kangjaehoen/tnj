@@ -21,8 +21,9 @@ public interface WishListMapper {
 
     @Select(" SELECT id, accomNum, checkStatus " +
             " FROM wishList " +
-            " WHERE checkStatus = 1")
-    public List<WishListDTO> checkWish();
+            " WHERE checkStatus = 1 " +
+            " AND id = #{id}")
+    public List<WishListDTO> checkWish(String id);
 
     @Select(" SELECT checkStatus " +
             " FROM wishList " +
