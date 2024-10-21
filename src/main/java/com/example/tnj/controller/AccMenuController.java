@@ -1,7 +1,6 @@
 package com.example.tnj.controller;
 
 import com.example.tnj.domain.AccVO;
-import com.example.tnj.domain.PayVO;
 import jakarta.servlet.http.HttpSession;
 import mybatis.dao.AccomImageMapper;
 import mybatis.dao.AccomMapper;
@@ -55,6 +54,16 @@ public class AccMenuController {
         mav.setViewName("myAccommodations");
         return mav;
     }
+    @RequestMapping(value = "/searchonsale", produces = "application/json; charset=utf-8")
+    @ResponseBody
+    public ModelAndView showonsale(HttpSession session){
+        ModelAndView mav = new ModelAndView();
+        String id = (String) session.getAttribute("id");
+        List<AccVO> mylist = acmd.searchmineonsale(id);
+        mav.addObject("mylist", mylist);
+        mav.setViewName("myAccommodations");
+        return mav;
+    }
 
     @RequestMapping("/accDeletelist")
     @ResponseBody
@@ -99,18 +108,6 @@ public class AccMenuController {
                 acmd.saleupdate(accomNum, 1);
         }
         mav.setViewName("redirect:/myacclist");
-        return mav;
-    }
-
-    @RequestMapping(value = "/rCheck", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public ModelAndView reservationcheck(HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        ModelAndView mav = new ModelAndView();
-        List<PayVO> rsv = acmd.reservationcheck(id);
-        mav.addObject("id", id);
-        mav.addObject("rsv", rsv);
-        mav.setViewName("reservationCheck");
         return mav;
     }
 }

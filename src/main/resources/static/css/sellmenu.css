@@ -30,3 +30,7 @@
 .selnav label {
 	padding-left: 30px;
 }
+
+.selnav input{
+    display : none;
+}
