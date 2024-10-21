@@ -327,14 +327,13 @@ function processPayment() {
         buyer_postcode: '123-456'  // 테스트용 우편번호
     }, function (res) {
         if (res.success) {
-            console.log(res);
 
-                var msg = "결제가 완료되었습니다.\\n";
+         /*       var msg = "결제가 완료되었습니다.\\n";
                 msg += '고유ID: ' + res.imp_uid + '\\n';
                 msg += '상점 거래ID: ' + res.merchant_uid + '\\n';
                 msg += '결제 금액: ' + res.paid_amount + '\\n';
                 msg += '카드 승인번호: ' + res.apply_num + '\\n';
-                msg += '결제 상품명: ' + res.name + '\\n';
+                msg += '결제 상품명: ' + res.name + '\\n';*/
 
                 alert(msg);
 
@@ -349,7 +348,7 @@ function processPayment() {
                 };
 
                 insertPay(payInfo);
-                console.log(payInfo);
+
             }
 
          /*   // 결제 완료된 정보를 폼에 입력

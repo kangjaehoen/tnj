@@ -14,7 +14,6 @@ public class PaymentDTO {
     private String id;
     private Date payDate;
     private char pay_Status;
-    private String payment;
 
     //결제api
     private String amount;
@@ -22,7 +21,6 @@ public class PaymentDTO {
     private String impUid;
     private String merchantUid;
     private String name;
-    private String productName;
     private String apply_num;
 
 }
