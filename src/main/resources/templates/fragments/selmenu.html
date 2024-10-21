@@ -17,9 +17,9 @@
     <div class="selmenu">
     <label>[[${session.id}]]님 안녕하세요.</label>
         <ul>
-            <li><form action="/accregist" method="post"><input type="hidden" name="id" th:value="${session.id}"><label><input type="submit" style="display:none;">숙소 등록</label></form></li>
-            <li><form action="/myacclist" method="post"><input type="hidden" name="id" th:value="${session.id}"><label><input type="submit" style="display:none;">나의 숙소 리스트</label></form></li>
-            <li><form action="/rCheck" method="post"><input type="hidden" name="id" th:value="${session.id}"><label><input type="submit" style="display:none;">예약 확인</label></form></li>
+            <li><form action="/accregist" method="post"><input type="hidden" name="id" th:value="${session.id}"><label><input type="submit">숙소 등록</label></form></li>
+            <li><form action="/myacclist" method="post"><input type="hidden" name="id" th:value="${session.id}"><label><input type="submit">나의 숙소 리스트</label></form></li>
+            <li><form action="/rCheck" method="post"><input type="hidden" name="id" th:value="${session.id}"><label><input type="submit">예약 확인</label></form></li>
         </ul>
     </div>
 </nav>
