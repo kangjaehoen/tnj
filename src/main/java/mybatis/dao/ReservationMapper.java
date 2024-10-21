@@ -30,7 +30,7 @@ public interface ReservationMapper {
     //리뷰 별점
     @Select("SELECT round(avg(satisfy),1) " +
             "FROM review r JOIN accom a ON r.accomNum = a.accomNum WHERE r.accomNum= #{accomNum}")
-    public double revRating(@Param("accomNum") int accomNum);
+    public String revRating(@Param("accomNum") int accomNum);
 
     //숙소 가격
     @Select("SELECT DISTINCT FORMAT(a.price,0) AS price\n" +
@@ -47,7 +47,7 @@ public interface ReservationMapper {
     public int chkDuplicate(ReservationDTO rDTO);
 
     //예약 insert
-    @Insert("insert into reservation (resDate,chkin_Date, chkout_Date, adultCnt, kidCnt, id, accomNum) values( now(),#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt},#{id}, #{accomNum})")
+    @Insert("insert into reservation (resDate,chkin_Date, chkout_Date, adultCnt, kidCnt, id, accomNum) values( now(),#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt}, #{id}, #{accomNum})")
     public void insertRes(ReservationDTO rDTO);
 
 

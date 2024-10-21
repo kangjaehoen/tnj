@@ -42,4 +42,5 @@ public class ReservationDTO {
     private Date hiredate;
     private String revContent;
 
+
 }

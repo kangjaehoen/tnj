@@ -1,4 +1,4 @@
-package com.example.tnj.Controller;
+package com.example.tnj.controller;
 
 import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.ResVO;
@@ -31,7 +31,7 @@ public class ReservationController {
         model.addAttribute("rDTO",rDTO);
 
         int revCnt=dao.cntReview(accomNum);
-        double revRate=dao.revRating(accomNum);
+        String revRate=dao.revRating(accomNum);
         String price=dao.accomPrice(accomNum);
 
         model.addAttribute("revCnt",revCnt);
@@ -62,10 +62,10 @@ public class ReservationController {
         String fmChkTime= lt.format(format);
 
         int revCnt=dao.cntReview(ac.getAccomNum());
-        double revRate=dao.revRating(ac.getAccomNum());
+        String revRate=dao.revRating(ac.getAccomNum());
 
 
-
+        model.addAttribute("accomNum",ac.getAccomNum());
         model.addAttribute("chkTime",fmChkTime);
         model.addAttribute("totalDays", totalDays);
         model.addAttribute("totalPayment", totalPayment);
@@ -86,8 +86,10 @@ public class ReservationController {
 
 
     @PostMapping("/reservation/insertRes")
-    public ResponseEntity<Void> insertRes(@RequestBody ReservationDTO rDTO) {
+    public ResponseEntity<Void> insertRes(@RequestBody ReservationDTO rDTO, @RequestParam("accomNum") int accomNum) {
         try {
+            rDTO.setAccomNum(accomNum);
+
             dao.insertRes(rDTO);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -95,6 +97,7 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 
 }
