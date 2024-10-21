@@ -11,7 +11,7 @@ public interface PaymentMapper {
     public int selectresNum(@Param("accomNum") int accomNum);
 
     //결제테이블 insert
-    @Insert("insert into pay( resNum, id, payDate, pay_Status, payment, accomNum, amount, impUid, merchantUid, productName)  values( #{resNum},#{id}, now(), 'Y', #{payment}, #{accomNum}, #{amount}, #{impUid}, #{merchantUid}, #{productName})")
+    @Insert("insert into pay( resNum, id, payDate, pay_Status, payment, accomNum, amount, impUid, merchantUid, productName,name, apply_num)  values( #{resNum},#{id}, now(), 'Y', #{payment}, #{accomNum}, #{amount}, #{impUid}, #{merchantUid}, #{productName}, #{name}, #{apply_num})")
     public void insertPay(PaymentDTO pDTO);
 
     //결제내역

@@ -23,5 +23,6 @@ public class PaymentDTO {
     private String merchantUid;
     private String name;
     private String productName;
+    private String apply_num;
 
 }

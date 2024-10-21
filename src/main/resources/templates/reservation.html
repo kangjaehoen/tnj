@@ -335,15 +335,17 @@ function processPayment() {
                 msg += '결제 금액: ' + res.paid_amount + '\\n';
                 msg += '카드 승인번호: ' + res.apply_num + '\\n';
                 msg += '결제 상품명: ' + res.name + '\\n';
+
                 alert(msg);
 
                 let payInfo={
                     accomNum: $("#accomNum").val(),
                     impUid: res.imp_uid,
-                    merchant_uid: res.merchant_uid,
+                    merchantUid: res.merchant_uid,
                     amount: res.paid_amount,
                     pay_Status: 'Y',
-                    name: $("#accomName").val()
+                    name: $("#accomName").val(),
+                    apply_num: res.apply_num
                 };
 
                 insertPay(payInfo);
