@@ -6,10 +6,13 @@
     <link rel="stylesheet" type="text/css" href="css/allseller.css" />
     <link rel="stylesheet" type="text/css" href="css/sellmenu.css" />
     <link rel="stylesheet" type="text/css" href="css/myAcc.css" />
+    <link rel="stylesheet" th:href="@{/css/headerStyle.css}">
 </head>
 <body>
 <th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
 <section class="mainsection">
+    <div><th:block th:replace="~{fragments/header :: headerFragment}"></th:block></div>
+    <br><br>
     <h1 class="displaycenter">
         <form  id="searchmine" class="search-bar" action="/searchmine" method="post"><input type="text" name="key" placeholder="상품 검색"/><button type="submit"><img id="searchButton" src="../images/search-button.png"></button></form>
     </h1>
@@ -56,6 +59,8 @@
             </tbody>
         </th:block>
     </table>
+    <br><br>
+    <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
 </section>
 <script>
     function goRegister(event, id, accomNum){
@@ -146,5 +151,6 @@
     location.href = '/searchonsale';
     }
 </script>
+<script th:src="@{/js/header.js}"></script>
 </body>
 </html>
