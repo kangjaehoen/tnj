@@ -5,18 +5,11 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="css/allseller.css"/>
     <link rel="stylesheet" type="text/css" href="css/sellmenu.css"/>
-    <link rel="stylesheet" type="text/css" href="css/reservationcheck.css"/>
+    <link rel="stylesheet" type="text/css" href="css/rcheck.css"/>
 </head>
 <body>
 <th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
 <section class="mainsection">
-    <h1 class="displaycenter">
-        <form id="searchmine" class="search-bar" action="/searchmine" method="post"><input type="text" name="key"
-                                                                                           placeholder="상품 검색"/>
-            <button type="submit"><img id="searchButton" src="../images/search-button.png"></button>
-        </form>
-    </h1>
-    <br>
     <section class="calender">
         <h1 class="timeselect">
             <button class="toolbtn" id="leftbtn">←</button>
@@ -42,7 +35,7 @@
                     <p th:if="${daystat.index % 7 == 6}" th:text="${#temporals.format(day,'dd')}" class="day" style="color : blue"></p>
                     <p th:if="${daystat.index % 7 != 0 && daystat.index % 7 != 6}" th:text="${#temporals.format(day,'dd')}" class="day"></p>
                     <br>
-                    <th:block th:each="ar : ${arDTOs}"><th:block th:if="${day == ar.res.chkin_Date}" ><span th:text="${ar.acc.accName}"></span><br></th:block></th:block></td>
+                    <th:block th:each="ar : ${arDTOs}"><th:block th:if="${day == ar.abd.date}" ><span th:text="${ar.acc.accName}"></span><br></th:block></th:block></td>
                 <th:block th:if="${daystat.index % 7 == 6}"></tr></th:block>
             </th:block>
         </table>

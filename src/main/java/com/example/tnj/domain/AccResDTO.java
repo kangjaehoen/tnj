@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter@Setter
 public class AccResDTO {
     AccVO acc;
-    ResVO res;
+    AbleDateVO abd;
 }

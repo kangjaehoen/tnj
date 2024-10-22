@@ -17,7 +17,7 @@
     <input type="hidden" name="onSale" value="1">
     <input type="hidden" name="loadedAccomNum" id="loadedAccomNum" th:value="${acmd?.accomNum?:0}">
     <p id="loadedAccName" th:text="${acmd?.accName?:_}" style="display : none"></p>
-<!--    <section class="left-section"></section>-->
+    <input type="hidden" name="regDate" th:value="${#dates.format(#dates.createNow(),'yyyy-MM-dd')}">
     <fieldset>
         <legend>상품명</legend>
         <input type="text" name="accName" th:value="${acmd?.accName?:_}" maxlength="30" required
@@ -149,6 +149,25 @@
                               th:checked="${acmd?.accType == '캠핑장'}"><span>캠핑장</span></label>
                 <label><input type="radio" name="accType" value="풀빌라"
                               th:checked="${acmd?.accType == '풀빌라'}"><span>풀빌라</span></label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>휴일</legend>
+            <div class="day">
+            <input type="checkbox" id="sunday" name="day" value="7">
+            <label for="sunday">일</label>
+            <input type="checkbox" id="monday" name="day" value="1">
+            <label for="monday">월</label>
+            <input type="checkbox" id="tuesday" name="day" value="2">
+            <label for="tuesday">화</label>
+            <input type="checkbox" id="wednesday" name="day" value="3">
+            <label for="wednesday">수</label>
+            <input type="checkbox" id="thursday" name="day" value="4">
+            <label for="thursday">목</label>
+            <input type="checkbox" id="friday" name="day" value="5">
+            <label for="friday">금</label>
+            <input type="checkbox" id="saturday" name="day" value="6">
+            <label for="saturday">토</label>
             </div>
         </fieldset>
         <!-- 주소 입력 필드 -->

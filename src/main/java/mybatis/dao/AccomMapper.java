@@ -19,7 +19,7 @@ public interface AccomMapper {
     public  List<AccVO> searchmineonsale(String id);
 
     //등록
-    @Insert("insert into accom (accomNum, id, accName, postcode, address, detailAddress, price, accCall, adultPrice, kidPrice, dayoff, category, accType, onSale, accomRule, informtext, occ, maxocc,chkin_Time,chkout_Time,room,bed,bathroom) values (#{accomNum}, #{id}, #{accName}, #{postcode}, #{address}, #{detailAddress}, #{price}, #{accCall}, #{adultPrice}, #{kidPrice}, #{dayoff}, #{category}, #{accType}, #{onSale}, #{accomRule}, #{informtext}, #{occ}, #{maxocc},#{chkin_Time},#{chkout_Time},#{room},#{bed},#{bathroom} )")
+    @Insert("insert into accom (accomNum, id, accName, postcode, address, detailAddress, price, accCall, adultPrice, kidPrice, dayoff, category, accType, onSale, accomRule, informtext, occ, maxocc,chkin_Time,chkout_Time,room,bed,bathroom, regDate) values (#{accomNum}, #{id}, #{accName}, #{postcode}, #{address}, #{detailAddress}, #{price}, #{accCall}, #{adultPrice}, #{kidPrice}, #{dayoff}, #{category}, #{accType}, #{onSale}, #{accomRule}, #{informtext}, #{occ}, #{maxocc},#{chkin_Time},#{chkout_Time},#{room},#{bed},#{bathroom}, #{regDate} )")
     @Options(useGeneratedKeys = true, keyProperty = "accomNum")
     public boolean accinsert(AccVO ac);
 
