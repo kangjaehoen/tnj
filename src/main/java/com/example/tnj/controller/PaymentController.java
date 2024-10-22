@@ -3,6 +3,7 @@ package com.example.tnj.controller;
 import com.example.tnj.domain.*;
 import jakarta.servlet.http.HttpSession;
 import mybatis.dao.PaymentMapper;
+import org.apache.tomcat.jni.SSLContext;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,9 +44,12 @@ public class PaymentController {
 
 
     @PostMapping("/reservation/payment")
-    public String insertPay(@RequestBody PaymentDTO pDTO,
+    public String insertPay(@RequestBody PaymentDTO pDTO, HttpSession session,
                             @RequestParam("accomNum") int accomNum){
+
         try{
+            String id= (String) session.getAttribute("id");
+            pDTO.setId(id);
             int resNum= dao.selectresNum(accomNum);
 
             pDTO.setResNum(resNum);
