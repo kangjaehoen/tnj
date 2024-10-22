@@ -31,13 +31,13 @@ public class PaymentController {
 
     @GetMapping("/payment")
     public String payment(Model model, @ModelAttribute AccVO ac, HttpSession session,
-                          RedirectAttributes redirectAttributes, @ModelAttribute PayVO pVO, String year, String month) {
+                          RedirectAttributes redirectAttributes, @ModelAttribute PayVO pVO) {
         String id = (String) session.getAttribute("id");
 
         if(id == null){
             redirectAttributes.addFlashAttribute("errorMessage", "로그인 한 회원만 접근가능한 페이지 입니다.");
         }
-        List<PaymentDTO> list = dao.payList(id, year, month);
+        List<PaymentDTO> list = dao.payList(id);
 
         model.addAttribute("list", list);
         return "payment";
@@ -64,13 +64,13 @@ public class PaymentController {
 
 
     }
-@PostMapping("/payment/cancel")
-@ResponseBody
+    @PostMapping("/payment/cancel")
+    @ResponseBody
     public ResponseEntity<String> cancelPayment(@RequestBody Map<String, Object> requestData,
                                                 @ModelAttribute PayVO pVOs,Model model) {
         // JSON 데이터를 Map으로 받음
         List<String> impUids = (List<String>) requestData.get("impUids");
-       /* PayVO pVO= dao.payInfo(accomNum);*/
+        /* PayVO pVO= dao.payInfo(accomNum);*/
 
         // 각 impUid에 대해 결제 취소 처리 (DB에서 결제 상태 변경 또는 삭제)
         for (String impUid : impUids) {
