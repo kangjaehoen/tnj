@@ -75,11 +75,34 @@ input[type="radio"] {
 	flex-wrap: wrap;
 	text-align: center;
 	align-items: center;
+	width : auto;
+}
+.radio-group label{
+    min-width : auto;
+    margin : 0 auto;
 }
 
 input[type="radio"]:checked+span {
 	color: #8dbf3d;
 	font-weight: bold;
+}
+.day{
+    width : 100%;
+    display : flex;
+    align-items : center;
+}
+
+.day label{
+    min-width : auto;
+    display : inline-block;
+    margin : 0 auto;
+}
+.day input:checked+label{
+	color: #8dbf3d;
+	font-weight: bold;
+}
+.day input{
+    display : none;
 }
 
 .button-container {

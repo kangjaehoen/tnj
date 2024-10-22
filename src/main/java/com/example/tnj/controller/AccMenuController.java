@@ -32,7 +32,7 @@ public class AccMenuController {
         return mav;
     }
 
-    @RequestMapping(value = "/myacclist", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/myacclist")
     @ResponseBody
     public ModelAndView myacclist(HttpSession session) {
         ModelAndView mav = new ModelAndView();
@@ -43,7 +43,7 @@ public class AccMenuController {
         return mav;
     }
 
-    @RequestMapping(value = "/searchmine", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/searchmine")
     @ResponseBody
     public ModelAndView searchmine(HttpSession session, @RequestParam(defaultValue = "") String key) {
         ModelAndView mav = new ModelAndView();
@@ -53,7 +53,7 @@ public class AccMenuController {
         mav.setViewName("myAccommodations");
         return mav;
     }
-    @RequestMapping(value = "/searchonsale", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/searchonsale")
     @ResponseBody
     public ModelAndView showonsale(HttpSession session){
         ModelAndView mav = new ModelAndView();

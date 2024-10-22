@@ -3,18 +3,20 @@ package com.example.tnj.domain;
 import lombok.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class ResVO {
-    private int resNum;
-    private Date resDate;
-    private Date Chkin_Date;
-    private Date Chkout_Date;
-    private int adultCnt;
-    private int kidCnt;
-    private String id;
-    private int accomNum;
+    int resNum;
+    LocalDate resDate;
+    LocalDate chkin_Date;
+    LocalDate chkout_Date;
+    int adultCnt;
+    int kidCnt;
+    String id;
+    int accomNum;
 }
