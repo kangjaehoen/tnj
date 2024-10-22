@@ -1,5 +1,6 @@
 package mybatis.dao;
 
+import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.PayVO;
 import com.example.tnj.domain.PaymentDTO;
 import org.apache.ibatis.annotations.*;
@@ -21,9 +22,20 @@ public interface PaymentMapper {
     public PayVO payInfo(@Param("accomNum") int accomNum);
 
     //결제취소
-    @Update("update pay set pay_Status='N' where accomNum=#{accomNum}")
-    public int cancelPay(@Param("accomNum") int accomNum);
+    @Update("update pay set pay_Status='N' where impUid=#{impUid}")
+    public int cancelPay(@Param("impUid") String impUid);
 
+    //resNum에 해당하는 모든 결제정보
     @Select("select * from pay where resNum=#{resNum}")
     public List<PaymentDTO> listAll(@Param("resNum") int resNum);
+
+    //세션에 따른 리스트출력
+    @Select("select DATE_FORMAT(payDate,'%Y') as year, DATE_FORMAT(payDate,'%M') as month ,impUid,name,amount,pay_Status from pay where id=#{id} and DATE_FORMAT(payDate,'%Y')=#{year} and DATE_FORMAT(payDate,'%M')=#{month}")
+    public List<PaymentDTO> payList(@Param("id") String id, String year, String month);
+
+    //결제상태에 따른 조회
+    @Select("select * from pay where pay_Status=#{pay_Status}")
+    public List<PaymentDTO> statusByList(@Param("pay_Status") String payStatus,@Param("resNum") int resNum);
+
+
 }

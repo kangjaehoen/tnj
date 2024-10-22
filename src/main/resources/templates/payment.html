@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제 내역 확인</title>
+
     <style>
         body {
             font-family: 'Pretendard-Regular', Arial, sans-serif;
@@ -47,6 +48,8 @@
             /*display: flex;
             flex-direction: column; */
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         #search-options, #payment-status {
@@ -152,9 +155,13 @@
             font-style: normal;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
+<input type="hidden" id="id" name="id" th:value="${session.id}">
+
 <div class="container">
     <th:block th:replace="~{fragments/header :: headerFragment}"></th:block>
 
@@ -175,26 +182,21 @@
         <div id="payment-status">
             <label>결제상태</label>
             <input type="radio" id="paid" name="status" checked>
-            <label for="paid">결제완료</label>
-
+            <label for="paid" name="status">결제완료</label>
             <input type="radio" id="refunded" name="status">
-            <label for="refunded">환불완료</label>
-
-            <!--<input type="radio" id="cancelled" name="status">
-            <label for="cancelled">취소 중</label>-->
-
-            <button>검색</button>
+            <label for="refunded" name="status">환불완료</label>
+            <button id="searchButton">검색</button>
         </div>
     </div>
 
     <div class="payment-history">
-        <h2>결제내역 확인 <button>취소</button>  </h2>
+        <h2>결제내역 확인 <button id="cancelPaymentButton">결제취소</button>  </h2>
 
         <table>
             <thead>
             <tr>
                 <th><input type="checkbox" id="select-all" onclick="toggleCheckboxes(this)"></th>
-                <th>No.</th>
+                <!--<th>No.</th>-->
                 <th>결제일시</th>
                 <th>결제번호</th>
                 <th>결제상품</th>
@@ -203,20 +205,25 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="list : ${list}">
-                <td><input type="checkbox" class="item-checkbox"></td>
-                <td>1</td>
-                <td><span th:text="${list.payDate}"></span></td>
-                <td><span th:text="${list.impUid}"></span></td>
-                <td><a href="#"><span th:text="${list.name}"></span></a></td>
-                <td><span th:text="${list.amount}"></span></td>
-                <td>
-                    <th:block th:switch="${list.pay_Status}">
-                        <span th:case="Y">결제완료</span>
-                        <span th:case="N">취소완료</span>
-                    </th:block>
-                </td>
+            <tr th:if="${#lists.isEmpty(list)}">
+
+                <td colspan="7" style="text-align: center;">결제내역이 존재하지 않습니다.</td>
             </tr>
+              <tr class="payList" th:each="list : ${list}">
+
+                  <td><input type="checkbox" class="item-checkbox"></td>
+                 <!-- <td>1</td>-->
+                  <td><span th:text="${list.payDate}"></span></td>
+                  <td><span class="impUids" th:text="${list.impUid}"></span></td>
+                  <td><a href="#"><span th:text="${list.name}"></span></a></td>
+                  <td><span th:text="${list.amount}"></span></td>
+                  <td>
+                      <th:block th:switch="${list.pay_Status}">
+                          <span th:case="Y">결제완료</span>
+                          <span th:case="N">환불완료</span>
+                      </th:block>
+                  </td>
+              </tr>
             </tbody>
         </table>
     </div>
@@ -231,29 +238,130 @@
 </div>
 <footer>
     <div class="footer-container">
-        <!--        <div class="footer-left">-->
         <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
-        <!--        </div>-->
     </div>
 </footer>
 <script>
+    $(document).ready(function () {
+        const currentYear = new Date().getFullYear();
+
+        // 년도 selectbox 만들기
+        for (i = 1970; i <= currentYear; i++) {
+            $('#year').append('<option value="' + i + '">' + i + '</option>');
+        }
+
+        // 월 selectbox 만들기
+        for (i = 1; i <= 12; i++) {
+            $('#month').append('<option value="' + i + '">' + i + '</option>');
+        }
+    });
+
+    // 전체 체크박스 선택
     function toggleCheckboxes(source) {
         const checkboxes = document.querySelectorAll('.item-checkbox');
         checkboxes.forEach(checkbox => {
             checkbox.checked = source.checked;
         });
     }
+
+    // 결제 취소 버튼 클릭 이벤트
+    document.getElementById('cancelPaymentButton').addEventListener('click', function() {
+        const selectedPayments = [];
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const impUid = row.querySelector('.impUids').innerText; // impUid 값을 가져옵니다.
+            selectedPayments.push(impUid);
+        });
+
+        if (selectedPayments.length === 0) {
+            alert('취소할 결제를 선택하세요.');
+            return;
+        }
+
+        // 결제 취소 확인
+        if (!confirm("결제를 취소하시겠습니까?")) {
+            return;
+        }
+
+        // AJAX 요청을 통해 서버에 결제 취소 요청
+        $.ajax({
+            url: "/payment/cancel", // 결제 취소 API URL
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                impUids: selectedPayments,  // 선택한 결제 내역(impUid) 배열을 서버에 전송
+                merchant_uid: 'merchant_' + new Date().getTime()  // 취소에 필요한 merchant_uid 생성
+
+            }),
+            success: function(response) {
+                alert("결제가 취소되었습니다.");
+                location.href = "/";  // 성공 시 리다이렉트할 페이지*/
+            },
+            error: function(error) {
+                alert("결제 취소 중 오류가 발생했습니다.");
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    // 검색 버튼 클릭 이벤트
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const selectedStatus = document.querySelector('input[name="status"]:checked').value; // 선택된 결제 상태
+        const syear = document.getElementById('year').value; // 선택된 년도
+        const smonth = document.getElementById('month').value; // 선택된 월
+
+        if(year === syear && month === smonth) {
+            const payStatus = selectedStatus === 'Y' ? 'Y' : 'N';
+            // AJAX 요청을 통해 서버에 결제 상태에 맞는 결제 내역 요청
+            fetch(`/payment?status=${payStatus}&year=${syear}&month=${smonth}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 서버에서 받은 데이터로 테이블 업데이트
+                    updatePaymentTable(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }else{
+                alert('검색조건에 해당하는 결과가 없습니다.');
+            }
+    });
+
+    // 결제 내역 테이블 업데이트 함수
+    function updatePaymentTable(data) {
+        const tbody = document.querySelector('.payment-history tbody');
+        tbody.innerHTML = ''; // 기존 내용을 비우기
+
+        if (data.length === 0) {
+            // 결제 내역이 없을 경우
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">결제내역이 존재하지 않습니다.</td></tr>';
+        } else {
+            // 결제 내역을 테이블에 추가
+            data.forEach((list, index) => {
+                const payDate = new Date(list.payDate);
+                const year = payDate.getFullYear();
+                const month = payDate.getMonth() + 1;
+
+                const row = `
+                <tr class="payList">
+                    <td><input type="checkbox" class="item-checkbox"></td>
+                    <td>${index + 1}</td>
+                    <td>${year}-${month < 10 ? '0' + month : month}</td>
+                    <td class="impUids">${list.impUid}</td>
+                    <td><a href="#"><span>${list.name}</span></a></td>
+                    <td>${list.amount}</td>
+                    <td>${list.pay_Status === 'Y' ? '결제완료' : '환불완료'}</td>
+                </tr>
+            `;
+                tbody.innerHTML += row;
+            });
+        }
+    }
+
 </script>
-<!-- 모달 -->
-<div id="reservationModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>예약 정보</h2>
-        <div id="reservationDetails">
-            <!-- 예약 정보가 여기에 표시됩니다. -->
-        </div>
-    </div>
-</div>
+
 
 </body>
 </html>

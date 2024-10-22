@@ -12,4 +12,5 @@ public interface AbledateMapper {
     public int createdate(int accomNum, LocalDate date, String ableStatus);
     @Update("update abledate set ableStatus =#{id} where accomNum = #{accomNum} and date >= #{chkin_Date} and date <= #{chkout_Date}")
     public int book (String id, LocalDate chkin_Date, LocalDate chkout_Date);
+
 }
