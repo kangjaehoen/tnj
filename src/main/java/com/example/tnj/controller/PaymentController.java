@@ -1,9 +1,6 @@
 package com.example.tnj.controller;
 
-import com.example.tnj.domain.AccVO;
-import com.example.tnj.domain.PaymentDTO;
-import com.example.tnj.domain.ResVO;
-import com.example.tnj.domain.ReservationDTO;
+import com.example.tnj.domain.*;
 import mybatis.dao.PaymentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,11 +21,15 @@ public class PaymentController {
 
 
     @GetMapping("/payment")
-    public String payment(Model model, @ModelAttribute AccVO ac,@RequestParam("accomNum") int accomNum){
+    public String payment(Model model, @ModelAttribute AccVO ac,
+                          @RequestParam("accomNum") int accomNum,
+                          String impUid, PayResAccomVO payResAccomVO){
 
         int resNum= dao.selectresNum(accomNum);
         List<PaymentDTO> list= dao.listAll(resNum);
         model.addAttribute("list",list);
+
+        payResAccomVO =dao.payReservAccomInfo(impUid);
 
         return "payment";
     }
@@ -56,7 +57,12 @@ public class PaymentController {
     }
 
 
-
+    @GetMapping(value ="/payResAccomInfo/{impUid}")
+    @ResponseBody
+    public PayResAccomVO payResAccomInfo(@PathVariable String impUid){
+       PayResAccomVO payResAccomVO = dao.payReservAccomInfo(impUid);
+        return payResAccomVO;
+    }
 
 
 }
