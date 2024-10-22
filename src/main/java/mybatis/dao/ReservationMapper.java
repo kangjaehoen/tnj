@@ -4,11 +4,9 @@ import com.example.tnj.domain.AccDetailDTO;
 import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.ResVO;
 import com.example.tnj.domain.ReservationDTO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -49,6 +47,8 @@ public interface ReservationMapper {
     //예약 insert
     @Insert("insert into reservation (resDate,chkin_Date, chkout_Date, adultCnt, kidCnt, id, accomNum) values( now(),#{chkin_Date}, #{chkout_Date}, #{adultCnt}, #{kidCnt}, #{id}, #{accomNum})")
     public void insertRes(ReservationDTO rDTO);
+
+
 
 
 }
