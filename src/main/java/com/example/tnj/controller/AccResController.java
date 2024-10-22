@@ -1,10 +1,12 @@
 package com.example.tnj.controller;
 
 
+import com.example.tnj.domain.AbleDateVO;
 import com.example.tnj.domain.AccResDTO;
 import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.ResVO;
 import jakarta.servlet.http.HttpSession;
+import mybatis.dao.AbledateMapper;
 import mybatis.dao.AccomMapper;
 import mybatis.dao.ResMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,12 @@ public class AccResController {
     ResMapper rv;
     @Autowired
     AccomMapper acmd;
+    @Autowired
+    AbledateMapper ab;
 
-    @RequestMapping(value = "/rCheck", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/rCheck")
     @ResponseBody
-    public ModelAndView rCheckChange(HttpSession session, @RequestParam(defaultValue = "1") int year, @RequestParam(defaultValue = "1") int month) {
+    public ModelAndView rCheck(HttpSession session, @RequestParam(defaultValue = "1") int year, @RequestParam(defaultValue = "1") int month) {
         String id = (String) session.getAttribute("id");
         ModelAndView mav = new ModelAndView();
         //이 날짜 구간의 데이터만 가져올거임
@@ -39,8 +43,8 @@ public class AccResController {
         } else {
             now = LocalDate.of(year, month, 1);
         }
-        mav.addObject("year",year);
-        mav.addObject("month",month);
+        mav.addObject("year", year);
+        mav.addObject("month", month);
 
         LocalDate sdate = now.withDayOfMonth(1);
         LocalDate startdate = sdate.minusDays(sdate.getDayOfWeek().getValue());
@@ -48,22 +52,20 @@ public class AccResController {
         LocalDate enddate = edate.plusDays(6 - edate.getDayOfWeek().getValue());
 
         mav.addObject("rchart", startdate.datesUntil(enddate.plusDays(1)).toList());
-        List<ResVO> rsv = rv.reservationcheck(id, startdate, enddate);
 
-        //AccVO와 ResVO를 합친 AccResDTO 만들었음.
         List<AccResDTO> arDTOs = new ArrayList<>();
-        for (int i = 0; i < rsv.size(); i++) {
+        List<AbleDateVO> abd = ab.myablelist(id);
+        for (int i = 0; i < abd.size(); i++) {
             AccResDTO ar = new AccResDTO();
-            ResVO rv = rsv.get(i);
+            AbleDateVO able = abd.get(i);
             AccVO ac = new AccVO();
-            ac.setAccName(acmd.oneNameByAccomNum(rv.getAccomNum()));
+            ac.setAccName(acmd.oneNameByAccomNum(abd.get(i).getAccomNum()));
             ar.setAcc(ac);
-            ar.setRes(rv);
+            ar.setAbd(able);
             arDTOs.add(ar);
         }
         mav.addObject("arDTOs", arDTOs);
         mav.setViewName("reservationCheck");
         return mav;
     }
-
 }

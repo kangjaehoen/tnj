@@ -34,4 +34,5 @@ public class AccVO {
     private int room;
     private int bed;
     private int bathroom;
+    private LocalDate regDate;
 }

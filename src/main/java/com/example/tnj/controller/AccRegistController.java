@@ -1,8 +1,10 @@
 package com.example.tnj.controller;
 
+import com.example.tnj.domain.AbleDateVO;
 import com.example.tnj.domain.AccVO;
 import com.example.tnj.domain.AccomImageVO;
 import jakarta.servlet.http.HttpSession;
+import mybatis.dao.AbledateMapper;
 import mybatis.dao.AccomImageMapper;
 import mybatis.dao.AccomMapper;
 import mybatis.dao.WishListMapper;
@@ -17,8 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 @Controller
 public class AccRegistController {
@@ -28,10 +30,12 @@ public class AccRegistController {
     AccomImageMapper acimg;
     @Autowired
     WishListMapper wl;
+    @Autowired
+    AbledateMapper ab;
 
-    @RequestMapping(value="/accLoad", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/accLoad")
     @ResponseBody
-    public ModelAndView accload(HttpSession session, /*@RequestParam(defaultValue = "0")*/ int accomNum) {
+    public ModelAndView accload(HttpSession session, int accomNum) {
         System.out.println(session.getAttribute("accomNum"));
         String id = (String) session.getAttribute("id");
         ModelAndView mav = new ModelAndView();
@@ -44,16 +48,44 @@ public class AccRegistController {
     @RequestMapping("/accUpload")
     @ResponseBody
     public ModelAndView accupload(@ModelAttribute AccVO ac,
-                                  @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImageVO ai) {
+                                  @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImageVO ai, @RequestParam(value = "day", required = false) List<String> days) {
+        //휴일데이터 넣기
+        if (days != null && !days.isEmpty()) {
+            String dayoff = String.join(",", days);
+            ac.setDayoff(dayoff);
+        }
+        //accom 테이블에 데이터 넣음
         acmd.accinsert(ac);
+        //abledate 테이블에 날짜넣기
+        LocalDate d = ac.getRegDate();
+        Set<Integer> intdayoff = new HashSet<>();
+        if (days != null && !days.isEmpty()) {
+            for (String s : days) {
+                intdayoff.add(Integer.parseInt(s));
+            }
+        }
+        ArrayList<AbleDateVO> ableDates = new ArrayList<>();
+        for (int i = 0; i < 365; i++) {
+            LocalDate day = d.plusDays(i);
+            if (intdayoff.contains(day.getDayOfWeek().getValue())) {
+                ableDates.add(new AbleDateVO(ac.getAccomNum(), day, "disable"));
+                //ab.createdate(ac.getAccomNum(), d.plusDays(i), "disable");
+            } else {
+                ableDates.add(new AbleDateVO(ac.getAccomNum(), day, "able"));
+                //ab.createdate(ac.getAccomNum(), d.plusDays(i), "able");
+            }
+        }
+        ab.batchInsertDates(ableDates);
+
+        //이미지 넣기
         ai.setAccomNum(ac.getAccomNum());
         ModelAndView mav = new ModelAndView();
         if (imageUpload != null) {
-        String path = "c:/kosa/project1/"+ac.getAccomNum();
-        File isDir = new File(path);
-        if (!isDir.exists()) {
-            isDir.mkdir();
-        }
+            String path = "c:/kosa/project1/" + ac.getAccomNum();
+            File isDir = new File(path);
+            if (!isDir.exists()) {
+                isDir.mkdir();
+            }
             List<MultipartFile> list = imageUpload;
             if (!list.isEmpty()) {
                 for (MultipartFile mfile : list) {
@@ -77,14 +109,15 @@ public class AccRegistController {
 
     @RequestMapping("/accDelete")
     @ResponseBody
-    public ModelAndView accDelete(HttpSession session,@RequestParam("loadedAccomNum") int accomNum) {
+    public ModelAndView accDelete(HttpSession session, @RequestParam("loadedAccomNum") int accomNum) {
         ModelAndView mav = new ModelAndView();
+        ab.deleteabledates(accomNum);
         wl.deleteByAccomNum(accomNum);
         acimg.deleteimg(accomNum);
-        acmd.accdelete((String)session.getAttribute("id"), accomNum);
-        String path = "c:/kosa/project1/"+accomNum;
+        acmd.accdelete((String) session.getAttribute("id"), accomNum);
+        String path = "c:/kosa/project1/" + accomNum;
         File isDir = new File(path);
-        if(isDir.exists()) {
+        if (isDir.exists()) {
             File[] files = isDir.listFiles();
             if (files != null)
                 for (File f : files) {
@@ -98,25 +131,55 @@ public class AccRegistController {
 
     @RequestMapping("/accUpdate")
     @ResponseBody
-    public ModelAndView accUpdate(AccVO ac, int loadedAccomNum, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImageVO ai) {
+    public ModelAndView accUpdate(AccVO ac, int loadedAccomNum, @RequestParam(required = false) List<MultipartFile> imageUpload, @ModelAttribute AccomImageVO ai, @RequestParam(value = "day", required = false) List<String> days) {
         ModelAndView mav = new ModelAndView();
+        //휴일
+        if (days != null && !days.isEmpty()) {
+            String dayoff = String.join(",", days);
+            ac.setDayoff(dayoff);
+        }
+        //accom 테이블 내용 수정
         acmd.accupdate(ac, loadedAccomNum);
-        ai.setAccomNum(loadedAccomNum);
-        mav.setViewName("redirect:/myacclist");
+        //기존값 삭제(예약안된것만)
+        ab.deleteabledates(loadedAccomNum);
+        //다시 추가
+        LocalDate d = ac.getRegDate();
+        Set<Integer> intdayoff = new HashSet<>();
+        if (days != null && !days.isEmpty()) {
+            for (String s : days) {
+                intdayoff.add(Integer.parseInt(s));
+            }
+        }
+        ArrayList<AbleDateVO> ableDates = new ArrayList<>();
+        List<AbleDateVO> prelist = ab.ableList(loadedAccomNum);
+        List<LocalDate> prelistdate = ab.ableListdate(loadedAccomNum);
+        for (int i = 0; i < 365; i++) {
+            LocalDate day = d.plusDays(i);
+            if (!prelistdate.contains(day)) {
+                if (intdayoff.contains(day.getDayOfWeek().getValue())) {
+                    ableDates.add(new AbleDateVO(loadedAccomNum, day, "disable"));
+                } else {
+                    ableDates.add(new AbleDateVO(loadedAccomNum, day, "able"));
+                }
+            }
+        }
+        ableDates.addAll(prelist);
+        ab.batchInsertDates(ableDates);
 
+        //이미지 삭제후 저장
+        ai.setAccomNum(loadedAccomNum);
         if (imageUpload != null) {
             acimg.deleteimg(loadedAccomNum);
-            String path = "c:/kosa/project1/"+loadedAccomNum;
+            String path = "c:/kosa/project1/" + loadedAccomNum;
             File isDir = new File(path);
             if (!isDir.exists()) {
                 isDir.mkdir();
-            }
-            else {
+            } else {
                 File[] files = isDir.listFiles();
-                if(files != null)
-                for (File f : files) {
-                    f.delete();
-                }
+                if (files != null)
+                    for (File f : files) {
+                        f.delete();
+                    }
             }
             List<MultipartFile> list = imageUpload;
             if (!list.isEmpty()) {
@@ -135,6 +198,7 @@ public class AccRegistController {
                 }
             }
         }
+        mav.setViewName("redirect:/myacclist");
         return mav;
     }
 }
