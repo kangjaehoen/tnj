@@ -501,18 +501,18 @@
             impUid =   imu[i].textContent;
 
             if(checks[i].checked == true){
-                console.log(impUid + " 추가");
+
                   if (!selectedImpUids.includes(impUid)) {
                      selectedImpUids.push(impUid);
                      }
            }else{
-                console.log(impUid + "제거");
+
                       const index = selectedImpUids.indexOf(impUid);
                     if (index > -1) {
                         selectedImpUids.splice(index, 1);
                     }
             }
-               console.log(selectedImpUids);
+
         }
     }
 
@@ -523,7 +523,7 @@
          for (let i = 0; i < modalFloat.length; i++) {
         modalFloat[i].onclick = function (e) {
             e.preventDefault(); // 기본 동작 방지
-            console.log("클릭이벤트");
+
 
               impUid =   imu[i].textContent;
               let p = document.getElementsByTagName("p");
@@ -532,8 +532,7 @@
                 if(xhr.status == 200) {
                   let obj = xhr.responseText;
                   let jsonObj = JSON.parse(obj);
-                    console.log(jsonObj.accName);
-                    console.log(jsonObj.accomNum);
+
                     p[1].textContent = '결제 및 예약 날짜 : '+jsonObj.payDate;
                     p[2].textContent = '결제번호 : '+jsonObj.impUid;
                     p[3].textContent = '가격 : ₩ '+jsonObj.amount;
@@ -555,7 +554,7 @@
 
                 }
             }
-             console.log(impUid+'123');
+
              xhr.open('GET','/payResAccomInfo/'+impUid,'true');
              xhr.send();
 
