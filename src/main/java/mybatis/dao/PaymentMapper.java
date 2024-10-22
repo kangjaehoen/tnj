@@ -1,5 +1,6 @@
 package mybatis.dao;
 
+import com.example.tnj.domain.PayResAccomVO;
 import com.example.tnj.domain.PayVO;
 import com.example.tnj.domain.PaymentDTO;
 import org.apache.ibatis.annotations.*;
@@ -26,4 +27,28 @@ public interface PaymentMapper {
 
     @Select("select * from pay where resNum=#{resNum}")
     public List<PaymentDTO> listAll(@Param("resNum") int resNum);
+
+
+    @Select(" SELECT  p.payDate AS payDate, p.accomNum AS accomNum, " +
+            "         p.amount AS amount, p.impUid AS impUid, " +
+            "         r.chkin_Date AS chkin_Date, r.chkout_Date AS chkout_Date, " +
+            "         r.adultCnt AS adultCnt, r.kidCnt AS kidCnt, r.id , r.resNum AS resNum , " +
+            "         a.accName AS accName, a.postCode AS postCode, " +
+            "         a.address AS address, a.detailAddress AS detailAddress, " +
+            "         a.accCall AS accCall, a.price AS price, a.chkin_Time AS chkin_Time, " +
+            "         a.chkout_Time AS chkout_Time, " +
+            "         ai.filePath AS filePath, COUNT(*) AS reviewCount, " +
+            "         round(avg(satisfy),1) as satisAvg , DATEDIFF( r.chkout_Date, r.chkin_Date) AS totalDay " +
+            " FROM pay p " +
+            " JOIN reservation r" +
+            " ON p.resNum = r.resNum" +
+            " JOIN accom a" +
+            " ON a.accomNum = r.accomNum" +
+            " LEFT JOIN accomimage ai" +
+            " ON a.accomNum = ai.accomNum " +
+            " LEFT JOIN  review rv " +
+            " ON a.accomNum = rv.accomNum "+
+            " WHERE p.impUid = #{impUid} ")
+    public PayResAccomVO payReservAccomInfo(String impUid);
+
 }
