@@ -242,6 +242,7 @@
     </div>
 </footer>
 <script>
+
     $(document).ready(function () {
         const currentYear = new Date().getFullYear();
 
@@ -309,13 +310,13 @@
     // 검색 버튼 클릭 이벤트
     document.getElementById('searchButton').addEventListener('click', function() {
         const selectedStatus = document.querySelector('input[name="status"]:checked').value; // 선택된 결제 상태
-        const syear = document.getElementById('year').value; // 선택된 년도
-        const smonth = document.getElementById('month').value; // 선택된 월
-
+        const year = document.getElementById('year').value; // 선택된 년도
+        const month = document.getElementById('month').value; // 선택된 월
+/*
         if(year === syear && month === smonth) {
-            const payStatus = selectedStatus === 'Y' ? 'Y' : 'N';
+            const payStatus = selectedStatus === 'Y' ? 'Y' : 'N';*/
             // AJAX 요청을 통해 서버에 결제 상태에 맞는 결제 내역 요청
-            fetch(`/payment?status=${payStatus}&year=${syear}&month=${smonth}`)
+            fetch(`/payment?status=${selectedStatus}&year=${year}&month=${month}`)
                 .then(response => response.json())
                 .then(data => {
                     // 서버에서 받은 데이터로 테이블 업데이트
@@ -324,9 +325,9 @@
                 .catch(error => {
                     console.error('Error:', error);
                 });
-            }else{
+            /*}else{
                 alert('검색조건에 해당하는 결과가 없습니다.');
-            }
+            }*/
     });
 
     // 결제 내역 테이블 업데이트 함수

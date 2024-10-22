@@ -30,8 +30,8 @@ public interface PaymentMapper {
     public List<PaymentDTO> listAll(@Param("resNum") int resNum);
 
     //세션에 따른 리스트출력
-    @Select("select DATE_FORMAT(payDate,'%Y') as year, DATE_FORMAT(payDate,'%M') as month ,impUid,name,amount,pay_Status from pay where id=#{id} and DATE_FORMAT(payDate,'%Y')=#{year} and DATE_FORMAT(payDate,'%M')=#{month}")
-    public List<PaymentDTO> payList(@Param("id") String id, String year, String month);
+    @Select("select payDate,impUid,name,amount,pay_Status from pay where id=#{id}")
+    public List<PaymentDTO> payList(@Param("id") String id);
 
     //결제상태에 따른 조회
     @Select("select * from pay where pay_Status=#{pay_Status}")
