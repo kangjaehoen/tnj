@@ -703,6 +703,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+
+    let id = "[[${session.id}]]";
     // 게스트 설정 영역 보이기/숨기기
     document.getElementById('guests').addEventListener('click', function () {
       const guestCounterContainer = document.getElementById('guestCounterContainer');
@@ -870,6 +872,7 @@
     }
 
   </script>
+  <script th:src="@{/js/header.js}"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
 
@@ -1050,6 +1053,7 @@
 
      };
   </script>
+
 </div>
 </body>
 </html>
