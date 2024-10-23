@@ -4,6 +4,7 @@ import com.example.tnj.domain.PageDTO;
 import com.example.tnj.domain.ReplyDTO;
 import com.example.tnj.domain.ReplyPageDTO;
 import com.example.tnj.domain.ReplyRatingVO;
+import mybatis.dao.AccomMapper;
 import mybatis.dao.ReplyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,12 +17,23 @@ import java.util.List;
 public class ReplyController {
     @Autowired
     private ReplyMapper replyMapper;
+    @Autowired
+    private AccomMapper accomMapper;
+
+    @GetMapping("/insertReply")
+    public String insert(int accomNum, Model model){
+        model.addAttribute("accomNum", accomNum);
+        accomMapper.oneNameByAccomNum(accomNum);
+        model.addAttribute("accomName" , accomMapper.oneNameByAccomNum(accomNum));
+        return "insertReply";
+    }
 
     @PostMapping("/reviewInsert")
     public String reviewInsert(ReplyDTO dto){
         replyMapper.insertReply(dto);
         return "redirect:";
     }
+
     @RequestMapping("/review")
     public String reviewList(int accomNum, Model model){
         ReplyRatingVO vo = replyMapper.rating(accomNum);
@@ -66,6 +78,7 @@ public class ReplyController {
 
         return rpdto;
     }
+
 
 
 }

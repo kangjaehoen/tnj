@@ -23,7 +23,7 @@ public class AccVO {
     private int kidPrice;
     private int occ;
     private int maxocc;
-    private LocalDate dayoff;
+    private String dayoff;
     private String category;
     private String accType;
     private int onSale;
@@ -34,4 +34,5 @@ public class AccVO {
     private int room;
     private int bed;
     private int bathroom;
+    private LocalDate regDate;
 }

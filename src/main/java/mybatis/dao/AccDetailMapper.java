@@ -20,7 +20,7 @@ public interface AccDetailMapper {
     //리뷰 별점
     @Select("SELECT round(avg(satisfy),1) " +
             "FROM review r JOIN accom a ON r.accomNum = a.accomNum WHERE r.accomNum= #{accomNum}")
-    public double revRating(@Param("accomNum") int accomNum);
+    public String revRating(@Param("accomNum") int accomNum);
 
     //체크 인아웃 시간
     @Select("select * from accom where accomNum=#{accomNum}")

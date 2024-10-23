@@ -34,14 +34,16 @@
         }
         .toolbtn{
             background-color: #B2D055;
+            border-radius : 10px 10px 0 0;
             color: white;
             border: none;
-            padding: 10px 20px;
+            width : 120px;
+            padding : 10px;
             cursor: pointer;
-            margin : 0;
         }
         .toolbtn:hover{
             background-color: #8dbf3d;
+            transition: 0.5s ease-out;
         }
 
         /*검색바*/

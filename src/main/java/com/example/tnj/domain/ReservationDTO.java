@@ -1,5 +1,6 @@
 package com.example.tnj.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.sql.Date;
@@ -14,11 +15,15 @@ public class ReservationDTO {
     //예약테이블
     private int resNum;
     private Date resDate;
+    @JsonProperty("checkIn")
     private Date Chkin_Date;
+    @JsonProperty("checkOut")
     private Date Chkout_Date;
     private int adultCnt;
     private int kidCnt;
     private String id;
+    private int totalDays;
+    private int totalPayment;
 
     //숙소테이블
     private int accomNum;

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>숙소 예약 페이지</title>
+  <link rel="stylesheet" th:href="@{/css/headerStyle.css}">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     .guest-counter {
@@ -121,6 +122,337 @@
       padding: 0 15px; /* 양쪽에 기본적인 패딩을 줌 */
     }
   </style>
+  <style>
+    /* 리뷰 섹션 스타일 */
+    .reviews-section {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        border : none !important;
+    }
+
+    /* 헤더 스타일 */
+    .reviews-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .reviews-header .rating {
+        font-size: 24px;
+        font-weight: bold;
+        color: #B2D055;
+    }
+
+    .reviews-header .review-count {
+        font-size: 16px;
+        color: #666;
+    }
+    #ratingChart {
+        width: 300px; /* 차트를 더 작게 만듦 */
+        height: 300px;
+        margin-right: 10px; /* 차트와 평점 사이에 여백 추가 */
+    }
+
+    /* 아이콘 섹션 스타일 */
+    .icons {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin: 20px 0;
+    }
+
+    .icon-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 14px;
+        color: #333;
+        text-align: center;
+    }
+
+    .icon-item i {
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: #B2D055;
+    }
+
+    .icon-item div {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .icon-item strong {
+        font-size: 14px;
+        color: #000;
+        display: block;
+        margin-top: 5px;
+    }
+
+    /* 구분선 */
+    .review-hr {
+        border: none;
+        border-top: 2px solid #B2D055;
+        margin-bottom: 20px;
+    }
+
+    /* 리뷰 카드 스타일 */
+    .review-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+        margin-left: 30px;
+
+    }
+
+    .review-card {
+        border: 1px solid #ffffff;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #ffffff;
+
+    }
+
+    #reviewModal .review-card{
+        width: 300px;
+        height: 130px;
+        padding: 15px;
+        margin-bottom : 10px;
+        margin-left:20px;
+
+    }
+
+    #reviewModal .icon-item{
+        margin-top: 25px;
+        width: 350px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #B2D055;
+
+    }
+
+
+
+
+    .user-info {
+        display: flex;
+        align-items: center;
+
+    }
+
+  .user-id{
+
+  }
+
+    .review-details {
+        margin-top: 10px;
+    }
+
+    .stars {
+        color: #B2D055;
+        font-size: 18px;
+    }
+
+    .review-date {
+        display: block;
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+    }
+
+    .review-text {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    /* 더보기 버튼 스타일 */
+    .load-more {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .load-more button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #B2D055;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .load-more button:hover {
+        background-color: #7e9537;
+    }
+
+            .modal {
+                display: none; /* 처음에는 숨겨놓음 */
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* 배경 어둡게 */
+                justify-content: center;
+                align-items: center;
+            }
+
+            .modal-content {
+                background-color: #fff;
+                padding-top: 20px;
+                padding-left: 20px;
+                padding-right: 20px;
+                padding-bottom: 40px;
+                border-radius: 10px;
+                width: 800px; /* 너비를 90%로 변경 */
+                height : 860px;
+
+    }
+
+            .close-modal {
+                text-align: right;
+                font-size: 18px;
+                cursor: pointer;
+            }
+
+            /* 리뷰 섹션 스타일 */
+            .reviews-section {
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-family: Arial, sans-serif;
+            }
+
+            /* 모달 내부 스타일 */
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .modal-header .rating {
+                font-size: 24px;
+                font-weight: bold;
+                color: #B2D055;
+            }
+
+            .modal-header .review-count {
+                font-size: 16px;
+                color: #666;
+            }
+
+            .modal-body {
+            }
+
+            #modal-half-right{
+                width: 350px;
+                height: auto;
+                float: right;
+
+            }
+
+            #modal-half-left{
+                width: 350px;
+                height: auto;
+                float: left;
+                align-items: flex-start;
+            }
+
+            #modal-ratingChart{
+                width: 300px;  /* 자동으로 크기를 조정 */
+                height: 300px; /* 자동으로 크기를 조정 */
+
+
+            }
+
+
+            .review-card {
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                padding: 15px;
+                background-color: #ffffff;
+                margin-bottom: 20px;
+            }
+
+            .review-details {
+                margin-top: 10px;
+            }
+
+            .stars {
+                color: #B2D055;
+                font-size: 18px;
+            }
+
+            .review-date {
+                display: block;
+                font-size: 12px;
+                color: #888;
+                margin-top: 5px;
+            }
+
+            .review-text {
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
+            .pagination {
+                 display: flex;
+                 justify-content: center; /* 가운데 정렬 */
+                 margin-top: 20px;
+                 padding-bottom : 20px;
+            }
+
+            .page-button {
+                padding: 8px;
+                margin: 0 10px;
+                border: none;
+                background-color: white;
+                color: #333;
+                font-size: 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+                outline: none;
+            }
+
+            .page-button:hover {
+                color: #B2D055;
+            }
+
+            .page-button:focus {
+              outline: none; /* 포커스 시 테두리 제거 */
+            }
+
+
+         .search-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom:10px;
+            width : 250px;
+            margin-left:20px;
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            padding: 10px;
+            border-radius: 25px;
+            width: 200px;
+        }
+
+
+
+  </style>
+
+
 </head>
 <body>
 <div>
@@ -183,7 +515,7 @@
       <!-- Sidebar -->
       <div class="col-md-4">
         <div class="sidebar" id="sidebar">
-          <form th:action="@{/reservation/resInfo}" method="post" onsubmit="return validateForm()">
+          <form th:action="@{/reservation/resInfo}" id="reservForm" method="post" onsubmit="return validateForm()">
             <input type="hidden" id="accomNum" name="accomNum" th:value="${aVO?.accomNum?:_}"/>
             <input type="hidden" id="adultPrice" th:value="${aVO?.adultPrice?:_}"/>
             <input type="hidden" id="kidPrice" th:value="${aVO?.kidPrice?:_}"/>
@@ -192,13 +524,13 @@
 
 
             <div class="form-group">
-              <label for="checkin">체크인</label>
-              <input type="date" class="form-control" id="checkIn" name="checkin"
+              <label for="checkIn">체크인</label>
+              <input type="date" class="form-control" id="checkIn" name="checkIn"
                      th:required="true"/>
             </div>
             <div class="form-group">
-              <label for="checkout">체크아웃</label>
-              <input type="date" class="form-control" id="checkOut" name="checkout"
+              <label for="checkOut">체크아웃</label>
+              <input type="date" class="form-control" id="checkOut" name="checkOut"
                      th:required="true"/>
             </div>
             <div class="form-group">
@@ -208,18 +540,18 @@
                   <span>성인 (13세 이상)</span>
                   <div class="guest-adjustment">
                     <button type="button" onclick="changeGuestCount('adult', -1)">-</button>
-                    <input type="number" id="adultCount" name="adultCnt" value="1" readonly
-                           th:required="${adultCount > 0}" />
+                    <input type="number" id="adultCnt" name="adultCnt" value="1" readonly
+                           th:required="${adultCnt > 0}" />
                     <button type="button" onclick="changeGuestCount('adult', 1)">+</button>
                   </div>
                 </div>
                 <div class="guest-counter mt-2">
                   <span>어린이 (2~12세)</span>
                   <div class="guest-adjustment">
-                    <button type="button" onclick="changeGuestCount('child', -1)">-</button>
-                    <input type="number" id="childCount" name="kidCnt" value="0" readonly
-                           th:required="${childCount > 0}" />
-                    <button type="button" onclick="changeGuestCount('child', 1)">+</button>
+                    <button type="button" onclick="changeGuestCount('kid', -1)">-</button>
+                    <input type="number" id="kidCnt" name="kidCnt" value="0" readonly
+                           th:required="${kidCnt > 0}" />
+                    <button type="button" onclick="changeGuestCount('kid', 1)">+</button>
                   </div>
                 </div>
               </div>
@@ -242,6 +574,121 @@
         </div>
       </div>
     </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+
+    <div class="reviews-section">
+      <div class="reviews-section">
+        <hr class="review-hr"> <!-- 여기를 위로 올림 -->
+        <div class="reviews-header">
+            <span class="rating">
+                <i class="fas fa-star"></i> [[${replyRate.satisAvg}]]
+            </span>
+          <span class="review-count">리뷰 [[${replyRate.reviewCount}]]개</span>
+        </div>
+        <div class="icons">
+          <div class="icon-item">
+            <canvas id="ratingChart"></canvas>
+          </div>
+          <div class="icon-item">
+            <i class="fas fa-bars"></i>
+            <div>전체 평점(만족도)<br><strong>[[${replyRate.satisAvg}]]</strong></div>
+          </div>
+          <div class="icon-item">
+            <i class="fas fa-stopwatch"></i>
+            <div>청결도<br><strong>[[${replyRate.cleanAvg}]]</strong></div>
+          </div>
+          <div class="icon-item">
+            <i class="fas fa-check-circle"></i>
+            <div>정확도<br><strong>[[${replyRate.accuracyAvg}]]</strong></div>
+          </div>
+          <div class="icon-item">
+            <i class="fas fa-tags"></i>
+            <div>가격 대비 만족도<br><strong>[[${replyRate.scpAvg}]]</strong></div>
+          </div>
+        </div>
+        <hr class="review-hr">
+      </div>
+
+
+      <div class="review-cards">
+        <div class="review-card1" th:each="review:${reviewList}" style="display:none">
+          <div class="review-details">
+            <div class="user-id">[[${review.id}]]</div>
+            <div th:if="${review.satisfy} == 5">
+              <span class="stars">★★★★★</span>
+            </div>
+            <div th:if="${review.satisfy} == 4">
+              <span class="stars">★★★★</span>
+            </div>
+            <div th:if="${review.satisfy} == 3">
+              <span class="stars">★★★</span>
+            </div>
+            <div th:if="${review.satisfy} == 2">
+              <span class="stars">★★</span>
+            </div>
+            <div th:if="${review.satisfy} == 1">
+              <span class="stars">★</span>
+            </div>
+            <span class="review-date">[[${review.hiredate}]]</span>
+            <div class="review-text">[[${review.revContent}]]</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reviews-section">
+        <!-- 기존 리뷰 섹션 -->
+        <div class="load-more">
+          <button id="loadMoreBtn">리뷰 [[${replyRate.reviewCount}]]개 더보기</button>
+        </div>
+      </div>
+
+      <!-- 모달 구조 -->
+      <div id="reviewModal" class="modal">
+        <div class="modal-content">
+          <div class="close-modal" id="closeModal">&times;</div>
+          <div class="modal-header">
+                <span class="rating">
+                    <i class="fas fa-star"></i> [[${replyRate.satisAvg}]]
+                </span>
+            <span class="review-count">리뷰 [[${replyRate.reviewCount}]]개</span>
+          </div>
+          <hr class="review-hr">
+          <div class="modal-body">
+            <!-- 리뷰 목록 -->
+            <div id="modal-half-left">
+              <canvas id="modal-ratingChart" width="200px" height="200px"></canvas>
+              <div class="icon-item">
+                <i class="fas fa-bars"></i>
+                <div>전체 평점(만족도)<br><strong>[[${replyRate.satisAvg}]]</strong></div>
+
+              </div>
+              <div class="icon-item">
+                <i class="fas fa-stopwatch"></i>
+                <div>청결도<br><strong>[[${replyRate.cleanAvg}]]</strong></div>
+
+              </div>
+              <div class="icon-item">
+                <i class="fas fa-check-circle"></i>
+                <div>정확도<br><strong>[[${replyRate.accuracyAvg}]]</strong></div>
+
+              </div>
+              <div class="icon-item">
+                <i class="fas fa-tags"></i>
+                <div>가격 대비 만족도<br><strong>[[${replyRate.scpAvg}]]</strong></div>
+
+              </div>
+            </div>
+            <div id="modal-half-right"> </div>
+          </div>
+
+          <!-- 추가 리뷰 카드들 -->
+        </div>
+      </div>
+    </div>
+
+
 
     <hr>
 
@@ -267,15 +714,15 @@
     });
 
     function changeGuestCount(type, change) {
-      const adultInput = document.getElementById('adultCount');
-      const childInput = document.getElementById('childCount');
+      const adultInput = document.getElementById('adultCnt');
+      const kidInput = document.getElementById('kidCnt');
 
       if (type === 'adult') {
         let newCount = Math.max(0, parseInt(adultInput.value) + change);
         adultInput.value = newCount;
-      } else if (type === 'child') {
-        let newCount = Math.max(0, parseInt(childInput.value) + change);
-        childInput.value = newCount;
+      } else if (type === 'kid') {
+        let newCount = Math.max(0, parseInt(kidInput.value) + change);
+        kidInput.value = newCount;
       }
 
       // 인원 수가 변경되면 가격 업데이트
@@ -342,46 +789,43 @@
 
     // 총 가격 구하기
     // 총 가격 구하기
-    // 총 가격 구하기
     function updatePrice(days) {
       var priceOneAdult = parseFloat(document.getElementById("adultPrice").value) || 0; // 성인 1인당 가격
       var priceOneKid = parseFloat(document.getElementById("kidPrice").value) || 0; // 어린이 1인당 가격
-      const adultCnt = parseInt(document.getElementById('adultCount').value) || 0; // 성인 수
-      const kidCnt = parseInt(document.getElementById('childCount').value) || 0; // 어린이 수
+      const adultCnt = parseInt(document.getElementById('adultCnt').value) || 0; // 성인 수
+      const kidCnt = parseInt(document.getElementById('kidCnt').value) || 0; // 어린이 수
       const maxOccupancy = parseInt(document.getElementById("maxOccupancy").value) || 0; // 최대 수용 인원
 
       let totalPrice = 0; // 총 가격 초기화
       const pricePerNight = parseFloat(document.getElementById("OneDayPrice").value) || 0;
 
-      if (adultCnt + kidCnt <= maxOccupancy) {
+      const totalGuests = adultCnt + kidCnt; // 전체 인원
+
+      if (totalGuests <= maxOccupancy) {
         // 최대 수용 인원 이내일 경우
         totalPrice = pricePerNight * days;
       } else {
         // 최대 수용 인원 초과 시
-        const excessCount = (adultCnt + kidCnt) - maxOccupancy; // 초과 인원 수
+        const excessCount = totalGuests - maxOccupancy; // 초과 인원 수
+        let excessAdults = Math.max(0, adultCnt - maxOccupancy); // 초과 성인 수
+        let excessKids = 0;
 
-        let moreCharge = 0;
+        if (excessAdults < excessCount) {
+          // 초과 성인이 초과 인원 수보다 적으면, 남은 인원은 어린이로 처리
+          excessKids = excessCount - excessAdults;
+        }
 
-        if (maxOccupancy < adultCnt) {
-          // 수용 인원이 어른 수보다 적은 경우
-          moreCharge = adultCnt - maxOccupancy; // 초과 성인 수
-          totalPrice = pricePerNight * days + (moreCharge * priceOneAdult * days) + (kidCnt * priceOneKid * days);
-        } else {
-          // 수용 인원이 어른 수보다 많고 어린이 수를 포함하는 경우
-          moreCharge = (adultCnt + kidCnt) - maxOccupancy; // 초과 인원 수
-          const excessKids = moreCharge > kidCnt ? moreCharge - kidCnt : 0; // 남은 초과 인원은 어린이로 간주
+        // 기본 숙박료 계산
+        totalPrice = pricePerNight * days;
 
-          // 기본 가격 계산
-          totalPrice += pricePerNight * days; // 기본 숙박료
+        // 초과 성인에 대한 추가 비용 계산
+        if (excessAdults > 0) {
+          totalPrice += (excessAdults * priceOneAdult * days);
+        }
 
-          // 초과 인원에 대한 추가 비용 계산
-          if (moreCharge > 0) {
-            if (adultCnt > maxOccupancy) {
-              totalPrice += (moreCharge * priceOneAdult * days); // 초과 성인에 대한 추가 비용
-            } else {
-              totalPrice += (excessKids * priceOneKid * days); // 초과 어린이에 대한 추가 비용
-            }
-          }
+        // 초과 어린이에 대한 추가 비용 계산
+        if (excessKids > 0) {
+          totalPrice += (excessKids * priceOneKid * days);
         }
       }
 
@@ -396,12 +840,13 @@
     }
 
 
+
     //날짜선택-유효성검증
     function validateForm() {
       var checkIn = document.getElementById("checkIn").value;
       var checkOut = document.getElementById("checkOut").value;
-      var adultCnt = parseInt(document.getElementById('adultCount').value) || 0;
-      var childCnt = parseInt(document.getElementById('childCount').value) || 0;
+      var adultCnt = parseInt(document.getElementById('adultCnt').value) || 0;
+      var kidCnt = parseInt(document.getElementById('kidCnt').value) || 0;
 
       if (!checkIn || !checkOut) {
         alert("체크인과 체크아웃 날짜를 선택해주세요.");
@@ -416,7 +861,7 @@
         return false; // 폼 제출 방지
       }
 
-      if (adultCnt === 0 && childCnt === 0) {
+      if (adultCnt === 0 && kidCnt === 0) {
         alert("성인 또는 어린이 인원을 최소 1명 이상 선택해주세요.");
         return false;
       }
@@ -424,6 +869,186 @@
       return true;
     }
 
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+
+    window.onload = function(){
+
+       const cards = document.querySelectorAll(".review-card1");
+
+       for(let i = 0; i<6 && i<cards.length;i++){
+            cards[i].style.display='block';
+       }
+
+
+
+      const ratings = {
+          labels: ['5', '4', '3', '2', '1'],
+          datasets: [{
+              label: '별점 분포',
+              data: [ [[${replyRate.count5}]], [[${replyRate.count4}]], [[${replyRate.count3}]], [[${replyRate.count2}]], [[${replyRate.count1}]] ],
+              backgroundColor: 'rgba(118, 185, 0, 0.5)',
+              borderColor: 'rgba(118, 185, 0, 1)',
+              borderWidth: 0.1
+          }]
+      };
+
+
+      const options = {
+      indexAxis: 'y',
+      maintainAspectRatio: true, // 차트가 부모 컨테이너에 맞춰 크기를 조정
+      aspectRatio: 2, // 비율을 설정하여 차트의 크기를 조절 (너비에 비해 높이를 작게)
+      scales: {
+          x: {
+              beginAtZero: true
+          }
+      }
+   };
+
+      // 차트를 그리는 함수
+      const ctx = document.getElementById('ratingChart').getContext('2d');
+      const ratingChart = new Chart(ctx, {
+          type: 'bar',
+          data: ratings,
+          options: options
+      });
+
+      const ctx1 = document.getElementById('modal-ratingChart').getContext('2d');
+      const ratingChart1 = new Chart(ctx1, {
+          type: 'bar',
+          data: ratings,
+          options: options
+      });
+
+       const modal = document.getElementById('reviewModal');
+         const openBtn = document.getElementById('loadMoreBtn');
+         const closeModal = document.getElementById('closeModal');
+
+
+         openBtn.onclick = function() {
+             modal.style.display = 'flex';
+         }
+
+
+         closeModal.onclick = function() {
+             modal.style.display = 'none';
+         }
+
+
+         window.onclick = function(event) {
+             if (event.target == modal) {
+                 modal.style.display = 'none';
+             }
+         }
+          let search =  document.getElementsByClassName("search-input");
+         let buttonNum =1;
+         let searchValue;
+
+         let rv =  document.getElementById("modal-half-right")
+          let xhr = new XMLHttpRequest();
+               xhr.onload = function(){
+                  if(xhr.status == 200) {
+                      let obj =  xhr.responseText;
+                      let jsonObj  =  JSON.parse(obj);
+
+                       let html = "";
+
+                       html +='<div class="search-container"><input id="searchBar" type="text" placeholder="후기 검색" class="search-input" name="search"></div>';
+                       jsonObj.dto.forEach(function(list){
+                            html += '<div class="review-card">'
+                            html += '<div class="user-info">'+list.id+'</div>';
+                            if(list.satisfy == 5) {
+                                html += '<span class="stars">★★★★★</span>';
+                            }
+                            if(list.satisfy == 4) {
+                                html += '<span class="stars">★★★★</span>';
+                            }
+                            if(list.satisfy == 3) {
+                                html += '<span class="stars">★★★</span>';
+                            }
+                            if(list.satisfy == 2){
+                                html += '<span class="stars">★★</span>';
+                            }
+                            if(list.satisfy == 1){
+                                html += '<span class="stars">★</span>';
+                            }
+                            html += '<span class="review-date">'+list.hiredate+'</span>';
+                            html += '<div class="review-text">'+list.revContent+'</div>';
+                            html += '</div>';
+
+                       });
+                            html += '<div class="pagination">';
+                           if(jsonObj.pdto.prev){
+                            html += '<button class="page-button prev">prev</button>';
+                            }
+                           for(let i=jsonObj.pdto.startPage;i<=jsonObj.pdto.endPage;i++){
+                             if(jsonObj.pdto.currentPage == i){
+                                html +='<button class="page-button" style="color: #7ca305">'+i+'</button>';
+                             }else{
+                                 html+='<button class="page-button">'+i+'</button>';
+                             }
+                           }
+
+
+                            if(jsonObj.pdto.next){
+                             html += '<button class="page-button next">next</button>';
+                            }
+                            html += '</div>'
+
+                        rv.innerHTML = html;
+
+                         buttons = document.getElementsByClassName("page-button");
+                          for(let i=0;i<buttons.length;i++){
+                            buttons[i].addEventListener("click", function(){
+                             buttonNum = this.textContent;
+
+
+                             if(buttonNum == 'prev'){
+                                buttonNum = jsonObj.pdto.startPage-1;
+
+                             }else if(buttonNum == 'next'){
+                                buttonNum = jsonObj.pdto.endPage+1;
+
+                             }
+                             if(searchValue == undefined || searchValue ==''){
+                                xhr.open('POST','/page/'+buttonNum+'/'+[[${param.accomNum}]],true);
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                xhr.send("");
+                                }else{
+                                 xhr.open('POST', '/search/'+buttonNum+'/'+[[${param.accomNum}]]+'/'+searchValue, true);
+                                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                 xhr.send("");
+                                }
+                            });
+                        }
+
+                     search[0].addEventListener('keydown',function(e){
+                        if(e.key == 'Enter'){
+                            buttonNum = 1;
+                            searchValue = search[0].value;
+
+                            if(searchValue == undefined || searchValue ==''){
+                                xhr.open('POST','/page/'+buttonNum+'/'+[[${param.accomNum}]],true);
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                xhr.send("");
+
+                            }else{
+                                xhr.open('POST', '/search/'+buttonNum+'/'+[[${param.accomNum}]]+'/'+searchValue, true);
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                xhr.send("");
+                            }
+                         }
+                  });
+
+               }
+           };
+
+            xhr.open('POST','/page/'+buttonNum+'/'+[[${param.accomNum}]],true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+            xhr.send("");
+
+     };
   </script>
 </div>
 </body>

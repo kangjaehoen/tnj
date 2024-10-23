@@ -1,24 +1,26 @@
 package com.example.tnj.domain;
 
-
 import lombok.*;
 
-import java.time.LocalDate;
+import java.sql.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PayVO {
-
-    private String id;
-    private LocalDate payDate;
-    private int pay_Staus;
-    private int accomNum;
+public class PaymentDTO {
     private int resNum;
+    private String id;
+    private Date payDate;
+    private char pay_Status;
+
+    //결제api
+    private String amount;
+    private int accomNum;
     private String impUid;
     private String merchantUid;
-    private String amount;
     private String name;
     private String apply_num;
+
 }

@@ -4,42 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Header Design</title>
-	<style>
-		body {
-			margin: 0;
-			font-family: Arial, sans-serif;
-		}
-
-		header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			padding: 10px 20px;
-			background-color: #fff;
-			border-bottom: 1px solid #ccc;
-		}
-
-		.logo {
-			margin-left: 300px;
-			float: left;
-		}
-
-		.logo img {
-			width: 100px; /* 로고 크기 조정 */
-			height: auto; /* 비율 유지 */
-			border-radius: 50%;
-			margin-left: 200px;
-		}
-
-		.profile-icon img {
-			display: inline-block;
-			width: 40px;
-			height: 40px;
-			border-radius: 50%;
-		}
-
-
-	</style>
+	<link rel="stylesheet" th:href="@{/css/headerStyle.css}">
 </head>
 <body>
 <div th:fragment="headerFragment" style="margin-right: 20px;"> <!-- 오른쪽 여백 추가 -->
@@ -48,10 +13,27 @@
 			<a href="/"><img src="/images/logo.png" alt="Logo"></a>
 		</div>
 		<div style="display: flex; align-items: center; margin-right: 40px;">
-			<img src="/images/profile.png" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-			<span style="font-size: 24px; cursor: pointer;">&#9776;</span> <!-- 메뉴 아이콘 -->
+			<div th:if="${session.id != null}">
+				<a id="hostMove" th:href="@{/sellerPage(id=${session.id})}">호스트 모드로 전환</a><br>
+			</div>
+			<div id="myPage" style="position: relative;">
+				<img src="/images/profile.png" alt="Profile" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+					<span style="font-size: 24px; cursor: pointer;">&#9776;</span> <!-- 메뉴 아이콘 -->
+				</div>
+				<div id="myPageList" style="display:none">
+					<div id="loginMoveBtn"><a href="/loginForm.html">로그인</a></div><br>
+					<div><a href="/registerForm.html">회원가입</a></div><br>
+					<div>도움말 센터</div>
+				</div>
+				<div id="myPageList2" style="display:none">
+					<div><a href="/payment">결제내역</a></div><br>
+					<div><a href="/logout">로그아웃</a></div><br>
+					<div></div>
+					<div>도움말 센터</div>
+				</div>
 		</div>
 	</header>
 </div>
+<script th:src="@{/js/header.js}"></script>
 </body>
 </html>
