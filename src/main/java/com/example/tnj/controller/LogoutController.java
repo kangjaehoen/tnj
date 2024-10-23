@@ -10,7 +10,7 @@ public class LogoutController {
     @GetMapping("/logout")
     public String logout(HttpSession session){
       String id = (String) session.getAttribute("id");
-        System.out.println(id);
+
         if(id != null && !id.equals("")){
             session.invalidate();
         }
