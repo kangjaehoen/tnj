@@ -462,7 +462,7 @@
     <div class="row">
       <div class="main-content">
         <h2 class="main-title" th:text="${list.accName}"></h2>
-        <button class="btn btn-outline-danger like-button">찜하기</button>
+        <!--<button class="btn btn-outline-danger like-button">찜하기</button>-->
       </div>
     </div>
 
@@ -475,8 +475,8 @@
 
     <!-- 숙소 상세정보 -->
     <div class="row">
-      <div class="col-md-8">
-        <h1 class="sub-title">Hwacheon-myeon, Hongcheon, 한국의 집 전체</h1>
+      <div class="col-md-8" th:each="list : ${list}">
+        <h1 class="sub-title"><span th:text="${list.accName}"></span></h1>
         <p>최대 인원 <span th:text="${list.maxocc}"></span>명 ·  침실 <span th:text="${list.room}"></span>개 · 침대 <span th:text="${list.bed}"></span>개 · 욕실 <span th:text="${list.bathroom}"></span>개</p>
         <p>★ <span th:text="${revRate}"></span>&nbsp;후기 <span th:text="${revCnt}"></span>개</p>
         <hr>
@@ -508,7 +508,8 @@
         <hr>
         <div  class="additional-info" style="display: flex; flex-direction: column;">
           <h4>호스트:&nbsp;<span th:text="${list.id}"/></h4>
-          <span th:text="${list.informtext}"></span>
+          <p>숙소설명: <span th:text="${list.informtext}"></span></p>
+          <p>이용규칙: <span th:text="${aVO.accomRule}"></span></p>
         </div>
       </div>
 
