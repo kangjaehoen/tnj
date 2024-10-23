@@ -196,7 +196,7 @@
             const response = JSON.parse(xhr.responseText);
                 if(response.result === 'success') {
                     alert('로그인 성공');
-<!--                    window.location.href = '/main';-->
+                    window.location.href = '/';
                 }else{
                     submitMsg.innerHTML = '아이디 또는 비밀번호가 틀렸습니다. 다시 입력해주세요.';
                     submitMsg.style.color = '#ff0000';
