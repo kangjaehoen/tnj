@@ -250,10 +250,10 @@ input[type="date"]{
 	document.getElementById('birth').setAttribute('max', today);
 
 	document.getElementById('findPwForm').addEventListener('submit', function(event) {
-	event.preventDefault();
-    const nAA = document.getElementById('notAvailableAlert');
-    const form = document.getElementById('findPwForm');
-	nAA.style.display = 'none';
+		event.preventDefault();
+   		const nAA = document.getElementById('notAvailableAlert');
+    	const form = document.getElementById('findPwForm');
+		nAA.style.display = 'none';
 
 	if (!form.checkValidity()) {
 		event.preventDefault();
@@ -262,6 +262,7 @@ input[type="date"]{
     	nAA.style.display = 'block';
     	return;
 	}
+	});
 </script>
 
 
