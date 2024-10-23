@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰 등록</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f9f9f9; /* 검은색 반투명 오버레이 */
+    z-index: 1; /* 요소 위에 표시되도록 */
+    }
+
+    .review-container {
+        width: 700px;
+        height: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #ffffff;
+        position: relative;
+        z-index: 2;
+    }
+
+    .title h2 {
+        margin: 0;
+        font-size: 1.5em;
+    }
+
+    .review-guide {
+        margin: 10px 0;
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .review-form {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .left-column {
+        flex: 1;
+        text-align: center;
+        padding-right: 20px;
+    }
+
+    .image-placeholder {
+        width: 150px;
+        height: 150px;
+        background-color: #eaeaea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        color: #666;
+    }
+
+    .property-name {
+        font-size: 1.2em;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .right-column {
+        flex: 2;
+    }
+
+    .right-column p {
+        margin-top: 0;
+        font-weight: bold;
+    }
+
+    .ratings {
+        margin-top: 10px;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .rating span {
+        margin-right: 10px;
+    }
+
+    .stars {
+        display: flex;
+    }
+
+    .star {
+        width: 25px;
+        height: 25px;
+        background-color: #e0e0e0;
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+    .star.filled {
+        background-color: #B2D055; /* Green color for filled stars */
+    }
+
+    .comment-section {
+        margin-top: 80px;
+    }
+
+    .comment-section h3 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .comment-box {
+        width: 97%;
+        height: 200px;
+        border: 1px solid #d0e6c1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 1em;
+        color: #999;
+        resize: none;
+        margin-top: 20px;
+    }
+
+    p{
+    margin-top: 20px;
+
+    }
+
+    .comment-box::placeholder {
+        color: #ccc;
+    }
+
+    .submit-btn {
+        margin-top: 30px;
+        background-color: #B2D055;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        float: right;
+    }
+
+    .submit-btn:hover {
+        background-color: #5BA63D;
+    }
+
+    .comment-box:focus {
+    outline: none; /* 클릭 시 발생하는 기본적인 외곽선 제거 */
+    border-color: #d0e6c1; /* 기본 테두리 색상 유지 */
+    background-color: white; /* 배경색이 변하지 않도록 유지 */
+    }
+
+     /* 모달 스타일 */
+     .modal-overlay {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* 다른 요소들보다 위에 위치 */
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal h3 {
+            margin-bottom: 10px;
+        }
+
+        .modal button {
+            margin-top: 10px;
+            background-color: #B2D055;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background-color: #5BA63D;
+        }
+        .modal .image-placeholder{
+            margin-left: 70px;
+
+        }
+
+</style>
+<body>
+<div class="review-container">
+    <div class="title">
+        <h2>평가 및 후기</h2>
+        <p>"숙소명"에 대한 리뷰를 남겨주세요.</p>
+    </div>
+
+    <div class="review-guide">
+        <p>#숙소 후기의 대한 가이드라인 및 이용 약관</p>
+    </div>
+
+    <div class="review-form">
+        <div class="left-column">
+            <div class="image-placeholder">숙소 이미지</div>
+            <div class="property-name">숙소명</div>
+        </div>
+
+        <div class="right-column">
+            <p>숙박이 어떠셨나요?</p>
+            <div class="ratings">
+                <div class="rating">
+                    <span>전체적 만족도</span>
+                    <div class="stars" data-rating="satisfy">
+                        <span class="star" data-value="1"></span>
+                        <span class="star" data-value="2"></span>
+                        <span class="star" data-value="3"></span>
+                        <span class="star" data-value="4"></span>
+                        <span class="star" data-value="5"></span>
+                    </div>
+                </div>
+
+                <div class="rating">
+                    <span>정확도</span>
+                    <div class="stars" data-rating="accuracy">
+                        <span class="star" data-value="1"></span>
+                        <span class="star" data-value="2"></span>
+                        <span class="star" data-value="3"></span>
+                        <span class="star" data-value="4"></span>
+                        <span class="star" data-value="5"></span>
+                    </div>
+                </div>
+
+                <div class="rating">
+                    <span>청결도</span>
+                    <div class="stars" data-rating="clean">
+                        <span class="star" data-value="1"></span>
+                        <span class="star" data-value="2"></span>
+                        <span class="star" data-value="3"></span>
+                        <span class="star" data-value="4"></span>
+                        <span class="star" data-value="5"></span>
+                    </div>
+                </div>
+
+                <!--       <div class="rating">
+                           <span>체크인</span>
+                           <div class="stars" data-rating="checkin">
+                               <span class="star" data-value="1"></span>
+                               <span class="star" data-value="2"></span>
+                               <span class="star" data-value="3"></span>
+                               <span class="star" data-value="4"></span>
+                               <span class="star" data-value="5"></span>
+                           </div>
+                       </div>-->
+
+                <div class="rating">
+                    <span>가격 대비 만족도</span>
+                    <div class="stars" data-rating="scp">
+                        <span class="star" data-value="1"></span>
+                        <span class="star" data-value="2"></span>
+                        <span class="star" data-value="3"></span>
+                        <span class="star" data-value="4"></span>
+                        <span class="star" data-value="5"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 댓글 입력창 시작 -->
+    <div class="comment-section">
+        <h3>공개 후기 (필수항목)</h3>
+        <textarea class="comment-box" name="revContent" placeholder="후기를 입력해주세요." required></textarea>
+        <button class="submit-btn" onclick="openModal()">후기 등록</button> <!-- 모달 열기 -->
+    </div>
+    <!-- 댓글 입력창 끝 -->
+</div>
+
+<!-- 모달 오버레이 -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <div class="image-placeholder">숙소 이미지</div>
+        <h3>숙소 정보</h3>
+        <p>리뷰를 정말 등록하시겠습니까?</p>
+        <button onclick="submitReview()">YES</button>
+        <button onclick="closeModal()">NO</button>
+    </div>
+</div>
+<form id="reviewInfo" action="/reviewInsert" method="post">
+    <input type="hidden" name="satisfy" value="" required>
+    <input type="hidden" name="accuracy" value="" required>
+    <input type="hidden" name="clean" value="" required>
+    <input type="hidden" name="scp" value="" required>
+    <input type="hidden" name="revContent" value="" required>
+    <input type="hidden" name="id" th:value="${session.id}">
+    <input type="hidden" name="accomNum" value="1">
+</form>
+
+<script>
+    let input = document.getElementsByTagName('input');
+
+    document.querySelectorAll('.stars .star').forEach(function(star) {
+        star.addEventListener('click', function() {
+            const ratingValue = this.getAttribute('data-value'); // 선택된 별의 값 (1~5)
+            const starContainer = this.parentNode; // 별들이 속한 컨테이너
+
+
+
+            starContainer.querySelectorAll('.star').forEach(function(s, index) {
+                if (index < ratingValue) {
+                    s.classList.add('filled');
+                } else {
+                    s.classList.remove('filled');
+                }
+            });
+
+
+            // console.log('Rating for', starContainer.getAttribute('data-rating'), 'is', ratingValue);
+            let data = starContainer.getAttribute('data-rating');
+            if(data == 'satisfy'){
+                input[0].value = ratingValue;
+                console.log(input[0].value);
+
+            }else if(data == 'accuracy'){
+                input[1].value = ratingValue;
+                console.log(input[1].value);
+
+            }else if(data == 'clean'){
+                input[2].value = ratingValue;
+                console.log(input[2].value);
+
+            }else{
+                input[3].value = ratingValue
+                console.log(input[3].value);
+
+            }
+            console.log(input[5].value);
+            console.log(input[6].value);
+        });
+    });
+
+    let content = document.getElementsByName("revContent")[0];
+    content.addEventListener('keyup',function(){
+        input[4].value = content.value;
+         console.log(input[4].value);
+
+
+
+    });
+
+
+    function openModal() {
+        document.getElementById('modal-overlay').style.display = 'flex'; // 모달 오버레이를 보이게 함
+    }
+
+
+    function closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none'; // 모달 오버레이를 숨김
+    }
+
+
+    function submitReview() {
+       let isValid = true;
+        let hiddenInputs = document.querySelectorAll('input[type="hidden"]');
+
+    hiddenInputs.forEach(input => {
+        if (!input.value) {
+            isValid = false;
+        }
+    });
+
+        if (!isValid) {
+            alert("평점 및 리뷰를 입력해주세요.");
+            return;
+        }
+
+
+
+    if (isValid) {
+        let reviewInfo = document.getElementById("reviewInfo");
+        alert("리뷰가 등록되었습니다!"); // 실제 리뷰 등록 로직 추가 필요
+        reviewInfo.submit();
+        closeModal(); // 모달 닫기
+        }
+    }
+</script>
+</body>
+</html>

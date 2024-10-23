@@ -35,6 +35,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	//결제 api 테스트를 위한 의존성 주입
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
+	implementation 'com.siot.IamportRestClient:iamport-rest-client:1.0.2' // 버전은 최신 버전으로 수정하세요
+	implementation 'com.kr.IamportRestClient:iamport-rest-client:1.0.2'
+
 }
 
 tasks.named('test') {

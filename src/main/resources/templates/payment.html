@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 내역 확인</title>
+    <link rel="stylesheet" th:href="@{/css/headerStyle.css}">
+    <style>
+        body {
+            font-family: 'Pretendard-Regular', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .logo img {
+            width: 120px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px; /* 페이지네이션 아래 간격 추가 */
+        }
+
+        .search-options {
+            /*display: flex;
+            flex-direction: column; */
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        #search-options, #payment-status {
+            margin-bottom: 20px; /* 각 섹션 간의 여백 추가 */
+        }
+
+        .search-options select,
+        .search-options input[type="radio"] {
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        .search-options label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .search-options button {
+            background-color: #92c653;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            align-self: flex-start; /* 버튼을 왼쪽 정렬 */
+        }
+
+        button{
+            background-color: #92c653;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+
+        .search-options button:hover {
+            background-color: #76a53b;
+        }
+
+        .payment-history {
+            padding: 0; /* 왼쪽과 오른쪽에 각각 20px의 패딩 추가 */
+            margin: 0;
+        }
+
+
+        .payment-history h2 {
+            margin-bottom: 20px;
+            /*font-size: 20px;*/
+        }
+
+        .payment-history table {
+           /* width: calc(100% - 40px);
+            border-collapse: collapse;
+            margin: 0 auto;*/
+            width: 70%;
+            border-collapse: collapse;
+        }
+
+        .payment-history th,
+        .payment-history td {
+            border: 1px solid #ddd;
+            padding: 10px 10px;
+            text-align: center;
+        }
+
+        .payment-history th {
+            background-color: #f4f4f4;
+        }
+
+        .payment-history td a {
+            color: #337ab7;
+            text-decoration: none;
+        }
+
+        .payment-history td a:hover {
+            text-decoration: underline;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            background-color: #f4f4f4;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+             /* 스타일 생략 */
+        .modal {
+            display: none; /* 기본적으로 모달을 숨김 */
+            position: fixed;
+            z-index: 1000; /* 페이지 내에서 가장 앞에 위치하게 설정 */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 검은색 배경 */
+            overflow: auto;
+
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 800px; /* 모달 너비 */
+            height : auto;
+            border-radius: 8px; /* 모서리 둥글게 */
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* 모달에 그림자 추가 */
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+    </style>
+    <style>
+        .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .reservation-and-rules {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .reservation-info {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 20px;
+        }
+
+        .reservation-details h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reservation-details p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .price-details {
+            display: flex;
+            align-items: center;
+            text-align: right;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: white;
+        }
+
+        .room-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .price-texts {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-texts p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        .total-price {
+            font-weight: bold;
+        }
+
+
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        .refund-policy {
+            padding-top: 20px;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .refund-policy p {
+            margin: 10px 0;
+        }
+
+        .basic-rules ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .basic-rules ul li {
+            margin: 5px 0;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        #reviewMove{
+          margin-left : 650px;
+}
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+<input type="hidden" id="id" name="id" th:value="${session.id}">
+
+<div class="container">
+    <th:block th:replace="~{fragments/header :: headerFragment}"></th:block>
+
+    <div class="search-options">
+        <div id="search-options">
+            <h2>검색옵션</h2>
+            <label for="year">청구년도</label>
+            <select id="year">
+                <option value="">전체 년도</option>
+            </select>
+
+            <label for="month">전체 월</label>
+            <select id="month">
+                <option value="">전체 월</option>
+            </select>
+        </div>
+
+        <div id="payment-status">
+            <label>결제상태</label>
+            <input type="radio" id="paid" name="status" checked>
+            <label for="paid" name="status">결제완료</label>
+            <input type="radio" id="refunded" name="status">
+            <label for="refunded" name="status">환불완료</label>
+            <button id="searchButton">검색</button>
+        </div>
+    </div>
+
+    <div class="payment-history">
+        <h2>결제내역 확인 <button id="cancelPaymentButton">결제취소</button>  </h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all" onclick="toggleCheckboxes(this)"></th>
+                <!--<th>No.</th>-->
+                <th>결제일시</th>
+                <th>결제번호</th>
+                <th>결제상품</th>
+                <th>결제 금액</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(list)}">
+
+                <td colspan="7" style="text-align: center;">결제내역이 존재하지 않습니다.</td>
+            </tr>
+              <tr class="payList" th:each="list : ${list}">
+
+                  <td><input type="checkbox" class="item-checkbox"></td>
+                 <!-- <td>1</td>-->
+                  <td><span th:text="${list.payDate}"></span></td>
+                  <td><span class="impUids" th:text="${list.impUid}"></span></td>
+                  <td><a href="#" class="modalFloat"><span th:text="${list.name}"></span></a></td>
+                  <td><span th:text="${list.amount}"></span></td>
+                  <td>
+                      <th:block th:switch="${list.pay_Status}">
+                          <span th:case="Y">결제완료</span>
+                          <span th:case="N">환불완료</span>
+                      </th:block>
+                  </td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <a href="#">«</a>
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <a href="#">»</a>
+    </div>
+</div>
+
+<form id="reviewForm" action="/insertReply" method="get">
+    <input id="accomNumHidden" type="hidden" name="accomNum" >
+</form>
+
+<div id="reservationModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>결제 정보</h2>
+        <div id="reservationDetails">
+            <!-- 예약 정보가 여기에 표시됩니다. -->
+
+            <div class="reservation-and-rules">
+                <form method="post">
+                    <div class="reservation-info">
+                        <div class="reservation-details">
+                            <h3>확인 및 결제</h3>
+                            <p><strong>결제 정보</strong></p>
+                            <p id="date">날짜:
+                               <!-- <span th:text="${checkIn}"></span> ~
+                                <span th:text="${checkOut}"></span>-->
+                            </p>
+                            <p>체크인 시간:
+<!--                                <span th:text="${aVO.chkin_Time}"></span> ~-->
+<!--                                <span th:text="${aVO.chkout_Time}"></span>-->
+                            </p>
+                            <p>게스트:
+                            <!--    <span th:text="'성인'+${adultCnt}+'명'"></span>
+                                <span th:if="${kidCnt > 0}">
+                             , <span th:text="'어린이 ' + ${kidCnt} + '명'"></span>-->
+                        </span>
+                            </p>
+                            <p>f</p>
+                            <p></p>
+                        </div>
+                        <div class="price-details">
+                            <img src="/images/room.png" alt="서울의 호스텔" class="room-image">
+                            <div class="price-texts">
+                                <p></p>
+                                <p>7</p>
+                                <p>8</p>
+                           <!--     <span th:text="${aVO.getAccName()}"></span>
+                                <p>★ <span th:text="${revRate}"></span>
+                                    후기(<span th:text="${revCnt != null ? revCnt : '0'}"></span>개)
+                                </p>-->
+                                <hr>
+                                <p>요금 세부정보</p>
+                                <p>10</p>
+                               <!-- <p><span th:text="${aVO.getPrice()}"></span>원 ×<span th:text="${totalDays}"></span> 박</p>-->
+
+                             <p>총 결제금액: <span id="amount"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <input type="hidden" id="accomName" name="accomName" th:value="${aVO?.getAccName()?:_}">
+                <input type="hidden" id="accomNum" name="accomNum" th:value="${aVO?.accomNum?:_}">
+                <input type="hidden" id="totalDays" name="totalDays" th:value="${totalDays}">
+                <input type="hidden" id="totalPayment" name="totalPayment" th:value="${totalPayment}">
+                <input type="hidden" id="checkIn" name="checkIn" th:value="${checkIn}">
+                <input type="hidden" id="checkOut" name="checkOut" th:value="${checkOut}">
+                <input type="hidden" id="adultCnt" name="adultCnt" th:value="${adultCnt}">
+                <input type="hidden" id="kidCnt" name="klidCnt" th:value="${kidCnt}">
+
+
+                <hr>
+                <h3>예약 정보</h3>
+                <p>12</p>
+                <p>13</p>
+                <p>14</p>
+                <p>15</p>
+                <p>16</p>
+                <p>17</p>
+                <!-- 연한 그레이색 hr 추가 -->
+                <hr>
+
+                <!-- 규칙 섹션 -->
+                <div id="rules">
+                    <div class="refund-policy">
+                        <p><strong>환불정책</strong></p>
+                        <p>19</p>
+                        <p></p>
+                     <!--  <p>
+                            <span th:text="${#strings.concat(checkIn.substring(5, 7), '월 ', checkIn.substring(8), '일')}"></span>
+                            오후 <span th:text="${chkTime}"></span> 전까지 무료로 취소하실 수 있습니다. <br>
+                            체크인 날짜인 <span th:text="${#strings.concat(checkIn.substring(5, 7), '월 ', checkIn.substring(8), '일')}"></span> 전에 취소하면 부분 환불받으실 수 있습니다.
+                        </p>-->
+                    </div>
+
+                    <div class="basic-rules">
+                        <br>
+                        <br>
+                        <button id="reviewMove">리뷰 쓰러가기.</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<footer>
+    <div class="footer-container">
+        <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
+    </div>
+</footer>
+<script>
+    let id = "[[${session.id}]]";
+    let modalFloat;
+    let selectedImpUids = [];
+    let reviewForm =  document.getElementById("reviewForm");
+    let accomValue =  document.getElementById("accomNumHidden");
+
+
+    $(document).ready(function () {
+        const currentYear = new Date().getFullYear();
+
+        // 년도 selectbox 만들기
+        for (i = 1970; i <= currentYear; i++) {
+            $('#year').append('<option value="' + i + '">' + i + '</option>');
+        }
+
+        // 월 selectbox 만들기
+        for (i = 1; i <= 12; i++) {
+            $('#month').append('<option value="' + i + '">' + i + '</option>');
+        }
+    });
+
+    // 전체 체크박스 선택
+    function toggleCheckboxes(source) {
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+        });
+    }
+
+    // 결제 취소 버튼 클릭 이벤트
+    document.getElementById('cancelPaymentButton').addEventListener('click', function() {
+        const selectedPayments = [];
+        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+
+        checkboxes.forEach(checkbox => {
+            const row = checkbox.closest('tr');
+            const impUid = row.querySelector('.impUids').innerText; // impUid 값을 가져옵니다.
+            selectedPayments.push(impUid);
+        });
+
+        if (selectedPayments.length === 0) {
+            alert('취소할 결제를 선택하세요.');
+            return;
+        }
+
+        // 결제 취소 확인
+        if (!confirm("결제를 취소하시겠습니까?")) {
+            return;
+        }
+
+        // AJAX 요청을 통해 서버에 결제 취소 요청
+        $.ajax({
+            url: "/payment/cancel", // 결제 취소 API URL
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                impUids: selectedPayments,  // 선택한 결제 내역(impUid) 배열을 서버에 전송
+                merchant_uid: 'merchant_' + new Date().getTime()  // 취소에 필요한 merchant_uid 생성
+
+            }),
+            success: function(response) {
+                alert("결제가 취소되었습니다.");
+                location.href = "/";  // 성공 시 리다이렉트할 페이지*/
+            },
+            error: function(error) {
+                alert("결제 취소 중 오류가 발생했습니다.");
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    // 검색 버튼 클릭 이벤트
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const selectedStatus = document.querySelector('input[name="status"]:checked').value; // 선택된 결제 상태
+        const year = document.getElementById('year').value; // 선택된 년도
+        const month = document.getElementById('month').value; // 선택된 월
+/*
+        if(year === syear && month === smonth) {
+            const payStatus = selectedStatus === 'Y' ? 'Y' : 'N';*/
+            // AJAX 요청을 통해 서버에 결제 상태에 맞는 결제 내역 요청
+            fetch(`/payment?status=${selectedStatus}&year=${year}&month=${month}`)
+                .then(response => response.json())
+                .then(data => {
+                    // 서버에서 받은 데이터로 테이블 업데이트
+                    updatePaymentTable(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            /*}else{
+                alert('검색조건에 해당하는 결과가 없습니다.');
+            }*/
+    });
+
+    // 결제 내역 테이블 업데이트 함수
+    function updatePaymentTable(data) {
+        const tbody = document.querySelector('.payment-history tbody');
+        tbody.innerHTML = ''; // 기존 내용을 비우기
+
+        if (data.length === 0) {
+            // 결제 내역이 없을 경우
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">결제내역이 존재하지 않습니다.</td></tr>';
+        } else {
+            // 결제 내역을 테이블에 추가
+            data.forEach((list, index) => {
+                const payDate = new Date(list.payDate);
+                const year = payDate.getFullYear();
+                const month = payDate.getMonth() + 1;
+
+                const row = `
+                <tr class="payList">
+                    <td><input type="checkbox" class="item-checkbox"></td>
+                    <td>${index + 1}</td>
+                    <td>${year}-${month < 10 ? '0' + month : month}</td>
+                    <td class="impUids">${list.impUid}</td>
+                    <td><a href="#"><span>${list.name}</span></a></td>
+                    <td>${list.amount}</td>
+                    <td>${list.pay_Status === 'Y' ? '결제완료' : '환불완료'}</td>
+                </tr>
+            `;
+                tbody.innerHTML += row;
+            });
+        }
+    }
+
+    let checks = document.querySelectorAll('.item-checkbox');
+    let imu = document.querySelectorAll('.impUids');
+    for(let i = 0; i < checks.length;i++){
+        checks[i].onclick = function() {
+            impUid =   imu[i].textContent;
+
+            if(checks[i].checked == true){
+
+                  if (!selectedImpUids.includes(impUid)) {
+                     selectedImpUids.push(impUid);
+                     }
+           }else{
+
+                      const index = selectedImpUids.indexOf(impUid);
+                    if (index > -1) {
+                        selectedImpUids.splice(index, 1);
+                    }
+            }
+
+        }
+    }
+
+        let xhr = new XMLHttpRequest();
+        let impUid;
+       modalFloat = document.getElementsByClassName("modalFloat");
+
+         for (let i = 0; i < modalFloat.length; i++) {
+        modalFloat[i].onclick = function (e) {
+            e.preventDefault(); // 기본 동작 방지
+
+
+              impUid =   imu[i].textContent;
+              let p = document.getElementsByTagName("p");
+               let amount = document.getElementById("amount");
+             xhr.onload = function(){
+                if(xhr.status == 200) {
+                  let obj = xhr.responseText;
+                  let jsonObj = JSON.parse(obj);
+
+                    p[1].textContent = '결제 및 예약 날짜 : '+jsonObj.payDate;
+                    p[2].textContent = '결제번호 : '+jsonObj.impUid;
+                    p[3].textContent = '가격 : ₩ '+jsonObj.amount;
+                    p[4].textContent = '유저 : '+jsonObj.id + '님';
+                    p[6].textContext = '숙소명 : '+ jsonObj.accName;
+                    p[8].textContent = '★' + jsonObj.satisAvg +' 후기('+jsonObj.reviewCount+')개';
+                    p[7].textContent = '숙소명 : '+jsonObj.accName;
+                    p[10].textContent = jsonObj.price+'원 x'+jsonObj.totalDay+'박';
+                    amount.textContent = jsonObj.amount +' ₩';
+                    p[12].textContent = '숙소명 : ' +jsonObj.accName;
+                    p[13].textContent = '주소 : '+jsonObj.address+' '+jsonObj.detailAddress;
+                    p[14].textContent = '우편번호 : '+jsonObj.postcode;
+                    p[15].textContent = '전화번호 : '+jsonObj.accCall;
+                    p[16].textContent = '예약기간 : '+jsonObj.checkIn+' '+jsonObj.chkin_Time +'  ~  '+jsonObj.checkOut+' '+jsonObj.chkout_Time ;
+                    p[17].textContent = '예약번호 : ' + jsonObj.resNum;
+                    p[19].textContent =  jsonObj.checkIn+' 오후 2시 전까지 무료로 취소하실 수 있습니다.'
+                    p[20].textContent = '체크인 날짜인 '+jsonObj.checkIn+' 이전에 취소하면 부분 환불 받으실 수 있습니다.';
+                   accomValue.value = jsonObj.accomNum;
+
+                }
+            }
+
+             xhr.open('GET','/payResAccomInfo/'+impUid,'true');
+             xhr.send();
+
+            document.getElementById('reservationModal').style.display = 'block'; // 모달 표시
+        }
+
+    }
+
+    // 모달을 닫는 함수
+    function closeModal() {
+        document.getElementById('reservationModal').style.display = 'none';
+    }
+
+    // X 버튼 클릭 시 모달 닫기
+    document.querySelector('.close-button').onclick = function () {
+        closeModal();
+    };
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function (event) {
+        const modal = document.getElementById('reservationModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    let review = document.getElementById("reviewMove");
+        review.onclick = function(e){
+            e.preventDefault();
+            reviewForm.submit();
+
+    }
+
+
+
+
+
+</script>
+
+
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>

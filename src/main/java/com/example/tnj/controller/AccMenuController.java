@@ -1,14 +1,12 @@
 package com.example.tnj.controller;
 
 import com.example.tnj.domain.AccVO;
-import com.example.tnj.domain.PayVO;
 import jakarta.servlet.http.HttpSession;
 import mybatis.dao.AccomImageMapper;
 import mybatis.dao.AccomMapper;
 import mybatis.dao.WishListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,7 +32,7 @@ public class AccMenuController {
         return mav;
     }
 
-    @RequestMapping(value = "/myacclist", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/myacclist")
     @ResponseBody
     public ModelAndView myacclist(HttpSession session) {
         ModelAndView mav = new ModelAndView();
@@ -45,12 +43,22 @@ public class AccMenuController {
         return mav;
     }
 
-    @RequestMapping(value = "/searchmine", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/searchmine")
     @ResponseBody
     public ModelAndView searchmine(HttpSession session, @RequestParam(defaultValue = "") String key) {
         ModelAndView mav = new ModelAndView();
         String id = (String) session.getAttribute("id");
         List<AccVO> mylist = acmd.searchmine(id, key);
+        mav.addObject("mylist", mylist);
+        mav.setViewName("myAccommodations");
+        return mav;
+    }
+    @RequestMapping(value = "/searchonsale")
+    @ResponseBody
+    public ModelAndView showonsale(HttpSession session){
+        ModelAndView mav = new ModelAndView();
+        String id = (String) session.getAttribute("id");
+        List<AccVO> mylist = acmd.searchmineonsale(id);
         mav.addObject("mylist", mylist);
         mav.setViewName("myAccommodations");
         return mav;
@@ -99,18 +107,6 @@ public class AccMenuController {
                 acmd.saleupdate(accomNum, 1);
         }
         mav.setViewName("redirect:/myacclist");
-        return mav;
-    }
-
-    @RequestMapping(value = "/rCheck", produces = "application/json; charset=utf-8")
-    @ResponseBody
-    public ModelAndView reservationcheck(HttpSession session) {
-        String id = (String) session.getAttribute("id");
-        ModelAndView mav = new ModelAndView();
-        List<PayVO> rsv = acmd.reservationcheck(id);
-        mav.addObject("id", id);
-        mav.addObject("rsv", rsv);
-        mav.setViewName("reservationCheck");
         return mav;
     }
 }

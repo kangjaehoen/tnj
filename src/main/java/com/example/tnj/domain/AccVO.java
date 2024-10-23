@@ -1,11 +1,15 @@
 package com.example.tnj.domain;
 
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class AccVO {
     private String accName;
     private int accomNum;
@@ -19,10 +23,9 @@ public class AccVO {
     private int kidPrice;
     private int occ;
     private int maxocc;
-    private LocalDate dayoff;
+    private String dayoff;
     private String category;
     private String accType;
-    private String accPic;
     private int onSale;
     private String accomRule;
     private String informtext;
@@ -31,4 +34,5 @@ public class AccVO {
     private int room;
     private int bed;
     private int bathroom;
+    private LocalDate regDate;
 }

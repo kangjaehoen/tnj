@@ -18,15 +18,18 @@
 		display: none;
 	}
 }
-.selnav label{
+.selmenu li{
+    list-style-type : none;
+}
+
+.selmenu li a{
     display : block;
     width : 100%;
+    height : 100%;
+    padding-left : 30px;
+    text-decoration-line : none;
 }
 
-.selnav form:hover {
+.selmenu li:hover {
 	background-color: #8dbf3d;
-}
-
-.selnav label {
-	padding-left: 30px;
 }

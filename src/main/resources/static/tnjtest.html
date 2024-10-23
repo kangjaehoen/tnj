@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 | 여행업고튀어</title>
+    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+    <div th:replace="fragments/header :: header"></div>
+</head>
+<body>
+<section>
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong><i class="fa fa-credit-card fa-lg"></i> 결제정보</strong></div>
+        <div class="panel-body form-horizontal">
+            <div class="form-group form-group-sm">
+                <label class="col-xs-4 col-sm-2 control-label">총이용금액</label>
+                <label class="col-xs-8 col-sm-2 control-label">
+                    <span id="pg-price-all" class="price_red">71,000</span> 원
+                </label>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-xs-4 col-sm-2 control-label">결제방법</label>
+                <div class="col-xs-8 col-sm-10 radio-line">
+                    <label><input type="radio" name="bk_payment" id="bk_payment_bank" class="payment_type" value="무통장" checked=checked /> 무통장입금</label>
+                    <label><input type="radio" name="bk_payment" id="bk_payment_card" class="payment_type" value="신용카드" /> 신용카드</label>
+                    <label><input type="radio" name="bk_payment" id="bk_payment_kakao" class="payment_type" value="카카오페이" /> 카카오페이</label>
+                </div>
+            </div>
+<!--    무통장 입금시 필요한 정보
+            <div id="bank_info_box" style="display:">
+                <div class="form-group form-group-sm">
+                    <label class="col-xs-4 col-sm-2 control-label" for="od_bank_account">입금계좌</label>
+                    <div class="col-xs-8 col-sm-4">
+                        <select name="bk_bank_account" id="bk_bank_account" class="form-control">
+                            <option value="카카오뱅크 3333-05-7297403 알빠노관광">카카오뱅크 3333-05-7297403 알빠노관광</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-sm">
+                    <label class="col-xs-4 col-sm-2 control-label" for="od_deposit_name">입금자명</label>
+                    <div class="col-xs-8 col-sm-2">
+                        <input type="text" name="bk_deposit_name" id="bk_deposit_name" class="form-control" value="" placeholder="입금자명" maxlength="20">
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="display_pay_button" class="col-md-12 btn-group-justified" role="group">
+            <div class="btn-group" role="group">
+                <button type="button" id="submit_next" data-loading-text="Loading..." autocomplete="off" class="btn btn-success" onclick="requestPay()"><i class="fa fa-check"></i> 예약하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script language="javascript" type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script>
+        jQuery(function($){
+            $.datepicker.regional["ko"] = {
+                closeText: "닫기",
+                prevText: "이전달",
+                nextText: "다음달",
+                currentText: "오늘",
+                monthNames: ["1월(JAN)","2월(FEB)","3월(MAR)","4월(APR)","5월(MAY)","6월(JUN)", "7월(JUL)","8월(AUG)","9월(SEP)","10월(OCT)","11월(NOV)","12월(DEC)"],
+                monthNamesShort: ["1월","2월","3월","4월","5월","6월", "7월","8월","9월","10월","11월","12월"],
+                dayNames: ["일","월","화","수","목","금","토"],
+                dayNamesShort: ["일","월","화","수","목","금","토"],
+                dayNamesMin: ["일","월","화","수","목","금","토"],
+                weekHeader: "Wk",
+                dateFormat: "yymmdd",
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: true,
+                yearSuffix: ""
+            };
+            $.datepicker.setDefaults($.datepicker.regional["ko"]);
+        });
+    </script>
+
+</section>
+
+<footer>
+    <div class="footer-container">
+        <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
+    </div>
+</footer>
+
+<%--스크롤_애니메이션_리셋--%>
+<script src="/static/js/wow.min.js"></script>
+<script> new WOW().init(); </script>
+<script>
+    function requestPay() {
+        PortOne.requestPayment({
+            storeId: "store-78210a12-d8bc-46bd-8b0a-ce0679096a79",
+            paymentId: "testlw4mxlva",
+            orderName: "알빠노-동해안투어",
+            totalAmount: 71000,
+            currency: "KRW",
+            channelKey: "channel-key-c2db6c5c-a0f4-402e-a176-5ccdfd775929",
+            payMethod: "CARD",
+            card: {},
+            redirectUrl: "https://sdk-playground.portone.io/",
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/allseller.css"/>
+    <link rel="stylesheet" type="text/css" href="css/sellmenu.css"/>
+    <link rel="stylesheet" type="text/css" href="css/myAcc.css"/>
+
+</head>
+<body>
+<th:block th:replace="~{fragments/selmenu :: nav}"></th:block>
+<section class="mainsection">
+
+    <table>
+        <th>예약자ID</th>
+        <th>결제숙소</th>
+        <th>결제날짜</th>
+        <th:block th:if="${pv}">
+            <th:block th:each="p, no : ${pv}">
+                <th:block th:if="${p.payDate}">
+                    <tr th:class="${no.count % 2 == 0} ? 'even-row' : 'odd-row'">
+                        <td><span th:text="${p.id}"></span></td>
+                        <td><span th:text="${p.name}"></span></td>
+                        <td><span th:text="${p.payDate}"></span></td>
+                    </tr>
+                </th:block>
+            </th:block>
+        </th:block>
+    </table>
+</section>
+</body>
+</html>

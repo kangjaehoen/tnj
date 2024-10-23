@@ -10,10 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class TestloginController {
-    @Autowired
-    AccomMapper acmd;
 
-    @RequestMapping(value = "/sellerPage", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/sellerPage")
     @ResponseBody
     public ModelAndView sellpage(HttpSession session, String id) {
         ModelAndView mav = new ModelAndView();
@@ -22,4 +20,5 @@ public class TestloginController {
         mav.setViewName("forward:/myacclist");
         return mav;
     }
+
 }
