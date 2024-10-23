@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -51,7 +51,7 @@ h4{
     width: 40%;
     height: 40px;
     color: black;
-    margin-top: 30px;
+    margin-top: 20px;
     background-color: #B2D055;
     border: 1px solid #B2D055;
     margin-left:-4px;
@@ -78,21 +78,24 @@ h4{
 	box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
 }
 .btn-dark{
-	text-align: center;
-	width: 43%;
-	height: 40px;
-	background-color: #333;
-	color: white;
-	border: none;
-	border-radius:10px;
-	margin-left:-4px;
-	padding:12px;
-	cursor: pointer;
-	margin-bottom: 25px;
+    text-align: center;
+    width: 80%;
+    margin-left: 52px;
+    height: 45px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 30px;
 }
 .btn-dark:hover{
-	background-color: black;
-	box-shadow: 2px 2px gray, -2px 2px darkgray;
+    background-color: black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
 }
 .btn-light{
 	text-align: center;
@@ -115,7 +118,7 @@ h4{
     display: inline-block;
     color: black;
     box-sizing: border-box;
-    margin-top: 30px;
+    margin-top: 20px;
     width: 40%;
     height: 40px;
     margin-bottom: 10px;
@@ -136,6 +139,7 @@ a{
 
 .form-floating{
 	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .form-floating input, .form-floating select {
@@ -188,15 +192,16 @@ input[type="date"]{
 	margin-left: 10px;
     width: 78%;
 }
-input[type="email"]{
+#email{
 	margin-top: 5px;
 	background-color: white;
 	border: 1px solid #111111;
 	border-radius: 1px;
     padding: 10px;
 	margin-left: 24px;
-    width: 51.5%;
-	margin-right: 4.5px;border: 1px solid #ccc;
+    width: 78%;
+	margin-right: 4.5px;
+	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: 14px;
 }
@@ -206,45 +211,59 @@ input[type="email"]{
 </head>
 <body>
 	<main class="form-signin w-100 m-auto">
-		<form action ="/findPw" method = "POST">
+		<form action ="/findPw" id = "findPwForm" method = "POST">
 			<h1 class="h3 mb-3 fw-normal">비밀번호 찾기</h1><br>
 			<a href= "/moveID" class="btn btn-bd-primary">아이디</a>
 			<a href= "/movePW" class="btn btn-primary">비밀번호</a>
 			<div class="form-floating">
-				<h4>등록된 이메일로 찾기</h4>
-				가입 당시 입력한 이메일을 통해 인증 후 새 비밀번호를 등록해주세요.<br>
-				<label>아이디<input type="text" name="id" placeholder="(필수)"></label><br>
-					<label>이름<input type="text" name="name" placeholder="(필수)"></label><br>
-				<label>생년월일 <input type = "date" name = "birth" placeholder="YY/MM/DD"></label><br>
-				<label>이메일 <input type="email" name ="email" placeholder="example@email.com"></label>
-				<button class = "btn-confirm" type = "button" name = "codeSend">인증번호 전송</button><br>
-				<label><input type = "number" name = "codeEnter" placeholder = "인증번호 입력"></label>
-				<button class = "btn-confirm" type = "button" name = "confirm">확인</button><br><br><br>
-				<button class = "btn-light" type = "button" name = "resend">재전송</button>
-				<button class = "btn-dark" type = "submit">비밀번호 찾기</button>
+				<h4>등록된 개인정보로 찾기</h4>
+				가입 당시 입력한 개인정보로 인증 후 새 비밀번호를 등록해주세요.<br>
+				<label>아이디<input type="text" name="id" id = "id" placeholder="(필수)" required></label><br>
+					<label>이름<input type="text" name="name" id = "name" placeholder="(필수)" required></label><br>
+				<label>생년월일 <input type = "date" name = "birth" id="birth" placeholder="YY/MM/DD" required></label><br>
+				<label>이메일 <input type="text" name ="email" id="email" placeholder="example@email.com" onkeydown="validateEmail()" required></label>
+				<span id = "notAvailableAlert" style="display:none;"></span>
 			</div>
+				<button class = "btn-dark" type = "submit">확인</button>
+
 		</form>
 	</main>
-	<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-	function
-	document.getElementById("pwFind").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent default form submission
-    const email = document.querySelector("[name='email']").value;
+	function validateEmail(){
+		const email = document.getElementById('email');
+		const emailVal = email.value;
+		const nAA = document.getElementById('notAvailableAlert');
+		const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        const resultDom = JSON.parse(xhr.responseText);
-        if (resultDom.success) {
-            alert("이메일을 확인해주세요.");
-        } else {
-            alert("비밀번호를 찾지 못했습니다. 다시 시도해주세요.");
-        }
-    };
-    xhr.open("POST", "/findPassword", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send(`email=${encodeURIComponent(email)}`);
-});
+    	if (!emailVal.match(pattern)) {
+        	nAA.innerHTML = '유효한 이메일 주소를 입력해주세요.';
+        	nAA.style.color = '#ff0000';
+        	nAA.style.display = 'block';
+        	return false;
+    	} else {
+        	nAA.style.display = 'none';
+    		return false;
+    	}
+	}
+	const today = new Date().toISOString().split('T')[0];
+	document.getElementById('birth').setAttribute('min', '1900-01-01');
+	document.getElementById('birth').setAttribute('max', today);
+
+	document.getElementById('findPwForm').addEventListener('submit', function(event) {
+	event.preventDefault();
+    const nAA = document.getElementById('notAvailableAlert');
+    const form = document.getElementById('findPwForm');
+	nAA.style.display = 'none';
+
+	if (!form.checkValidity()) {
+		event.preventDefault();
+    	nAA.innerHTML = '필요한 정보들을 넣어주세요.';
+    	nAA.style.color = '#ff0000';
+    	nAA.style.display = 'block';
+    	return;
+	}
 </script>
+
+
 </body>
 </html>

@@ -34,8 +34,6 @@
 
     h1 {
         text-align: center;
-        text-underline-position: below;
-        /* text-shadow: #B2D055 3px 3px, #B2D055 3px 3px; */
         font-weight: bolder;
         padding-top: 25px;
     }
@@ -108,6 +106,11 @@
     .btn-bd-primary:hover{
         box-shadow: 2px 2px gray, -2px -2px darkgray, 2px -2px gray, -2px 2px darkgray;
     }
+    #submitAlert{
+        color: #000;
+        font-size: 13px;
+        text-stroke: 0.3px solid #000;
+    }
     .find{
         text-align: right;
         margin-top: 10px;
@@ -135,7 +138,7 @@
 </head>
 <body>
 <main class="form-signin w-100 m-auto">
-    <form action="/logIn" id="loginForm" method="Post">
+    <form action="/login" id="loginForm" method="Post">
         <h1 class="h3 mb-3 fw-normal">My 여행 업고 튀어</h1><br><br>
         <span style="font-weight: bolder">로그인</span>
         <span id="alertMsg" style="display:none;"></span>
@@ -151,7 +154,7 @@
             <a href="/moveID" class="findLink">아이디 및 비밀번호 찾기</a>
         </div>
         <br><br> &nbsp;
-        <button class="btn-bd-primary" onsubmit="loginSubmit(event)">계속</button>
+        <button class="btn-bd-primary" onclick="loginSubmit(event)">계속</button>
         <br><br><br>
         <div class="register">
             계정이 없으신가요?<br>
@@ -159,64 +162,68 @@
         </div>
     </form>
 </main>
+
 <script>
     const alertMsg = document.getElementById('alertMsg');
-       const params = new URLSearchParams(window.location.search);
-       if (params.get('registered') === 'true') {
-           alertMsg.innerHTML = '회원가입이 완료되었습니다. 로그인 해주세요!';
-           alertMsg.style.display = 'block';
-       }
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('registered') === 'true') {
+        alertMsg.innerHTML = '회원가입이 완료되었습니다. 로그인 해주세요!';
+        alertMsg.style.display = 'block';
+    }
 
-       function loginSubmit(event){
-           const id = document.querySelector('[name="id"]').value;
-           const pw = document.querySelector('[name="pw"]').value;
-           const submitMsg = document.getElementById('submitAlert');
+    function loginSubmit(event){
+        event.preventDefault();
+        alertMsg.style.display = 'none';
+        const id = document.querySelector('[name="id"]').value;
+        const pw = document.querySelector('[name="pw"]').value;
+        const submitMsg = document.getElementById('submitAlert');
+        const loginForm = document.getElementById('loginForm');
 
-       if (!loginForm.checkValidity()) {
-           event.preventDefault();
-           submitMsg.innerHTML = '아이디와 비밀번호를 입력해주세요.';
-           submitMsg.style.color = '#ff0000';
-           submitMsg.style.display = 'block';
-           return;
-       }
+        if (!loginForm.checkValidity()) {
+            submitMsg.innerHTML = '아이디와 비밀번호를 입력해주세요.';
+            submitMsg.style.color = '#ff0000';
+            submitMsg.style.display = 'block';
+            return;
+        }
 
-       let param = 'id=' + encodeURIComponent(id) + '&pw=' + encodeURIComponent(pw);
-       let xhr = new XMLHttpRequest();
+        const param = 'id=' + encodeURIComponent(id) + '&pw=' + encodeURIComponent(pw);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/login', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-       xhr.onload = function() {
-           if (xhr.status === 200) {
-           let resultDom = JSON.parse(xhr.responseText);
-           if(resultDom.result === 'ok') {
-               alert('로그인 성공');
-               window.location.href = '/main';
-           }else{
-               alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
-           }
-       }
-   };
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+                if(response.result === 'success') {
+                    alert('로그인 성공');
+                    window.location.href = '/';
+                }else{
+                    submitMsg.innerHTML = '아이디 또는 비밀번호가 틀렸습니다. 다시 입력해주세요.';
+                    submitMsg.style.color = '#ff0000';
+                    submitMsg.style.display = 'block';
+                }
+        } else {
+            submitMsg.innerHTML = '서버와의 연결에 문제가 발생했습니다. 다시 시도해주세요.';
+            submitMsg.style.color = '#ff0000';
+            submitMsg.style.display = 'block';
+                }
+            };
+            xhr.send(param);
+    }
 
-   xhr.onerror = function() {
-       alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
-   };
-
-       xhr.open('POST', '/login', true);
-       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-       xhr.send(param);
-   };
-
-   function hiddenErrorMsg() {
+    function hiddenErrorMsg() {
        const submitMsg = document.getElementById('submitAlert');
-       submitMsg.style.display = 'none';
-   };
-
-   document.querySelector('[name="id"]').addEventListener('input', hiddenErrorMsg);
-   document.querySelector('[name="pw"]').addEventListener('input', hiddenErrorMsg);
-
-   function togglePasswordVisibility() {
-       const passwordInput = document.querySelector('[name = "pw"]');
-       const type = passwordInput.type === 'password' ? 'text' : 'password';
-       passwordInput.type = type;
+    submitMsg.style.display = 'none';
    }
+
+    document.querySelector('[name="id"]').addEventListener('input', hiddenErrorMsg);
+    document.querySelector('[name="pw"]').addEventListener('input', hiddenErrorMsg);
+
+    function togglePasswordVisibility() {
+       const passwordInput = document.querySelector('[name = "pw"]');
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+    }
 </script>
 </body>
 </html>
