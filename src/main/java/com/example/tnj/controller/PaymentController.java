@@ -1,11 +1,13 @@
 package com.example.tnj.controller;
 
 import com.example.tnj.domain.*;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import mybatis.dao.PaymentMapper;
 import org.apache.tomcat.jni.SSLContext;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -45,8 +47,8 @@ public class PaymentController {
 
     @PostMapping("/reservation/payment")
     public String insertPay(@RequestBody PaymentDTO pDTO, HttpSession session,
-                            @RequestParam("accomNum") int accomNum){
-
+                            @RequestParam("accomNum") int accomNum, HttpServletResponse request){
+        /*String referer = request.getHeader("referer");*/
         try{
             String id= (String) session.getAttribute("id");
             pDTO.setId(id);
@@ -54,17 +56,17 @@ public class PaymentController {
 
             pDTO.setResNum(resNum);
             pDTO.setAccomNum(accomNum);
-            System.out.println("Received PaymentDTO: " + pDTO);
+ /*           System.out.println("Received PaymentDTO: " + pDTO);*/
             dao.insertPay(pDTO);
 
-            return "payment";
         }catch (Exception e){
             e.printStackTrace();
-            return "redirect:/";
+            String referer = request.getHeader("referer");
+            return "redirect:" + referer;
         }
-
-
+        return "redirect:/";
     }
+
     @PostMapping("/payment/cancel")
     @ResponseBody
     public ResponseEntity<String> cancelPayment(@RequestBody Map<String, Object> requestData,
