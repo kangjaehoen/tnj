@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -192,7 +192,7 @@ input[type="date"]{
 	margin-left: 10px;
     width: 78%;
 }
-input[type="email"]{
+#email{
 	margin-top: 5px;
 	background-color: white;
 	border: 1px solid #111111;
@@ -200,7 +200,8 @@ input[type="email"]{
     padding: 10px;
 	margin-left: 24px;
     width: 78%;
-	margin-right: 4.5px;border: 1px solid #ccc;
+	margin-right: 4.5px;
+	border: 1px solid #ccc;
 	border-radius: 5px;
 	font-size: 14px;
 }
@@ -217,86 +218,52 @@ input[type="email"]{
 			<div class="form-floating">
 				<h4>등록된 개인정보로 찾기</h4>
 				가입 당시 입력한 개인정보로 인증 후 새 비밀번호를 등록해주세요.<br>
-				<label>아이디<input type="text" name="id" placeholder="(필수)"></label><br>
-					<label>이름<input type="text" name="name" placeholder="(필수)"></label><br>
-				<label>생년월일 <input type = "date" name = "birth" placeholder="YY/MM/DD"></label><br>
-				<label>이메일 <input type="email" name ="email" placeholder="example@email.com"></label>
-				<span id = notAvailableAlert></span>
+				<label>아이디<input type="text" name="id" id = "id" placeholder="(필수)" required></label><br>
+					<label>이름<input type="text" name="name" id = "name" placeholder="(필수)" required></label><br>
+				<label>생년월일 <input type = "date" name = "birth" id="birth" placeholder="YY/MM/DD" required></label><br>
+				<label>이메일 <input type="text" name ="email" id="email" placeholder="example@email.com" onkeydown="validateEmail()" required></label>
+				<span id = "notAvailableAlert" style="display:none;"></span>
 			</div>
 				<button class = "btn-dark" type = "submit">확인</button>
 
 		</form>
 	</main>
 <script>
-	document.getElementById('findPwForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+	function validateEmail(){
+		const email = document.getElementById('email');
+		const emailVal = email.value;
+		const nAA = document.getElementById('notAvailableAlert');
+		const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 
-    document.querySelector('input[name="email"]').addEventListener("keypress", function(event){
-    	var email = document.getElementById('email').value;
-    	var text = document.getElementById('text');
-    	var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    	if (event.key === 'Enter') {
-    		if (!email.match(pattern)) {
-    			text.innerHTML = '유효한 이메일 주소를 입력해주세요.';
-    			text.style.color = '#ff0000';
-    			text.style.display = 'block';
-    		} else {
-    			text.style.display = 'none';
-    		}
+    	if (!emailVal.match(pattern)) {
+        	nAA.innerHTML = '유효한 이메일 주소를 입력해주세요.';
+        	nAA.style.color = '#ff0000';
+        	nAA.style.display = 'block';
+        	return false;
+    	} else {
+        	nAA.style.display = 'none';
+    		return false;
     	}
-    };
-        const nAA = document.getElementById('notAvailableAlert');
-        const id = document.querySelector('[name="id"]').value;
-        const name = document.querySelector('[name="name"]').value;
-        const birth = document.querySelector('[name="birth"]').value;
-        const email = document.querySelector('[name="email"]').value;
+	}
+	const today = new Date().toISOString().split('T')[0];
+	document.getElementById('birth').setAttribute('min', '1900-01-01');
+	document.getElementById('birth').setAttribute('max', today);
 
-            if (!document.getElementById('findPwForm').checkValidity()) {
-                nAA.innerHTML = '필요한 정보들을 넣어주세요.';
-                nAA.style.color = '#ff0000';
-                nAA.style.display = 'block';
-                return;
-            }
+	document.getElementById('findPwForm').addEventListener('submit', function(event) {
+	event.preventDefault();
+    const nAA = document.getElementById('notAvailableAlert');
+    const form = document.getElementById('findPwForm');
+	nAA.style.display = 'none';
 
-        const params = new URLSearchParams({
-        		id: id,
-                name: name,
-                birth: birth,
-                email: email
-            }).toString();
-
-        let xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-            const response = JSON.parse(xhr.responseText);
-            if (response && response.id){
-                window.location.href=`/showId?name=${encodeURIComponent(name)}&id=${encodeURIComponent(response.id)}`;
-            } else {
-                alert('아이디를 찾을 수 없습니다.');
-            }
-            }else{
-            alert('서버 오류 발생');
-            }
-       };
-
-        xhr.open('POST', '/findId', true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send(params);
-        });
-
-    <!--    const xhr = new XMLHttpRequest();-->
-    <!--    xhr.onload = function() {-->
-    <!--        const resultDom = JSON.parse(xhr.responseText);-->
-    <!--        if (resultDom.success) {-->
-    <!--            alert("이메일을 변경해주세요.");-->
-    <!--        } else {-->
-    <!--            alert("비밀번호를 찾지 못했습니다. 다시 시도해주세요.");-->
-    <!--        }-->
-    <!--    };-->
-    <!--    xhr.open("POST", "/findPassword", true);-->
-    <!--    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");-->
-    <!--    xhr.send(`email=${encodeURIComponent(email)}`);-->
-    <!--});-->
+	if (!form.checkValidity()) {
+		event.preventDefault();
+    	nAA.innerHTML = '필요한 정보들을 넣어주세요.';
+    	nAA.style.color = '#ff0000';
+    	nAA.style.display = 'block';
+    	return;
+	}
 </script>
+
+
 </body>
 </html>
